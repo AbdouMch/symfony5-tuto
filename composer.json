@@ -5,6 +5,7 @@
         "php": "^7.3.0 || ^8.0.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "friendsofphp/php-cs-fixer": "^3.11",
         "sensio/framework-extra-bundle": "^6.0",
         "symfony/asset": "5.4.*",
         "symfony/console": "5.4.*",

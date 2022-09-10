@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CommentController extends AbstractController
@@ -17,7 +16,7 @@ class CommentController extends AbstractController
         // todo - use id to query the database
 
         // use real logic here to save this to the database
-        if ($direction === 'up') {
+        if ('up' === $direction) {
             $logger->info('Voting up!');
             $currentVoteCount = rand(7, 100);
         } else {

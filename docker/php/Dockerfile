@@ -52,4 +52,10 @@ RUN pecl install apcu && \
 
 COPY ./conf.d/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
+# install dependencies
+COPY ./install-vendors.sh /usr/local/bin/install-vendors.sh
+RUN chmod +x /usr/local/bin/install-vendors.sh
+RUN /usr/local/bin/install-vendors.sh
+
 WORKDIR /srv/app
+

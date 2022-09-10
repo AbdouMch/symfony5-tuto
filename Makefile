@@ -55,6 +55,10 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 cc: c=c:c ## Clear the cache
 cc: sf
 
+cs-fix: ## run php cs-fix
+	@$(PHP_EXEC) vendor/bin/php-cs-fixer fix -v
+
+## —— assets  ———————————————————————————————————————————————————————————————
 yarn-i: ## Install assets dependencies
 	@$(PHP_EXEC) yarn install
 
