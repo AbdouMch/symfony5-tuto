@@ -7,7 +7,7 @@ use League\CommonMark\ConverterInterface;
 use League\CommonMark\Output\RenderedContentInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
-class MarkDownConverter implements MarkdownConverterInterface
+class MarkdownConverter implements MarkdownConverterInterface
 {
     private ConverterInterface $converter;
     private CacheInterface $cache;

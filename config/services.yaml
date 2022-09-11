@@ -17,7 +17,7 @@ services:
         resource: '../src/*'
         exclude:
             - '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
-            - '../src/Service/MarkDownConverter.php'
+            - '../src/Service/Markdown/MarkdownConverter.php'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -26,5 +26,5 @@ services:
         tags: ['controller.service_arguments']
 
     app.markdown.converter:
-        class: App\Service\Markdown\MarkDownConverter
+        class: App\Service\Markdown\MarkdownConverter
     App\Service\Markdown\MarkdownConverterInterface: '@app.markdown.converter'
