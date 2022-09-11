@@ -25,6 +25,8 @@ build: ## Builds the Docker images
 
 init: down up ## Build and start the containers
 
+reset: down up install-vendors ## Reset the project by installing or updating the php/js vendors
+
 up: ## Start the docker's containers
 	@$(DOCKER_COMP) up -d --build
 
@@ -37,6 +39,9 @@ logs: ## Show live logs
 php: ## Enter PHP container as root
 	@echo "Entering PHP container..."
 	$(DOCKER_EXEC) -it $(PHP_CONTAINER) /bin/bash
+
+install-vendors:
+	@$(PHP_EXEC) /usr/local/bin/install-vendors.sh
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'

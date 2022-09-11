@@ -14,6 +14,7 @@ $finder = (new PhpCsFixer\Finder())
 return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
+        'ordered_class_elements' => true,
 //        '@PSR12' => true,
 //        '@PhpCsFixer' => true,
 //        '@Symfony' => true,
@@ -24,19 +25,3 @@ return (new PhpCsFixer\Config())
     ])
     ->setFinder($finder)
 ;
-
-$finder = PhpCsFixer\Finder::create()->in(__DIR__)->exclude($excludedDirectories);
-$config = new PhpCsFixer\Config();
-
-return $config
-    ->setRiskyAllowed(true)
-    ->setRules([
-        '@PSR12' => true,
-        '@PhpCsFixer' => true,
-        '@Symfony' => true,
-        'declare_strict_types' => false,
-        'ordered_interfaces' => true,
-        'global_namespace_import' => true,
-        'list_syntax' => ['syntax' => 'short'],
-    ])
-    ->setFinder($finder);
