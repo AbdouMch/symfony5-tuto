@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "friendsofphp/php-cs-fixer": "^3.11",
+        "league/commonmark": "^2.3",
         "sensio/framework-extra-bundle": "^6.0",
         "symfony/asset": "5.4.*",
         "symfony/console": "5.4.*",
@@ -20,6 +21,7 @@
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "5.4.*",
         "twig/extra-bundle": "^2.12|^3.0",
+        "twig/markdown-extra": "^3.4",
         "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
