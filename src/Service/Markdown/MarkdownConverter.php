@@ -27,7 +27,7 @@ class MarkdownConverter implements MarkdownConverterInterface
     public function convert(string $input): RenderedContentInterface
     {
         $cacheKey = $this->getCacheKey($input);
-
+        throw new \Exception('bad things happened!!');
         return $this->cache->get($cacheKey, function (ItemInterface $item) use ($input) {
             $item->expiresAfter($this->cacheTTL);
             $converted = $this->converter->convert($input);

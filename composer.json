@@ -8,6 +8,7 @@
         "friendsofphp/php-cs-fixer": "^3.11",
         "league/commonmark": "^2.3",
         "sensio/framework-extra-bundle": "^6.0",
+        "sentry/sentry-symfony": "^4.3",
         "symfony/asset": "5.4.*",
         "symfony/console": "5.4.*",
         "symfony/debug-bundle": "5.4.*",
