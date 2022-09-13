@@ -1,17 +1,22 @@
 monolog:
-    channels: ['markdown']
+    channels: ['markdown', 'spell-command']
     handlers:
         main:
             type: rotating_file
             max_files: 2
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
-            channels: ["!event", "!markdown"]
+            channels: ["!event", "!markdown", "!spell-command"]
         markdown:
             type: rotating_file
             max_files: 1
             path: "%kernel.logs_dir%/markdown.%kernel.environment%.log"
             channels: ["markdown"]
+        spell_command:
+            type: rotating_file
+            max_files: 1
+            path: "%kernel.logs_dir%/spell_command.%kernel.environment%.log"
+            channels: [ "spell-command" ]
         # uncomment to get logging in your browser
         # you may have to allow bigger header sizes in your Web server configuration
         #firephp:
@@ -23,4 +28,4 @@ monolog:
         console:
             type: console
             process_psr_3_messages: false
-            channels: ["!event", "!doctrine", "!console", "!markdown"]
+            channels: ["!event", "!doctrine", "!console", "!markdown", "!spell-command"]
