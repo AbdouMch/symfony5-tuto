@@ -6,7 +6,6 @@ use App\Service\Markdown\MarkdownConverterInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Cache\CacheInterface;
 use Twig\Environment;
 
 class QuestionController extends AbstractController
@@ -29,7 +28,7 @@ class QuestionController extends AbstractController
     /**
      * @Route("/questions/{slug}", name="app_question_show")
      */
-    public function show($slug, MarkdownConverterInterface $converter, CacheInterface $cache)
+    public function show($slug, MarkdownConverterInterface $converter)
     {
         $answers = [
             'Make sure `your cat is sitting` purrrfectly still 🤣',
