@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="mt-5 p-4 bg-light login-form">
+            <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
+            <form method="post" action="{{ path('app_login') }}">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" placeholder="Enter email" id="email"  required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="pwd">Password:</label>
+                    <input type="password" class="form-control" placeholder="Enter password" id="pwd" required>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox"> Remember me
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-secondary">Login</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
