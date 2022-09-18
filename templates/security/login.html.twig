@@ -6,14 +6,17 @@
     <div class="container">
         <div class="mt-5 p-4 bg-light login-form">
             <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
+            {% if error %}
+                <p class="alert alert-danger">{{ error.messageKey }}</p>
+            {% endif %}
             <form method="post" action="{{ path('app_login') }}">
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" class="form-control" placeholder="Enter email" id="email"  required autofocus>
+                    <input type="email" class="form-control" placeholder="Enter email" id="email" name="email" required autofocus>
                 </div>
                 <div class="form-group">
                     <label for="pwd">Password:</label>
-                    <input type="password" class="form-control" placeholder="Enter password" id="pwd" required>
+                    <input type="password" class="form-control" placeholder="Enter password" id="pwd" name="password" required>
                 </div>
                 <div class="form-group form-check">
                     <label class="form-check-label">
