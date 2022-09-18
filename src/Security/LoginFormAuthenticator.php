@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -13,15 +14,18 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
+use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
 class LoginFormAuthenticator extends AbstractAuthenticator
 {
     private UrlGeneratorInterface $urlGenerator;
+    private UserPasswordHasherInterface $passwordHasher;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator, UserPasswordHasherInterface $passwordHasher)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function supports(Request $request): ?bool
@@ -40,9 +44,13 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         $userBadge = new UserBadge($email);
 
         // here we check if the user provides the correct credentials
-        $userCredential = new CustomCredentials(function ($credentials) {
-            return 'tada' === $credentials;
-        }, $password);
+//        $userCredential = new CustomCredentials(
+//            function ($credentials, User $user) {
+//                return $this->passwordHasher->isPasswordValid($user, $credentials);
+//            },
+//            $password
+//        );
+        $userCredential = new PasswordCredentials($password);
 
         return new Passport($userBadge, $userCredential);
     }

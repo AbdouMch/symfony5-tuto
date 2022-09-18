@@ -25,6 +25,6 @@ class SecurityController extends AbstractController
      */
     public function logout(): void
     {
-        throw new RuntimeException("This route should not be reached");
+        throw new RuntimeException('This route should not be reached');
     }
 }
