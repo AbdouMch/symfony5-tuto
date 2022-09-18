@@ -7,7 +7,7 @@
         <div class="mt-5 p-4 bg-light login-form">
             <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
             {% if error %}
-                <p class="alert alert-danger">{{ error.messageKey }}</p>
+                <p class="alert alert-danger">{{ error.messageKey | trans(error.messageData, 'security')}}</p>
             {% endif %}
             <form method="post" action="{{ path('app_login') }}">
                 <div class="form-group">
