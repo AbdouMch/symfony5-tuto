@@ -315,6 +315,9 @@
     "symfony/twig-pack": {
         "version": "v1.0.0"
     },
+    "symfony/ux-chartjs": {
+        "version": "v2.4.0"
+    },
     "symfony/var-dumper": {
         "version": "v5.0.4"
     },
