@@ -22,7 +22,7 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\LoginFormAuthenticator
+#            custom_authenticator: App\Security\LoginFormAuthenticator
             logout: true
             # remember option
             remember_me:
@@ -33,6 +33,16 @@ security:
                 # the cookie is signed with the password by default
                 signature_properties:
                     - password
+            # built-in authenticator with a login form
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                username_parameter: email
+                password_parameter: password
+                enable_csrf: true
+                csrf_parameter: _csrf_token
+                # authenticate is the default id value
+                csrf_token_id: authentication
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
