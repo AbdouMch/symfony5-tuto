@@ -18,8 +18,9 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
-class LoginFormAuthenticator extends AbstractAuthenticator
+class LoginFormAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
     private UrlGeneratorInterface $urlGenerator;
     // for custom credentials
@@ -76,6 +77,11 @@ class LoginFormAuthenticator extends AbstractAuthenticator
     {
         $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
 
+        return new RedirectResponse($this->urlGenerator->generate('app_login'));
+    }
+
+    public function start(Request $request, AuthenticationException $authException = null): Response
+    {
         return new RedirectResponse($this->urlGenerator->generate('app_login'));
     }
 }
