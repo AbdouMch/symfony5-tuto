@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
@@ -20,12 +21,14 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 class LoginFormAuthenticator extends AbstractAuthenticator
 {
     private UrlGeneratorInterface $urlGenerator;
-    private UserPasswordHasherInterface $passwordHasher;
+    // for custom credentials
+//    private UserPasswordHasherInterface $passwordHasher;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, UserPasswordHasherInterface $passwordHasher)
+    public function __construct(UrlGeneratorInterface $urlGenerator/* , UserPasswordHasherInterface $passwordHasher */)
     {
         $this->urlGenerator = $urlGenerator;
-        $this->passwordHasher = $passwordHasher;
+        // for custom credentials
+//        $this->passwordHasher = $passwordHasher;
     }
 
     public function supports(Request $request): ?bool
@@ -37,6 +40,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
     {
         $email = $request->request->get('email');
         $password = $request->request->get('password');
+        $csrfToken = $request->request->get('_csrf_token');
 
         // This badge will query the user with the user provider configured in security.yaml
         // or with the second argument callback if provided
@@ -52,7 +56,13 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 //        );
         $userCredential = new PasswordCredentials($password);
 
-        return new Passport($userBadge, $userCredential);
+        return new Passport(
+            $userBadge,
+            $userCredential,
+            [
+                new CsrfTokenBadge('authentication', $csrfToken),
+            ]
+        );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response

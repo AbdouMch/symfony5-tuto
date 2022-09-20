@@ -23,6 +23,7 @@
                         <input class="form-check-input" type="checkbox"> Remember me
                     </label>
                 </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authentication') }}">
                 <button type="submit" class="btn btn-secondary">Login</button>
             </form>
         </div>
