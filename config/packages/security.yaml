@@ -24,8 +24,16 @@ security:
             provider: app_user_provider
             custom_authenticator: App\Security\LoginFormAuthenticator
             logout: true
+            # remember option
             remember_me:
                 secret: '%kernel.secret%'
+                # automatically add a remember_me cookie
+                always_remember_me: true
+                # sign the REMEMBERME cookie by the password to invalidate the cookie if the user change it
+                # the cookie is signed with the password by default
+                signature_properties:
+                    - password
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
