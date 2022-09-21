@@ -149,4 +149,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getAvatar(string $size): string
+    {
+        return "https://ui-avatars.com/api/?" . http_build_query(
+                [
+                    'name' => $this->firstName,
+                    'size' => $size,
+                    'background' => 'random',
+                ]
+            );
+    }
 }

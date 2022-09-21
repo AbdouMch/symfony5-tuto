@@ -1,5 +1,5 @@
 monolog:
-    channels: ['markdown', 'spell-command']
+    channels: ['markdown', 'spell-command', 'voting']
     handlers:
         main:
             type: rotating_file
@@ -17,6 +17,11 @@ monolog:
             max_files: 1
             path: "%kernel.logs_dir%/spell_command.%kernel.environment%.log"
             channels: [ "spell-command" ]
+        voting:
+            type: rotating_file
+            max_files: 1
+            path: "%kernel.logs_dir%/voting.%kernel.environment%.log"
+            channels: [ "voting" ]
         # uncomment to get logging in your browser
         # you may have to allow bigger header sizes in your Web server configuration
         #firephp:

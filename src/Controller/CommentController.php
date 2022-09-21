@@ -3,16 +3,26 @@
 namespace App\Controller;
 
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CommentController extends AbstractController
+class CommentController extends BaseController
 {
     /**
+     * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
      * @Route("/comments/{id}/vote/{direction<up|down>}", methods="POST")
      */
-    public function commentVote($id, $direction, LoggerInterface $logger)
+    public function commentVote($id, $direction, LoggerInterface $logger, LoggerInterface $votingLogger)
     {
+        $votingLogger->info(
+            '{user} is voting on the ansswer id: {answer_id}',
+            [
+                'user' => $this->getUser()->getEmail(),
+                'answer_id' => $id,
+            ]
+        );
+
         // todo - use id to query the database
 
         // use real logic here to save this to the database
