@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\Markdown\MarkdownConverterInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,13 +16,6 @@ class QuestionController extends AbstractController
      */
     public function homepage(Environment $twigEnvironment)
     {
-        /*
-        // fun example of using the Twig service directly!
-        $html = $twigEnvironment->render('question/homepage.html.twig');
-
-        return new Response($html);
-        */
-
         return $this->render('question/homepage.html.twig');
     }
 
@@ -45,5 +39,15 @@ class QuestionController extends AbstractController
             'question_text' => $questionText,
             'answers' => $answers,
         ]);
+    }
+
+    /**
+     * @IsGranted("ROLE_QUESTION_DELETE")
+     *
+     * @Route("/question/{id}/delete")
+     */
+    public function delete(int $id): Response
+    {
+        return new Response("question with $id has been deleted successfully");
     }
 }
