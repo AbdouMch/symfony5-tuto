@@ -60,6 +60,6 @@ class AdminController extends AbstractController
      */
     public function adminLogin(): Response
     {
-        return new Response("fake admin login page");
+        return new Response('fake admin login page');
     }
 }

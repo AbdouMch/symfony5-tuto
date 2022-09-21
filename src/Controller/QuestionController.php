@@ -43,7 +43,6 @@ class QuestionController extends AbstractController
 
     /**
      * @IsGranted("ROLE_QUESTION_DELETE")
-     *
      * @Route("/question/{id}/delete")
      */
     public function delete(int $id): Response
