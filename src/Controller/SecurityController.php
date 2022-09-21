@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use RuntimeException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -27,5 +29,15 @@ class SecurityController extends AbstractController
     public function logout(): void
     {
         throw new RuntimeException('This route should not be reached');
+    }
+
+    /**
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     *
+     * @Route("/change-password", name="app_change_password")
+     */
+    public function changPassword(): Response
+    {
+        return new Response("fake password change page");
     }
 }

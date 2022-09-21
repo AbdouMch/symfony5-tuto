@@ -11,14 +11,32 @@
     </head>
     <body>
         <nav class="navbar navbar-light bg-light" style="height: 100px;">
-          <a class="navbar-brand" href="{{ path('app_homepage') }}">
-            <i style="color: #444; font-size: 2rem;" class="pb-1 fad fa-cauldron"></i>
-            <p class="pl-2 d-inline font-weight-bold" style="color: #444;">{{ main_title }}</p>
-          </a>
-          <div>
-              <a class="btn btn-secondary" href="{{ path('app_login') }}">Login</a>
-              <button class="btn btn-dark">Sign up</button>
-          </div>
+            <div>
+                <a class="navbar-brand" href="{{ path('app_homepage') }}">
+                    <i style="color: #444; font-size: 2rem;" class="pb-1 fad fa-cauldron"></i>
+                    <p class="pl-2 d-inline font-weight-bold" style="color: #444;">{{ main_title }}</p>
+                </a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('admin_dashboard') }}" class="d-inline nav-item nav-link">Admin</a>
+                {% endif %}
+            </div>
+            <div>
+                {#      In combination with the IS_AUTHENTICATED_FULLY in the controller this is a perfect way to organize a change password page          #}
+                {#      In this case i f the user is authenticated with the remember me cookie the link is shown so when it navigate to the page it will be redirected to the log in page          #}
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <a class="btn btn-secondary" href="{{ path('app_change_password') }}">Change password</a>
+                {% endif %}
+                {#      IS_AUTHENTICATED_FULLY is used only for the opened session but when the session is closed it will be false          #}
+                {#      if we have a remember me option we can use IS_REMEMBERED so it will test on the remember me cookie instead of session cookie           #}
+                {#      or  use ROLE_USER if it is added automatically for any user          #}
+                {#      or the best sollution is to use IS_ANONYMOUS          #}
+                {% if is_granted('IS_ANONYMOUS') %}
+                    <a class="btn btn-secondary" href="{{ path('app_login') }}">Login</a>
+                    <button class="btn btn-dark">Sign up</button>
+                {% else %}
+                    <a class="btn btn-secondary" href="{{ path('app_logout') }}">Log out</a>
+                {% endif %}
+            </div>
         </nav>
 
         {% block body %}{% endblock %}
