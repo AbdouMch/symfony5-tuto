@@ -1,0 +1,8 @@
+App\Entity\User:
+  attributes:
+    id:
+      groups: ['api:user']
+    email:
+      groups: ['api:user']
+    firstName:
+      groups: ['api:user']
