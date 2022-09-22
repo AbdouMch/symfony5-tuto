@@ -15,6 +15,12 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+
+        switch_user_provider:
+            entity:
+                class: App\Entity\User
+                property: id
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -48,7 +54,9 @@ security:
             # https://symfony.com/doc/current/security.html#the-firewall
 
             # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+            # allow impersonation for user with the ROLE_ALLOWED_TO_SWITCH
+            switch_user:
+                provider: switch_user_provider
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
@@ -63,6 +71,7 @@ security:
         ROLE_ADMIN:
             - ROLE_QUESTION_DELETE
             - ROLE_USER_EDIT
+            - ROLE_ALLOWED_TO_SWITCH
 
         ROLE_HUMAN_RESOURCES:
             - ROLE_USER_EDIT
