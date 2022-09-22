@@ -1,0 +1,6 @@
+App\Entity\Spell:
+  attributes:
+    name:
+      groups: ['api:spell']
+    constant_code:
+      groups: ['api:spell']

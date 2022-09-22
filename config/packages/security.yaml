@@ -69,6 +69,7 @@ security:
     role_hierarchy:
         # here the admin will inherit these roles without needing to change the roles in the database
         ROLE_ADMIN:
+            - ROLE_SPELL_READ
             - ROLE_QUESTION_DELETE
             - ROLE_USER_EDIT
             - ROLE_ALLOWED_TO_SWITCH

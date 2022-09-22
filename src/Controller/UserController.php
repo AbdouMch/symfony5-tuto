@@ -8,7 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * because we use the remember_me cookie
+ * because we use the remember_me cookie.
+ *
  * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
  */
 class UserController extends BaseController
