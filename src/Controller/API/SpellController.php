@@ -2,27 +2,18 @@
 
 namespace App\Controller\API;
 
-use App\Controller\BaseController;
+use App\Model\ApiResponse;
 use App\Repository\SpellRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * because we use the remember_me cookie.
- *
  * @IsGranted("ROLE_SPELL_READ")
  */
-class SpellController extends BaseController
+class SpellController extends BaseApiController
 {
-    use TranslatableJsonResponseTrait;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     /**
      * @Route("/api/spells", name="api_spells_list")
      */
@@ -30,6 +21,11 @@ class SpellController extends BaseController
     {
         $spells = $spellRepository->findAll();
 
-        return $this->translatedJson($spells, 'name', ['api:spell']);
+        return $this->translatedJson(
+            new ApiResponse($spells, Response::HTTP_OK),
+            'name',
+            'spell',
+            ['api:spell', 'api:response']
+        );
     }
 }

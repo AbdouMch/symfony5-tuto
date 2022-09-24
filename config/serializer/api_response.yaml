@@ -1,0 +1,10 @@
+App\Model\ApiResponse:
+  attributes:
+    result:
+      groups: ['api:response', 'api:response:list']
+    code:
+      groups: ['api:response', 'api:response:list']
+    limit:
+      groups: [ 'api:response:list' ]
+    page:
+      groups: [ 'api:response:list' ]
