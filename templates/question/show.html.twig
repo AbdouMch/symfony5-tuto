@@ -44,7 +44,7 @@
                         <img src="{{ asset('images/tisha.png') }}" width="50" height="50" alt="Tisha avatar">
                     </div>
                     <div class="mr-3 pt-2">
-                        {{ answer | markdown }}
+                        {{ answer | markdown_to_html }}
                         <p>-- Mallory</p>
                     </div>
                     <div class="vote-arrows flex-fill pt-2 js-vote-arrows" style="min-width: 90px;">
