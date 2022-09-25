@@ -30,3 +30,7 @@ services:
     app.markdown.converter:
         class: App\Service\Markdown\MarkdownConverter
     App\Service\Markdown\MarkdownConverterInterface: '@app.markdown.converter'
+
+    App\Security\ApiTokenAuthenticator:
+        arguments:
+            $authTokenHeader: '%env(API_TOKEN_HEADER)%'

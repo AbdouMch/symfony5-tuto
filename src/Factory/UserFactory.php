@@ -2,6 +2,7 @@
 
 namespace App\Factory;
 
+use App\Entity\ApiToken;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -35,6 +36,14 @@ final class UserFactory extends ModelFactory
     {
         parent::__construct();
         $this->passwordHasher = $passwordHasher;
+    }
+
+    public function withApiToken()
+    {
+        return $this->afterInstantiate(function (User $user): void {
+            $apiToken = new ApiToken($user);
+            $user->addApiToken($apiToken);
+        });
     }
 
     protected function getDefaults(): array

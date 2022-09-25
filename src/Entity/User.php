@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -40,6 +42,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $password;
 
     private ?string $plainPassword;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ApiToken::class, mappedBy="user", orphanRemoval=true, cascade={"persist", "remove"})
+     */
+    private Collection $apiTokens;
+
+    public function __construct()
+    {
+        $this->apiTokens = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -159,5 +171,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 'background' => 'random',
             ]
         );
+    }
+
+    /**
+     * @return Collection<int, ApiToken>
+     */
+    public function getApiTokens(): Collection
+    {
+        return $this->apiTokens;
+    }
+
+    public function addApiToken(ApiToken $apiToken): self
+    {
+        if (!$this->apiTokens->contains($apiToken)) {
+            $this->apiTokens[] = $apiToken;
+        }
+
+        return $this;
     }
 }

@@ -15,10 +15,14 @@ class UserFixtures extends Fixture
             'firstName' => 'abdou',
             'roles' => ['ROLE_ADMIN'],
         ]);
-        UserFactory::createOne([
+
+        UserFactory::new([
             'email' => 'abdou_user@example.com',
             'firstName' => 'abdou',
-        ]);
+        ])
+            ->withApiToken()
+            ->create();
+
         UserFactory::createMany(10);
 
         $manager->flush();

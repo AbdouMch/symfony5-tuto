@@ -28,7 +28,10 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-#            custom_authenticator: App\Security\LoginFormAuthenticator
+            custom_authenticator:
+                - App\Security\ApiTokenAuthenticator
+            #   - App\Security\LoginFormAuthenticator
+
             logout: true
             # remember option
             remember_me:
@@ -76,6 +79,8 @@ security:
 
         ROLE_HUMAN_RESOURCES:
             - ROLE_USER_EDIT
+        ROLE_USER:
+            - ROLE_SPELL_READ
 
 when@test:
     security:
