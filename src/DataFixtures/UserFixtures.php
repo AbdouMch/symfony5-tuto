@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Factory\QuestionFactory;
 use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -10,13 +11,13 @@ class UserFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        UserFactory::createOne([
+       $admin = UserFactory::createOne([
             'email' => 'abdou_admin@example.com',
             'firstName' => 'abdou',
             'roles' => ['ROLE_ADMIN'],
         ]);
 
-        UserFactory::new([
+        $user = UserFactory::new([
             'email' => 'abdou_user@example.com',
             'firstName' => 'abdou',
         ])
@@ -24,6 +25,14 @@ class UserFixtures extends Fixture
             ->create();
 
         UserFactory::createMany(10);
+
+        QuestionFactory::createMany(5, static function () use ($admin) {
+            return ['owner' => $admin];
+        });
+
+        QuestionFactory::createMany(5, static function () use ($user) {
+            return ['owner' => $user];
+        });
 
         $manager->flush();
     }

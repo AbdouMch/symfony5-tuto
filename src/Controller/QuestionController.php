@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Question;
+use App\Repository\QuestionRepository;
 use App\Service\Markdown\MarkdownConverterInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,15 +16,18 @@ class QuestionController extends AbstractController
     /**
      * @Route("/", name="app_homepage")
      */
-    public function homepage(Environment $twigEnvironment)
+    public function homepage(QuestionRepository $questionRepository)
     {
-        return $this->render('question/homepage.html.twig');
+        $questions = $questionRepository->findTopNewestQuestions(3);
+        return $this->render('question/homepage.html.twig', [
+            'questions' => $questions,
+        ]);
     }
 
     /**
-     * @Route("/questions/{slug}", name="app_question_show")
+     * @Route("/questions/{id}", name="app_question_show")
      */
-    public function show($slug, MarkdownConverterInterface $converter)
+    public function show(Question $question, MarkdownConverterInterface $converter)
     {
         $answers = [
             'Make sure `your cat is sitting` purrrfectly still 🤣',
@@ -30,14 +35,29 @@ class QuestionController extends AbstractController
             'Maybe... try saying the spell backwards?',
         ];
 
-        $questionText = "I've been turned into a `cat`, any thoughts on how to turn back? While I'm **adorable**, I don't really care for cat food.";
-
-        $questionText = $converter->convert($questionText);
+        $questionText = $converter->convert($question->getQuestion());
+        $question->setQuestion($questionText);
 
         return $this->render('question/show.html.twig', [
-            'question' => ucwords(str_replace('-', ' ', $slug)),
+            'question' => $question,
             'question_text' => $questionText,
             'answers' => $answers,
+        ]);
+    }
+
+    /**
+     * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
+     *
+     * @Route("/questions/{id}/edit", name="app_question_edit")
+     */
+    public function edit(Question $question)
+    {
+        if ($question->getOwner() !== $this->getUser()) {
+            throw $this->createAccessDeniedException("You are not the owner!");
+        }
+
+        return $this->render('question/edit.html.twig', [
+            'question' => $question,
         ]);
     }
 

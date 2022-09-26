@@ -50,9 +50,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $apiTokens;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Question::class, mappedBy="owner", orphanRemoval=true)
+     */
+    private Collection $questions;
+
     public function __construct()
     {
         $this->apiTokens = new ArrayCollection();
+        $this->questions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -187,6 +193,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->apiTokens->contains($apiToken)) {
             $this->apiTokens[] = $apiToken;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Question>
+     */
+    public function getQuestions(): Collection
+    {
+        return $this->questions;
+    }
+
+    public function addQuestion(Question $question): self
+    {
+        if (!$this->questions->contains($question)) {
+            $this->questions[] = $question;
+            $question->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(Question $question): self
+    {
+        if ($this->questions->removeElement($question) && $question->getOwner() === $this) {
+            $question->setOwner(null);
         }
 
         return $this;
