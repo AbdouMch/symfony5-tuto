@@ -27,6 +27,17 @@ class QuestionRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findTopNewestQuestions(int $count): array
+    {
+        $qb = $this->createAskedOrderedByNewestQueryBuilder();
+        $qb = $this->addTopVotesQueryBuilder($qb);
+        $qb = $this->addIsAskedQueryBuilder($qb);
+
+        return $qb->setMaxResults($count)
+            ->getQuery()
+            ->getResult();
+    }
+
     private function addIsAskedQueryBuilder(QueryBuilder $qb = null): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder($qb)
@@ -42,16 +53,5 @@ class QuestionRepository extends ServiceEntityRepository
     private function getOrCreateQueryBuilder(QueryBuilder $qb = null): QueryBuilder
     {
         return $qb ?: $this->createQueryBuilder('q');
-    }
-
-    public function findTopNewestQuestions(int $count): array
-    {
-        $qb = $this->createAskedOrderedByNewestQueryBuilder();
-        $qb = $this->addTopVotesQueryBuilder($qb);
-        $qb = $this->addIsAskedQueryBuilder($qb);
-
-        return $qb->setMaxResults($count)
-            ->getQuery()
-            ->getResult();
     }
 }

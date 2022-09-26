@@ -9,7 +9,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Twig\Environment;
 
 class QuestionController extends AbstractController
 {
@@ -19,6 +18,7 @@ class QuestionController extends AbstractController
     public function homepage(QuestionRepository $questionRepository)
     {
         $questions = $questionRepository->findTopNewestQuestions(3);
+
         return $this->render('question/homepage.html.twig', [
             'questions' => $questions,
         ]);
@@ -47,7 +47,6 @@ class QuestionController extends AbstractController
 
     /**
      * @IsGranted("EDIT", subject="question")
-     *
      * @Route("/questions/{id}/edit", name="app_question_edit")
      */
     public function edit(Question $question)

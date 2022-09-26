@@ -14,15 +14,12 @@ class QuestionVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
-        return $attribute === self::EDIT
+        return self::EDIT === $attribute
             && $subject instanceof Question;
     }
 
     /**
-     * @param string $attribute
      * @param Question $subject
-     * @param TokenInterface $token
-     * @return bool
      */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {

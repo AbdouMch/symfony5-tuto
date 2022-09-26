@@ -2,14 +2,8 @@
 
 namespace App\Entity;
 
-use App\Repository\AnswerRepository;
 use App\Repository\QuestionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=QuestionRepository::class)
@@ -97,7 +91,7 @@ class Question
 
     public function getVotesString(): string
     {
-        $prefix = $this->getVotes() >=0 ? '+' : '-';
+        $prefix = $this->getVotes() >= 0 ? '+' : '-';
 
         return sprintf('%s %d', $prefix, abs($this->getVotes()));
     }
@@ -111,14 +105,14 @@ class Question
 
     public function upVote(): self
     {
-        $this->votes++;
+        ++$this->votes;
 
         return $this;
     }
 
     public function downVote(): self
     {
-        $this->votes--;
+        --$this->votes;
 
         return $this;
     }
