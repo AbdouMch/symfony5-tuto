@@ -46,16 +46,12 @@ class QuestionController extends AbstractController
     }
 
     /**
-     * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
+     * @IsGranted("EDIT", subject="question")
      *
      * @Route("/questions/{id}/edit", name="app_question_edit")
      */
     public function edit(Question $question)
     {
-        if ($question->getOwner() !== $this->getUser()) {
-            throw $this->createAccessDeniedException("You are not the owner!");
-        }
-
         return $this->render('question/edit.html.twig', [
             'question' => $question,
         ]);

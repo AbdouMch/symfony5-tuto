@@ -13,7 +13,12 @@
                             <img src="{{ question.owner.avatar(100) }}" width="100" height="100"  alt="{{ question.owner.firstName }} avatar">
                         </div>
                         <div class="col">
-                            <h1 class="q-title-show">{{ question.name }}</h1>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h1 class="q-title-show">{{ question.name }}</h1>
+                                {% if is_granted('EDIT', question) %}
+                                    <a class="btn btn-light q-display-response text-center" href="{{ path('app_question_edit', { id: question.id }) }}">Edit</a>
+                                {% endif %}
+                            </div>
                             <div class="q-display p-3">
                                 <i class="fa fa-quote-left mr-3"></i>
                                 <p class="d-inline">{{ question_text | raw }}</p>

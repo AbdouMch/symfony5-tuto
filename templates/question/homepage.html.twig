@@ -32,12 +32,14 @@
                             <div class="col">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <a class="q-title" href="{{ path('app_question_show', { id: question.id }) }}"><h2>{{ question.name }}</h2></a>
-                                    <a class="btn btn-light q-display-response text-center" href="{{ path('app_question_edit', { id: question.id }) }}">Edit</a>
+                                    {% if is_granted('EDIT', question) %}
+                                        <a class="btn btn-light q-display-response text-center" href="{{ path('app_question_edit', { id: question.id }) }}">Edit</a>
+                                    {% endif %}
                                 </div>
                                 <div class="q-display p-3">
                                     <i class="fa fa-quote-left mr-3"></i>
                                     <p class="d-inline">{{ question.question }}</p>
-                                    <p class="pt-4"><strong>--{{ owner.firstname }}</strong></p>
+                                    <p class="pt-4"><strong>--{{ owner.firstname }}</strong>({{ owner.id }})</p>
                                 </div>
                             </div>
                         </div>
