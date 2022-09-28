@@ -55,6 +55,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $questions;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $isVerified = false;
+
     public function __construct()
     {
         $this->apiTokens = new ArrayCollection();
@@ -221,6 +226,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->questions->removeElement($question) && $question->getOwner() === $this) {
             $question->setOwner(null);
         }
+
+        return $this;
+    }
+
+    public function isIsVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }

@@ -1,0 +1,66 @@
+<nav class="navbar navbar-light bg-light"
+     style="
+             height: 100px;
+     {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+             background-color: rgba(5,56,89,0.52) !important;
+     {% endif %}
+             "
+>
+    <div>
+        <a class="navbar-brand" href="{{ path('app_homepage') }}">
+            <i style="color: #444; font-size: 2rem;" class="pb-1 fad fa-cauldron"></i>
+            <p class="pl-2 d-inline font-weight-bold" style="color: #444;">{{ main_title }}</p>
+        </a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('admin_dashboard') }}" class="d-inline nav-item nav-link">Admin</a>
+        {% endif %}
+    </div>
+    {#      IS_AUTHENTICATED_FULLY is used only for the opened session but when the session is closed it will be false          #}
+    {#      if we have a remember me option we can use IS_REMEMBERED so it will test on the remember me cookie instead of session cookie           #}
+    {#      or  use ROLE_USER if it is added automatically for any user          #}
+    {#      or the best sollution is to use IS_ANONYMOUS          #}
+
+    {% if false == is_granted('IS_ANONYMOUS') %}
+        <div class="dropdown">
+            <button
+                    class="dropdown-toggle btn"
+                    type="button"
+                    id="user-dropdown"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+            >
+                <img
+                        src="{{ app.user.avatar(32) }}"
+                        alt="{{ app.user.firstName }} Avatar">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-right" aria-labelledby="user-dropdown">
+                <li class="dropdown-header">
+                    <span>Logged in as {{ app.user.firstName }}</span>
+                </li>
+                {#      In combination with the IS_AUTHENTICATED_FULLY in the controller this is a perfect way to organize a change password page          #}
+                {#      In this case i f the user is authenticated with the remember me cookie the link is shown so when it navigate to the page it will be redirected to the log in page          #}
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and false == is_granted('ROLE_PREVIOUS_ADMIN')%} {# switched users cannot change the user's password #}
+                    <li class="dropdown-item">
+                        <a class="dropdown-item" href="{{ path('app_change_password') }}">Change password</a>
+                    </li>
+                {% endif %}
+                {# ROLE_PREVIOUS_ADMIN is added when a user has switched to the current user with impersonation #}
+                {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+                    <li class="dropdown-item">
+                        <a class="dropdown-item" href="{{ path('app_homepage', {_switch_user: '_exit'}) }}">Quit Impersonation</a>
+                    </li>
+                {% endif %}
+                <li class="dropdown-item">
+                    <a class="dropdown-item" href="{{ path('app_logout') }}">Log out</a>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if is_granted('IS_ANONYMOUS') %}
+        <div>
+            <a class="btn btn-secondary" href="{{ path('app_login') }}">Login</a>
+            <a class="btn btn-dark" href="{{ path('app_register') }}">Sign up</a>
+        </div>
+    {% endif %}
+</nav>
