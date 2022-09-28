@@ -33,6 +33,10 @@ security:
             #   - App\Security\LoginFormAuthenticator
 
             logout: true
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#the-firewall
+
             # remember option
             remember_me:
                 secret: '%kernel.secret%'
@@ -53,13 +57,13 @@ security:
                 # authenticate is the default id value
                 csrf_token_id: authentication
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
-
             # https://symfony.com/doc/current/security/impersonating_user.html
             # allow impersonation for user with the ROLE_ALLOWED_TO_SWITCH
             switch_user:
                 provider: switch_user_provider
+
+            # login failure attempt rate limiter
+            login_throttling: true
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
