@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Blocked {% endblock %}
+
+{% block body %}
+    <div class="container text-center">
+        <h1 class="text-danger">{{ 'user.blocked_account.title' | trans({}, 'security') }}</h1>
+        <p>
+            {{ 'user.blocked_account.message' | trans({}, 'security') | raw }}
+        </p>
+    </div>
+{% endblock %}
