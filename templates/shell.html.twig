@@ -50,7 +50,7 @@
                         <a class="dropdown-item" href="{{ path('app_homepage', {_switch_user: '_exit'}) }}">Quit Impersonation</a>
                     </li>
                 {% endif %}
-                {% if false == app.user.isTotpEnabled %}
+                {% if false == app.user.isTotpEnabled and is_granted('IS_VERIFIED') %}
                     <li class="dropdown-item">
                         <a class="dropdown-item" href="{{ path('app_2fa_enable') }}">Enable 2FA</a>
                     </li>

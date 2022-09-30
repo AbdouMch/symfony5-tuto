@@ -11,7 +11,7 @@ class EmailVerifiedVoter extends Voter
 {
     protected function supports(string $attribute, $subject): bool
     {
-        return 'EMAIL_VERIFIED' === $attribute;
+        return 'IS_VERIFIED' === $attribute;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool

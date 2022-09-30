@@ -33,7 +33,7 @@
 
     <div class="d-flex justify-content-between my-4">
         <h2 class="">Answers <span style="font-size:1.2rem;">({{ answers|length }})</span></h2>
-        {% if is_granted('EMAIL_VERIFIED') %}
+        {% if is_granted('IS_VERIFIED') %}
             <button class="btn btn-sm btn-secondary">Submit an Answer</button>
         {% endif %}
     </div>
@@ -52,7 +52,7 @@
                         <p>-- Mallory</p>
                     </div>
                     <div class="vote-arrows flex-fill pt-2 js-vote-arrows" style="min-width: 90px;">
-                        {% if is_granted('EMAIL_VERIFIED') %}
+                        {% if is_granted('IS_VERIFIED') %}
                             <a class="vote-up" href="#" data-direction="up"><i class="far fa-arrow-alt-circle-up"></i></a>
                             <a class="vote-down" href="#" data-direction="down"><i class="far fa-arrow-alt-circle-down"></i></a>
                             <span>+ <span class="js-vote-total">6</span></span>
