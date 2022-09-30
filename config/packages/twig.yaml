@@ -1,4 +1,4 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
-        main_title: 'Cauldron Overflow'
+        main_title: '%env(APP_TITLE)%'

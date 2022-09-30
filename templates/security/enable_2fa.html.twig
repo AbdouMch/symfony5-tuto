@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}2FA QR Code{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="login-form bg-light mt-4 p-4 d-flex flex-column align-items-center">
+                <h1 class="h3 mb-3 font-weight-normal">Use Authy or Google Authenticator to Scan the QR Code</h1>
+                <img src="{{ qr_code_path(qr_content) }}" alt="2FA QR code"  width="300" height="300">
+                <form method="post" action="{{ path('app_2fa_enable', {_confirm: 1}) }}">
+                    <div class="form-group row col-12">
+                        <label for="code" class="col-form-label col-3">Code:</label>
+                        <div class="col-9">
+                            {% set error_class =  error is not null ? ' is-invalid' : '' %}
+                            <input type="text" class="form-control{{ error_class }}" placeholder="Enter your code" id="code" name="code" required autofocus>
+                            {% if error is not null %}
+                                <div class="invalid-feedback">
+                                    {{ error }}
+                                </div>
+                            {% endif %}
+                            <small id="codeHelp" class="form-text text-muted">Enter the code generated from the app to confirm the 2FA configuration.</small>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
