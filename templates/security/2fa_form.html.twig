@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}2FA | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="mt-5 p-4 bg-light login-form">
+            <h1 class="h3 mb-3 font-weight-normal">Tow Factor Authentication</h1>
+            <form class="form" action="{{ checkPathUrl ? checkPathUrl: path(checkPathRoute) }}" method="post">
+                <div class="form-group row col-10">
+                    <label for="_auth_code" class="col-form-label col-4">{{ twoFactorProvider | upper }} Code:</label>
+                    <div class="col-6">
+                        {% set error_class =  authenticationError ? ' is-invalid' : '' %}
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control{{ error_class }}" placeholder="Enter your code" id="_auth_code" name="{{ authCodeParameterName }}"  autocomplete="one-time-code" required autofocus>
+                        {% if authenticationError %}
+                            <div class="invalid-feedback">
+                                {{ authenticationError|trans(authenticationErrorData, 'SchebTwoFactorBundle') }}
+                            </div>
+                        {% endif %}
+                        <small id="codeHelp" class="form-text text-muted">Enter the code generated from the authenticator app.</small>
+                    </div>
+                </div>
+
+                {% if displayTrustedOption %}
+                    <p class="widget"><label for="_trusted"><input id="_trusted" type="checkbox" name="{{ trustedParameterName }}" /> {{ "trusted"|trans({}, 'SchebTwoFactorBundle') }}</label></p>
+                {% endif %}
+                {% if isCsrfProtectionEnabled %}
+                    <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}">
+                {% endif %}
+                <button type="submit" class="btn btn-secondary">{{ "login"|trans({}, 'SchebTwoFactorBundle') }}</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
