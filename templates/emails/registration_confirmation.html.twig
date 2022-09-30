@@ -1,68 +1,10 @@
-{% apply inline_css %}
-<!doctype html>
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Welcome to the {{ main_title }} site!</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #f3f3f3;
-            font-family: Helvetica, Arial, sans-serif;
-        }
-        h1 {
-            background-color: #264459;
-            color: #ffffff;
-            padding: 30px 0 50px 0;
-            font-weight: normal;
-        }
-        hr {
-            border: none;
-            border-top: 3px solid #264459;
-            margin: 20px;
-        }
-        .container {
-            background-color: #fefefe;
-            width: 580px;
-            margin: 0 auto;
-        }
-        .block {
-            margin: 0;
-            padding: 10px 20px 20px 20px;
-        }
-        .text-center {
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-<div class="body">
-    <div class="container">
-        <div class="header text-center">
-            <a href="{{ path('app_homepage') }}">
-                <i style="color: #444; font-size: 2rem;" class="pb-1 fad fa-cauldron"></i>
-                <p class="pl-2 d-inline font-weight-bold" style="color: #444;">{{ main_title }}</p>
-            </a>
-        </div>
-        <div class="content">
-            <h1 class="text-center">Nice to meet you {{ user.firstName }}!</h1>
-            <p class="block">
-                Please <a href="{{ confirmation_link }}">Confirm your account</a>.
-            </p>
-            <p class="block">
-                Or go directly to this URL: {{ confirmation_link }}
-            </p>
-        </div>
-        <div class="footer">
-            <p class="block">
-                Cheers,<br><br>
-                Your friendly <em>{{ main_title }} Team</em>
-            </p>
-        </div>
-    </div>
-</div>
-</body>
-</html>
-{% endapply %}
+{% extends '/emails/base.html.twig' %}
+{% block content %}
+    <h1 class="text-center">Nice to meet you {{ user.firstName }}!</h1>
+    <p class="block">
+        Please <a href="{{ confirmation_link }}">Confirm your account</a>.
+    </p>
+    <p class="block">
+        Or go directly to this URL: {{ confirmation_link }}
+    </p>
+{% endblock %}

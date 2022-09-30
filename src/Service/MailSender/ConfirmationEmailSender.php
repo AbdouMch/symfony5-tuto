@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\MailSender;
 
 use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
