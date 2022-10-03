@@ -18,7 +18,8 @@
 
         {#    email verification banner    #}
         {% if false == is_granted('IS_ANONYMOUS') and false == is_granted('IS_VERIFIED') %}
-            <div class="alert alert-warning m-0 text-center"><p>Please verify your email to get full access to our site</p></div>
+            <div class="alert alert-warning m-0 text-center"><p>Please verify your email to get full access to our site
+                    <a href="{{ path('app_resend_verification_email') }}">Resend Verification Email</a></p></div>
         {% endif %}
 
         {% block body %}{% endblock %}

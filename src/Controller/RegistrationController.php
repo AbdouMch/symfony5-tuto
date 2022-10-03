@@ -7,6 +7,7 @@ use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Service\MailSender\ConfirmationEmailSender;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -97,9 +98,50 @@ class RegistrationController extends AbstractController
         if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $this->addFlash('success', 'Your account is verified. Enjoy !!');
         } else {
-            $this->addFlash('success', 'Your account is verified. Please login in to have full access to our website');
+            $this->addFlash('success', 'Your account is verified. Please login to have full access to our website');
         }
 
         return $this->redirectToRoute('app_homepage');
+    }
+
+    /**
+     * @Route("/resend-verification-email", name="app_resend_verification_email")
+     * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
+     */
+    public function resendVerificationEmail(
+        Request $request,
+        VerifyEmailHelperInterface $verifyEmailHelper,
+        UserRepository $userRepository,
+        ConfirmationEmailSender $confirmationEmailSender
+    ): Response {
+        $error = null;
+
+        if ('POST' === $request->getMethod()) {
+            $email = $request->request->get('email');
+            if ($email) {
+                $user = $userRepository->findOneBy([
+                    'email' => $email,
+                ]);
+                if ($user) {
+                    $signatureComponents = $verifyEmailHelper->generateSignature(
+                        'app_verify_email',
+                        $user->getId(),
+                        $user->getEmail(),
+                        ['id' => $user->getId()]
+                    );
+                    $confirmationEmailSender->sendConfirmationEmail($user, $signatureComponents->getSignedUrl());
+                    $this->addFlash('success', 'A verification email was sent');
+
+                    return $this->redirectToRoute('app_homepage');
+                }
+                $error = 'Email not registered in our database';
+            } else {
+                $error = 'Please retype your email';
+            }
+        }
+
+        return $this->render('registration/resend_verification.html.twig', [
+            'error' => $error,
+        ]);
     }
 }

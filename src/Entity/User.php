@@ -279,7 +279,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
     public function getTotpAuthenticationUsername(): string
     {
-       return $this->getUserIdentifier();
+        return $this->getUserIdentifier();
     }
 
     public function getTotpAuthenticationConfiguration(): ?TotpConfigurationInterface

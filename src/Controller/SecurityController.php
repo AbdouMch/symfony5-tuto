@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Service\MailSender\TotpQRCodeSender;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
@@ -52,8 +51,6 @@ class SecurityController extends BaseController
         TotpAuthenticatorInterface $totpAuthenticator,
         EntityManagerInterface $entityManager): Response
     {
-
-
         $user = $this->getUser();
         $error = null;
         if ('POST' === $request->getMethod()) {
@@ -62,6 +59,7 @@ class SecurityController extends BaseController
                 $user->setIsTotpEnabled(true);
                 $entityManager->flush();
                 $this->addFlash('success', 'The 2FA is enabled');
+
                 return $this->redirectToRoute('app_homepage');
             }
             $error = 'Invalid code. Please retry.';

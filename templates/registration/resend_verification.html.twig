@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Resend Verification | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="mt-5 p-4 bg-light login-form">
+            <h1 class="h3 mb-3 font-weight-normal">Resend verification email</h1>
+            <form action="{{ path('app_resend_verification_email') }}" method="post">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    {% set error_class =  error ? ' is-invalid' : '' %}
+                    <input type="email" class="form-control{{ error_class }}" placeholder="Enter email" id="email" name="email" required autofocus>
+                    {% if error %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-secondary">Resend</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
