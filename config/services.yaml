@@ -35,3 +35,7 @@ services:
     App\Security\ApiTokenAuthenticator:
         arguments:
             $authTokenHeader: '%env(API_TOKEN_HEADER)%'
+
+    App\EventListener\UserAgentListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
