@@ -68,6 +68,9 @@
             ".php-cs-fixer.dist.php"
         ]
     },
+    "knplabs/knp-time-bundle": {
+        "version": "v1.19.0"
+    },
     "monolog/monolog": {
         "version": "2.0.2"
     },

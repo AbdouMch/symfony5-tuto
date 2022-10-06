@@ -14,6 +14,9 @@
         {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('admin_dashboard') }}" class="d-inline nav-item nav-link">Admin</a>
         {% endif %}
+        {% if is_granted('IS_VERIFIED') %}
+            <a href="{{ path('app_questions_list') }}" class="d-inline nav-item nav-link">Questions</a>
+        {% endif %}
     </div>
     {#      IS_AUTHENTICATED_FULLY is used only for the opened session but when the session is closed it will be false          #}
     {#      if we have a remember me option we can use IS_REMEMBERED so it will test on the remember me cookie instead of session cookie           #}

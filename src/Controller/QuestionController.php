@@ -25,7 +25,7 @@ class QuestionController extends AbstractController
     }
 
     /**
-     * @Route("/questions/{id}", name="app_question_show")
+     * @Route("/question/{id}", name="app_question_show", requirements={"id"="\d+"})
      */
     public function show(Question $question, MarkdownConverterInterface $converter)
     {
@@ -47,9 +47,10 @@ class QuestionController extends AbstractController
 
     /**
      * @IsGranted("EDIT", subject="question")
-     * @Route("/questions/{id}/edit", name="app_question_edit")
+     *
+     * @Route("/question/{id}/edit", name="app_question_edit")
      */
-    public function edit(Question $question)
+    public function edit(Question $question): Response
     {
         return $this->render('question/edit.html.twig', [
             'question' => $question,
@@ -64,4 +65,19 @@ class QuestionController extends AbstractController
     {
         return new Response("question with $id has been deleted successfully");
     }
+
+    /**
+     * @IsGranted("IS_VERIFIED")
+     *
+     * @Route("/questions", name="app_questions_list")
+     */
+    public function list(QuestionRepository $questionRepository): Response
+    {
+        $questions = $questionRepository->findBy([], ['askedAt' => 'DESC']);
+
+        return $this->render('question/list.html.twig', [
+            'questions' => $questions,
+        ]);
+    }
+
 }

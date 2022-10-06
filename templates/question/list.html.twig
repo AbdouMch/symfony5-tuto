@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}Question List{% endblock %}
+{% block body %}
+    <div class="container mt-3">
+        {% if is_granted('IS_VERIFIED') %}
+            <div class="row mb-3">
+                <div class="col">
+                    <a class="btn btn-question" href="{{ path('app_question_create') }}">Ask a Question</a>
+                </div>
+            </div>
+        {% endif %}
+        {#  Questions list  #}
+        {% include 'question/questions_show.html.twig' with { questions: questions }%}
+    </div>
+{% endblock %}
+

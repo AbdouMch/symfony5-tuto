@@ -15,46 +15,8 @@
             </div>
         </div>
     {% endif %}
-    <div class="row">
-        {% for question in questions %}
-            {% set owner = question.owner %}
-            <div class="col-12">
-                <div style="box-shadow: 2px 3px 9px 4px rgba(0,0,0,0.04);">
-                    <div class="q-container p-4">
-                        <div class="row">
-                            <div class="col-2 text-center">
-                                <img src="{{ owner.avatar(100) }}" width="100" height="100"  alt="{{ question.owner.firstName }} avatar">
-                                <div class="d-block mt-3 vote-arrows">
-                                    {% if is_granted('IS_VERIFIED') %}
-                                        <a class="vote-up" href="#"><i class="far fa-arrow-alt-circle-up"></i></a>
-                                        <a class="vote-down" href="#"><i class="far fa-arrow-alt-circle-down"></i></a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <a class="q-title" href="{{ path('app_question_show', { id: question.id }) }}"><h2>{{ question.name }}</h2></a>
-                                    {% if is_granted('EDIT', question) %}
-                                        <a class="btn btn-light q-display-response text-center" href="{{ path('app_question_edit', { id: question.id }) }}">Edit</a>
-                                    {% endif %}
-                                </div>
-                                <div class="q-display p-3">
-                                    <i class="fa fa-quote-left mr-3"></i>
-                                    <p class="d-inline">{{ question.question }}</p>
-                                    <p class="pt-4"><strong>--{{ owner.firstname }}</strong>({{ owner.id }})</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a class="answer-link" href="{{ path('app_question_show', { id: question.id }) }}" style="color: #fff;">
-                        <p class="q-display-response text-center p-3">
-                            <i class="fa fa-magic magic-wand"></i> 6 answers
-                        </p>
-                    </a>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+    {#  Questions list  #}
+    {% include 'question/questions_show.html.twig' with { questions: questions }%}
 </div>
 {% endblock %}
 
