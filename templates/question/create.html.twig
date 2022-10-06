@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}Ask Question{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mt-3">
+                <h1 class="h3 mb-3 font-weight-normal">Ask a new question</h1>
+                {{ form_start(questionForm) }}
+                    {{ form_widget(questionForm) }}
+                    <button type="submit" class="btn btn-primary">Create</button>
+                {{ form_end(questionForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -2,7 +2,15 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}{% endblock %} | {{ main_title }}</title>
+        <title>
+{#            {% block title %}{% endblock %}#}
+            {% block title %}{% endblock %}
+            {% set title_block = block('title') %}
+            {% if title_block is not empty %}
+                |
+            {% endif %}
+            {{ main_title }}
+        </title>
         {% block stylesheets %}
             <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Spartan&display=swap">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />

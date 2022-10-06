@@ -20,6 +20,24 @@ class QuestionRepository extends ServiceEntityRepository
         parent::__construct($registry, Question::class);
     }
 
+    public function add(Question $question, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($question);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Question $question, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($question);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
     public function createAskedOrderedByNewestQueryBuilder(): QueryBuilder
     {
         return $this->addIsAskedQueryBuilder()

@@ -3,14 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Question;
+use App\Form\QuestionFormType;
 use App\Repository\QuestionRepository;
 use App\Service\Markdown\MarkdownConverterInterface;
+use DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class QuestionController extends AbstractController
+class QuestionController extends BaseController
 {
     /**
      * @Route("/", name="app_homepage")
@@ -46,8 +48,33 @@ class QuestionController extends AbstractController
     }
 
     /**
+     * @IsGranted("IS_VERIFIED")
+     * @Route("/question/create", name="app_question_create")
+     */
+    public function create(Request $request, QuestionRepository $questionRepository): Response
+    {
+        $form = $this->createForm(QuestionFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Question $question */
+            $question = $form->getData();
+            $question->setOwner($this->getUser());
+            $question->setAskedAt(new DateTime());
+            $questionRepository->add($question, true);
+
+            $this->addFlash('success', 'Question submitted. Enjoy !');
+
+            return $this->redirectToRoute('app_questions_list');
+        }
+
+        return $this->render('question/create.html.twig', [
+            'questionForm' => $form->createView(),
+        ]);
+    }
+
+    /**
      * @IsGranted("EDIT", subject="question")
-     *
      * @Route("/question/{id}/edit", name="app_question_edit")
      */
     public function edit(Question $question): Response
@@ -68,7 +95,6 @@ class QuestionController extends AbstractController
 
     /**
      * @IsGranted("IS_VERIFIED")
-     *
      * @Route("/questions", name="app_questions_list")
      */
     public function list(QuestionRepository $questionRepository): Response
@@ -79,5 +105,4 @@ class QuestionController extends AbstractController
             'questions' => $questions,
         ]);
     }
-
 }
