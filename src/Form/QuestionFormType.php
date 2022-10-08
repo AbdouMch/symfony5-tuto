@@ -27,6 +27,11 @@ class QuestionFormType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'form.asked_at.label',
                 'help' => 'form.asked_at.help',
+                'attr' => [
+                    'class' => 'js-datepicker',
+                ],
+                // to give the js datepicker widget the control and force symfony to not add the type date to the input
+                'html5' => false,
             ])
         ;
     }

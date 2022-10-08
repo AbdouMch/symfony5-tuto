@@ -60,7 +60,7 @@ class QuestionController extends BaseController
             /** @var Question $question */
             $question = $form->getData();
             $question->setOwner($this->getUser());
-            $question->setAskedAt(new DateTime());
+            $question->setAskedAt($question->getAskedAt() ?? new DateTime());
             $questionRepository->add($question, true);
 
             $this->addFlash('success', 'Question submitted. Enjoy !');
