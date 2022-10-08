@@ -1,0 +1,6 @@
+form.name.label: 'Title'
+form.name.help: 'Choose something catchy!!'
+form.question.label: 'Content'
+form.question.help: 'There is no stupid question!!'
+form.asked_at.label: 'Asked At'
+form.asked_at.help: 'When to ask the question!!'
