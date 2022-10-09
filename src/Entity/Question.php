@@ -43,6 +43,11 @@ class Question
      */
     private User $owner;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Spell::class, inversedBy="questions")
+     */
+    private ?Spell $spell;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -125,6 +130,18 @@ class Question
     public function setOwner(User $owner): self
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getSpell(): ?Spell
+    {
+        return $this->spell;
+    }
+
+    public function setSpell(?Spell $spell): self
+    {
+        $this->spell = $spell;
 
         return $this;
     }
