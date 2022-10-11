@@ -26,11 +26,10 @@ class ExceptionEventListener
     private TranslatorInterface $translator;
 
     public function __construct(
-        string              $environment, UrlGeneratorInterface $urlGenerator,
+        string $environment, UrlGeneratorInterface $urlGenerator,
         SerializerInterface $serializer,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->urlGenerator = $urlGenerator;
         $this->serializer = $serializer;
         $this->environment = $environment;
@@ -54,6 +53,7 @@ class ExceptionEventListener
                 break;
             case $exception instanceof FormValidationException:
                 $this->event->setResponse($exception->getResponse());
+
                 return;
             default:
         }
@@ -63,8 +63,7 @@ class ExceptionEventListener
 
     private function setResponse(string $message, int $statusCode): void
     {
-
-        if ('dev' !== $this->environment && $statusCode === Response::HTTP_INTERNAL_SERVER_ERROR) {
+        if ('dev' !== $this->environment && Response::HTTP_INTERNAL_SERVER_ERROR === $statusCode) {
             $message = $this->translator->trans('technical_error.message', [], 'exception');
         }
 

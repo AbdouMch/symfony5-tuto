@@ -17,7 +17,6 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 /**
  * @Rest\Route("/spells")
- *
  * @IsGranted("ROLE_SPELL_READ")
  */
 class SpellController extends BaseApiController
