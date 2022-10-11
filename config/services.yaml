@@ -39,3 +39,9 @@ services:
     App\EventListener\UserAgentListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
+
+    App\EventListener\ExceptionEventListener:
+        arguments:
+            $environment: '%kernel.environment%'
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception}

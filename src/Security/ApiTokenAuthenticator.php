@@ -3,7 +3,7 @@
 namespace App\Security;
 
 use App\Entity\ApiToken;
-use App\Model\ApiResponse;
+use App\Model\Api\Response as ApiResponse;
 use App\Repository\ApiTokenRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

@@ -1,0 +1,6 @@
+App\Model\Api\Error:
+  attributes:
+    message:
+      groups: ['api:error']
+    code:
+      groups: ['api:error']

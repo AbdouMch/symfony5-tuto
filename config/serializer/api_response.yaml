@@ -1,4 +1,4 @@
-App\Model\ApiResponse:
+App\Model\Api\Response:
   attributes:
     result:
       groups: ['api:response', 'api:response:list']
