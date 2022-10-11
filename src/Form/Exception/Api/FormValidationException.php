@@ -2,6 +2,9 @@
 
 namespace App\Form\Exception\Api;
 
+use function array_key_exists;
+use function count;
+
 use Exception;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -9,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FormValidationException extends Exception
 {
-    protected $message = "Validation failed";
+    protected $message = 'Validation failed';
     protected FormInterface $form;
 
     public function __construct(FormInterface $form)
@@ -36,20 +39,28 @@ class FormValidationException extends Exception
         foreach ($form->all() as $field) {
             $fieldKey = $field->getName();
 
-            if (1 <= \count($field->all())) {
-                $fieldErrors = self::getErrors($field);
+            if (1 <= count($field->all())) {
+                $fieldErrors = $this->getErrors($field);
 
                 if (!empty($fieldErrors)) {
                     $errors[$fieldKey] = $fieldErrors;
                 }
             } else {
-                foreach ($field->getErrors(true) as $error) {
-                    if (\array_key_exists($fieldKey, $errors)) {
-                        $errors[$fieldKey][] = $error->getMessage();
-                    } else {
-                        $errors[$fieldKey] = [$error->getMessage()];
-                    }
-                }
+                $errors = $this->extractErrors($field, true, $errors);
+            }
+        }
+
+        return $this->extractErrors($form, false, $errors);
+    }
+
+    protected function extractErrors(FormInterface $form, bool $deep, array $errors): array
+    {
+        foreach ($form->getErrors($deep) as $error) {
+            $fieldKey = $error->getOrigin() ? $error->getOrigin()->getName() : null;
+            if (array_key_exists($fieldKey, $errors)) {
+                $errors[$fieldKey][] = $error->getMessage();
+            } else {
+                $errors[$fieldKey] = [$error->getMessage()];
             }
         }
 
