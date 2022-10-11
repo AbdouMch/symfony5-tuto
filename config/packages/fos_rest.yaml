@@ -1,0 +1,17 @@
+fos_rest:
+  param_fetcher_listener: true
+  body_listener:
+    decoders:
+      json: fos_rest.decoder.json
+  format_listener:
+    rules:
+      - { path: ^/api, prefer_extension: true, fallback_format: json, priorities: [ json ] }
+      - { path: ^/, prefer_extension: true, fallback_format: ~, priorities: [ 'html', '*/*' ] }
+
+  view:
+    # for serializing object when returning a View object in a controller
+    view_response_listener:
+      enabled: true
+      force: false
+      service: custom_view_response_listener
+    formats: { json: true, xml: false, rss: false }

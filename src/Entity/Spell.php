@@ -17,22 +17,27 @@ class Spell
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $constantCode;
+    private string $constantCode;
 
     /**
      * @ORM\OneToMany(targetEntity=Question::class, mappedBy="spell")
      */
     private Collection $questions;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="spells")
+     */
+    private ?User $owner;
 
     public function __construct()
     {
@@ -94,6 +99,18 @@ class Spell
         ) {
             $question->setSpell(null);
         }
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }

@@ -78,10 +78,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
      */
     private bool $isTotpEnabled = false;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Spell::class, mappedBy="owner")
+     */
+    private Collection $spells;
+
     public function __construct()
     {
         $this->apiTokens = new ArrayCollection();
         $this->questions = new ArrayCollection();
+        $this->spells = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -302,6 +308,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function setIsTotpEnabled(bool $isTotpEnabled): self
     {
         $this->isTotpEnabled = $isTotpEnabled;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Spell>
+     */
+    public function getSpells(): Collection
+    {
+        return $this->spells;
+    }
+
+    public function addSpell(Spell $spell): self
+    {
+        if (!$this->spells->contains($spell)) {
+            $this->spells[] = $spell;
+            $spell->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpell(Spell $spell): self
+    {
+        if ($this->spells->removeElement($spell) && $spell->getOwner() === $this) {
+            $spell->setOwner(null);
+        }
 
         return $this;
     }

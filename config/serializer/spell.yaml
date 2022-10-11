@@ -1,6 +1,8 @@
 App\Entity\Spell:
   attributes:
     name:
-      groups: ['api:spell']
+      groups: ['api:spell', 'api:spell:details']
     constant_code:
-      groups: ['api:spell']
+      groups: ['api:spell', 'api:spell:details']
+    owner:
+      groups: ['api:spell:details']

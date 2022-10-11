@@ -1,3 +1,11 @@
-#index:
-#    path: /
-#    controller: App\Controller\QuestionController::homepage
+v1_api_controllers:
+  resource: ../src/Controller/API/V1
+  type: annotation
+  prefix: /api/v1
+  name_prefix: api_v1_
+
+v2_api_controllers:
+  resource: ../src/Controller/API/V2
+  type: annotation
+  prefix: /api/v2
+  name_prefix: api_v2_

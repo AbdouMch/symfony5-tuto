@@ -2,12 +2,12 @@
 
 namespace App\Controller\API;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-abstract class BaseApiController extends AbstractController
+abstract class BaseApiController extends AbstractFOSRestController
 {
     private TranslatorInterface $translator;
 
