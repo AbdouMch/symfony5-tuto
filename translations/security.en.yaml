@@ -1,4 +1,6 @@
 "Username could not be found.": 'Invalid email or password'
 "Invalid credentials.": 'Invalid email or password'
-user.blocked_account.title: 'Access Denied: Blocked Account'
-user.blocked_account.message: 'Your account is blocked for some reasons. Please contact the site admin <a href="mailto: abc@example.com">Send Email</a>'
+user:
+  blocked_account:
+    title: 'Access Denied: Blocked Account'
+    message: 'Your account is blocked for some reasons. Please contact the site admin <a href="mailto: abc@example.com">Send Email</a>'
