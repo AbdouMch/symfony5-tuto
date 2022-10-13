@@ -7,6 +7,7 @@ use App\Form\QuestionFormType;
 use App\Repository\QuestionRepository;
 use App\Service\Markdown\MarkdownConverterInterface;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -77,10 +78,23 @@ class QuestionController extends BaseController
      * @IsGranted("EDIT", subject="question")
      * @Route("/question/{id}/edit", name="app_question_edit")
      */
-    public function edit(Question $question): Response
+    public function edit(Question $question, Request $request, EntityManagerInterface $em): Response
     {
+        $form = $this->createForm(QuestionFormType::class, $question);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Question updated. Hooyaa !');
+
+            return $this->redirectToRoute('app_question_edit', [
+                'id' => $question->getId(),
+            ]);
+        }
+
         return $this->render('question/edit.html.twig', [
             'question' => $question,
+            'questionForm' => $form->createView(),
         ]);
     }
 
