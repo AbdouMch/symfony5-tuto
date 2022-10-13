@@ -1,0 +1,10 @@
+# Validation for the Question Entity
+question:
+  title:
+    not_blank: 'Be more creative and submit a title'
+    min_length: 'Be more creative and submit a more comprehensive message'
+  content:
+    not_blank: 'Be more creative and submit the question content'
+    min_length: 'Be more creative and submit a more detailed question'
+  spell:
+    invalid: 'The spell you selected is invalid'

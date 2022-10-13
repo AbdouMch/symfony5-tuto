@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\QuestionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=QuestionRepository::class)
@@ -19,11 +20,17 @@ class Question
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Assert\NotBlank(message="question.title.not_blank")
+     * @Assert\Length(min=10, minMessage="question.title.min_length")
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
+     *
+     * @Assert\NotBlank(message="question.content.not_blank")
+     * @Assert\Length(min=100, minMessage="question.content.min_length")
      */
     private $question;
 
