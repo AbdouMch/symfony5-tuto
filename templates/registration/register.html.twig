@@ -1,41 +1,86 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme registrationForm _self %} {# to tell twig that it should look for a theme block here in this template #}
+
+{# here we override a block #}
+{%- block form_row -%}
+    {%- set label = name|humanize -%}
+    {%- set widget_attr = { attr: { placeholder: label } } -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+{#    {%- set attr = attr|merge({ class: ('row input-group ' ~ attr.class | default('')) | trim }) -%}#}
+    {{- form_label(form, null, {
+        label_attr: { class: ('sr-only ' ~ label_attr.class | default('') | trim )}
+    }) -}}
+    {{- form_errors(form) -}}
+    {{- form_widget(form, widget_attr) -}}
+    {{- form_help(form) -}}
+{%- endblock form_row -%}
+
+{%- block _registration_form_agreeTerms_row -%}
+    <div class="checkbox mt-3 mb-3">
+        {{ form_errors(form) }}
+        <label>
+            <input type="checkbox" name="{{ full_name }}"
+            > Agree to terms I for sure read
+        </label>
+    </div>
+{%- endblock -%}
+
 {% block title %}Register{% endblock %}
 
 {% block body %}
     <div class="container">
-        <div class="mt-5 p-4 bg-light login-form">
+        <div class="mt-5 p-4 bg-light">
             <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-            {{ form_errors(registrationForm, {'attr': {'class': 'alert alert-danger'}}) }}
-            {{ form_start(registrationForm) }}
-            <div class="form-group">
-                {{ form_label(registrationForm.email) }}
-                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
-                <div class="form-error text-danger">
-                    {{ form_errors(registrationForm.email, {'attr': {'class': 'alert alert-danger'}}) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(registrationForm.firstName) }}
-                {{ form_widget(registrationForm.firstName, {'attr': {'class': 'form-control'}}) }}
-                <div class="form-error text-danger">
-                    {{ form_errors(registrationForm.firstName, {'attr': {'class': 'alert alert-danger'}}) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(registrationForm.plainPassword, 'Password') }}
-                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
-                <div class="form-error text-danger">
-                    {{ form_errors(registrationForm.plainPassword, {'attr': {'class': 'alert alert-danger'}}) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(registrationForm.agreeTerms, null, {'label_attr': {'class': 'form-check-label'}}) }}
-                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
-            </div>
-
-            <button type="submit" class="btn btn-secondary">Register</button>
+            {{ form_start(registrationForm, {
+                attr: {class: 'form-signin'}
+            }) }}
+                {{ form_row(registrationForm.email, {
+                    attr: { style: "margin-bottom: -1px; border-bottom-right-radius: 0; border-bottom-left-radius: 0;" }
+                }) }}
+                {{ form_row(registrationForm.firstName, {
+                    attr: { style: "margin-bottom: -1px; margin-top: -1px; border-radius: 0;" }
+                }) }}
+                {{ form_row(registrationForm.plainPassword, {
+                    attr: {
+                        style: "margin-top: -1px; border-top-right-radius: 0; border-top-left-radius: 0;"
+                    }
+                }) }}
+                {{ form_row(registrationForm.agreeTerms) }}
+                <button type="submit" class="btn btn-secondary">Register</button>
             {{ form_end(registrationForm) }}
+
+{#            {{ form_start(registrationForm) }} #}
+{#            <div class="form-group">#}
+{#                {{ form_label(registrationForm.email) }}#}
+{#                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}#}
+{#                <div class="form-error text-danger">#}
+{#                    {{ form_errors(registrationForm.email, {'attr': {'class': 'alert alert-danger'}}) }}#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                {{ form_label(registrationForm.firstName) }}#}
+{#                {{ form_widget(registrationForm.firstName, {'attr': {'class': 'form-control'}}) }}#}
+{#                <div class="form-error text-danger">#}
+{#                    {{ form_errors(registrationForm.firstName, {'attr': {'class': 'alert alert-danger'}}) }}#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                {{ form_label(registrationForm.plainPassword, 'Password') }}#}
+{#                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}#}
+{#                <div class="form-error text-danger">#}
+{#                    {{ form_errors(registrationForm.plainPassword, {'attr': {'class': 'alert alert-danger'}}) }}#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                {{ form_label(registrationForm.agreeTerms, null, {'label_attr': {'class': 'form-check-label'}}) }}#}
+{#                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}#}
+{#            </div>#}
+
+{#            <button type="submit" class="btn btn-secondary">Register</button>#}
+{#            {{ form_end(registrationForm) }}#}
         </div>
     </div>
 {% endblock %}
