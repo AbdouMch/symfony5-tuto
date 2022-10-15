@@ -6,6 +6,7 @@ use App\Form\DataTransformer\StringToSpellTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SpellSelectTextType extends AbstractType
 {
@@ -24,5 +25,12 @@ class SpellSelectTextType extends AbstractType
     public function getParent(): string
     {
         return TextType::class;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'invalid_message' => 'question.spell.invalid',
+        ]);
     }
 }

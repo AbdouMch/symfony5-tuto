@@ -14,3 +14,6 @@ registration:
   password:
     empty: 'Please enter a password'
     min_length: 'Your password should be at least {{ limit }} characters'
+spell:
+  name:
+    not_found: 'The spell with the name "%name%" was not found'

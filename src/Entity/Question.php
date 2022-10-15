@@ -28,7 +28,7 @@ class Question
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank(message="question.content.not_blank")
-     * @Assert\Length(min=100, minMessage="question.content.min_length")
+     * @Assert\Length(min=10, minMessage="question.content.min_length")
      */
     private $question;
 

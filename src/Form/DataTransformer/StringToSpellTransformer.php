@@ -31,12 +31,23 @@ class StringToSpellTransformer implements DataTransformerInterface
 
     public function reverseTransform($value): ?Spell
     {
+        // empty value will be handled by a constraint
+        if (null === $value) {
+            return null;
+        }
+
         $spell = $this->spellRepository->findOneBy([
             'name' => $value,
         ]);
 
         if (null === $spell) {
-            throw new TransformationFailedException(sprintf('No spell found with the name "%s"', $value));
+            throw new TransformationFailedException(
+                sprintf('No spell found with the name "%s"', $value),
+                0,
+                null,
+                'spell.name.not_found',
+                ['%name%' => $value]
+            );
         }
 
         return $spell;

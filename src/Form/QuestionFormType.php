@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QuestionFormType extends AbstractType
@@ -42,7 +43,9 @@ class QuestionFormType extends AbstractType
                 // to give the js datepicker widget the control and force symfony to not add the type date to the input
                 'html5' => false,
             ])
-            ->add('spell', SpellSelectTextType::class)
+            ->add('spell', SpellSelectTextType::class, [
+                'required' => false,
+            ])
         ;
     }
 
