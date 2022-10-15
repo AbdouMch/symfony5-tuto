@@ -2,11 +2,15 @@
 
 namespace App\Controller\API;
 
+use App\Entity\User;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @method User getUser()
+ */
 abstract class BaseApiController extends AbstractFOSRestController
 {
     private TranslatorInterface $translator;

@@ -1,0 +1,10 @@
+App\Entity\Question:
+  attributes:
+    name:
+      groups: ['api:question']
+    question:
+      groups: ['api:question']
+    spell:
+      groups: ['api:question']
+    owner:
+      groups: ['api:question']

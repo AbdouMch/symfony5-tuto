@@ -11,10 +11,12 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 class StringToSpellTransformer implements DataTransformerInterface
 {
     private SpellRepository $spellRepository;
+    private string $searchField;
 
-    public function __construct(SpellRepository $spellRepository)
+    public function __construct(SpellRepository $spellRepository, string $searchField)
     {
         $this->spellRepository = $spellRepository;
+        $this->searchField = $searchField;
     }
 
     public function transform($value)
@@ -37,17 +39,11 @@ class StringToSpellTransformer implements DataTransformerInterface
         }
 
         $spell = $this->spellRepository->findOneBy([
-            'name' => $value,
+            $this->searchField => $value,
         ]);
 
         if (null === $spell) {
-            throw new TransformationFailedException(
-                sprintf('No spell found with the name "%s"', $value),
-                0,
-                null,
-                'spell.name.not_found',
-                ['%name%' => $value]
-            );
+            throw new TransformationFailedException(sprintf('No spell found with the "%s" "%s"', $this->searchField, $value), 0, null, 'spell.not_found', ['%field%' => $this->searchField, '%name%' => $value]);
         }
 
         return $spell;

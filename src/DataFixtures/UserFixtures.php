@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Factory\QuestionFactory;
+use App\Factory\SpellFactory;
 use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -31,6 +32,10 @@ class UserFixtures extends Fixture
         });
 
         QuestionFactory::createMany(5, static function () use ($user) {
+            return ['owner' => $user];
+        });
+
+        SpellFactory::createMany(2, static function () use ($user) {
             return ['owner' => $user];
         });
 
