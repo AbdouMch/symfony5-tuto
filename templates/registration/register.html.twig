@@ -6,25 +6,32 @@
 {%- block form_row -%}
     {%- set label = name|humanize -%}
     {%- set widget_attr = { attr: { placeholder: label } } -%}
+    {% if errors is not empty %}
+        {% set  error_messages = '' %}
+        {%- for error in errors -%}
+            {% set  error_messages = error_messages ~ ' ' ~ error.message %}
+        {%- endfor -%}
+        {%- set tooltip_attr = {  'tabindex': '0', 'data-toggle': 'tooltip', 'data-placement': 'right', 'title': error_messages|trim } -%}
+        {%- set widget_attr = { attr: (widget_attr.attr | merge(tooltip_attr)) } -%}
+    {% endif %}
     {%- if help is not empty -%}
-        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+        {%- set widget_attr = { attr: (widget_attr.attr | merge({'aria-describedby': id ~"_help"})) } -%}
     {%- endif -%}
 {#    {%- set attr = attr|merge({ class: ('row input-group ' ~ attr.class | default('')) | trim }) -%}#}
     {{- form_label(form, null, {
         label_attr: { class: ('sr-only ' ~ label_attr.class | default('') | trim )}
     }) -}}
-    {{- form_errors(form) -}}
     {{- form_widget(form, widget_attr) -}}
     {{- form_help(form) -}}
 {%- endblock form_row -%}
 
 {%- block _registration_form_agreeTerms_row -%}
     <div class="checkbox mt-3 mb-3">
-        {{ form_errors(form) }}
         <label>
             <input type="checkbox" name="{{ full_name }}"
             > Agree to terms I for sure read
         </label>
+        {{ form_errors(form) }}
     </div>
 {%- endblock -%}
 
@@ -83,4 +90,18 @@
 {#            {{ form_end(registrationForm) }}#}
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(function () {
+            const $element = $('[data-toggle="tooltip"]');
+            $element.tooltip({
+                'trigger': 'manual',
+                'template': '<div class="tooltip" role="tooltip"><div class="arrow colored"></div><div class="tooltip-inner bg-danger"></div></div>'
+            });
+            $element.tooltip('toggle')
+        })
+    </script>
 {% endblock %}
