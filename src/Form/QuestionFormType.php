@@ -3,8 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Question;
-use App\Entity\Spell;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Form\Type\SpellSelectTextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -43,15 +42,7 @@ class QuestionFormType extends AbstractType
                 // to give the js datepicker widget the control and force symfony to not add the type date to the input
                 'html5' => false,
             ])
-            ->add('spell', EntityType::class, [
-                'class' => Spell::class,
-                'choice_label' => 'name',
-                'choice_translation_domain' => 'spell',
-                'label' => 'form.spell.label',
-                'placeholder' => 'form.spell.placeholder',
-                'required' => false,
-                'invalid_message' => 'question.spell.invalid',
-            ])
+            ->add('spell', SpellSelectTextType::class)
         ;
     }
 
