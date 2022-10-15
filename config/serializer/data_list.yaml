@@ -1,0 +1,12 @@
+App\DataList\Result:
+  attributes:
+    result:
+      groups: ['api:response:list']
+    limit:
+      groups: ['api:response:list']
+    page:
+      groups: ['api:response:list']
+    total_count:
+      groups: ['api:response:list']
+    filtered_count:
+      groups: ['api:response:list']
