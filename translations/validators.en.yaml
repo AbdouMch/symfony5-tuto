@@ -8,3 +8,9 @@ question:
     min_length: 'Be more creative and submit a more detailed question'
   spell:
     invalid: 'The spell you selected is invalid'
+registration:
+  agree_terms:
+    not_checked: 'You should agree to our terms'
+  password:
+    empty: 'Please enter a password'
+    min_length: 'Your password should be at least {{ limit }} characters'

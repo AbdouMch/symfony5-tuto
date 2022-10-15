@@ -44,6 +44,9 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            if ($form->get('agreeTerms')->getData()) {
+                $user->agreeTerms();
+            }
             $userRepository->add($user, true);
             $signatureComponents = $verifyEmailHelper->generateSignature(
                 'app_verify_email',

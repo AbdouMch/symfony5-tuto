@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -82,6 +83,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
      * @ORM\OneToMany(targetEntity=Spell::class, mappedBy="owner")
      */
     private Collection $spells;
+
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
+    private DateTimeImmutable $agreedTermsAt;
 
     public function __construct()
     {
@@ -335,6 +341,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         if ($this->spells->removeElement($spell) && $spell->getOwner() === $this) {
             $spell->setOwner(null);
         }
+
+        return $this;
+    }
+
+    public function getAgreedTermsAt(): DateTimeImmutable
+    {
+        return $this->agreedTermsAt;
+    }
+
+    public function agreeTerms(): self
+    {
+        $this->agreedTermsAt = new DateTimeImmutable();
 
         return $this;
     }
