@@ -38,7 +38,19 @@ class SpellController extends BaseApiController
         $name = $paramFetcher->get('name');
         $fields = $paramFetcher->get('fields');
 
-        $spells = $dataList->list($limit, $page, 'name', 'ASC');
+        $spells = $dataList->list(
+            $limit,
+            $page,
+            'name',
+            'ASC',
+            [
+                'filters' => [
+                    'name' => [
+                        'contains' => 'Patronum',
+                    ]
+                ]
+            ]
+        );
 
         return $this->translatedJson(
             $spells,

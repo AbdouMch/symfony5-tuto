@@ -5,22 +5,21 @@ namespace App\DataList\DataField\Spell;
 use App\DataList\AbstractField;
 use Doctrine\ORM\QueryBuilder;
 
-class OwnerField extends AbstractField
+class NameField extends AbstractField
 {
     public function getDefaultFilter(): string
     {
-        return 'eq';
+        return 'contains';
     }
 
     public function getField(): string
     {
-        return 'owner.id';
+        return $this->rootAlias .  '.name';
     }
 
     protected function addJoins(QueryBuilder $qb): QueryBuilder
     {
-        $this->innerJoin($this->rootAlias, 'owner', 'owner');
-
+        // no joins needed
         return $qb;
     }
 }

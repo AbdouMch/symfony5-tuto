@@ -20,7 +20,7 @@ abstract class AbstractField
 
     abstract public function getDefaultFilter(): string;
 
-    abstract protected function getField(): string;
+    abstract public function getField(): string;
 
     abstract protected function addJoins(QueryBuilder $qb): QueryBuilder;
 
@@ -29,21 +29,21 @@ abstract class AbstractField
         return stripos($queryBuilder->getDQL(), "$joinType join $join $joinAlias");
     }
 
-    protected function leftJoin(string $rootAlias, $join, $alias): void
+    protected function leftJoin(string $rootAlias, $join, $joinAlias): void
     {
-        if ($this->hasJoin($this->qb, Join::LEFT_JOIN, "$rootAlias.$join", $alias)) {
+        if ($this->hasJoin($this->qb, Join::LEFT_JOIN, "$rootAlias.$join", $joinAlias)) {
             return;
         }
 
-        $this->qb->leftJoin($join, $alias);
+        $this->qb->leftJoin($join, $joinAlias);
     }
 
-    protected function innerJoin(string $rootAlias, $join, $alias): void
+    protected function innerJoin(string $rootAlias, $join, $joinAlias): void
     {
-        if ($this->hasJoin($this->qb, Join::INNER_JOIN, "$rootAlias.$join", $alias)) {
+        if ($this->hasJoin($this->qb, Join::INNER_JOIN, "$rootAlias.$join", $joinAlias)) {
             return;
         }
 
-        $this->qb->leftJoin($join, $alias);
+        $this->qb->leftJoin($join, $joinAlias);
     }
 }
