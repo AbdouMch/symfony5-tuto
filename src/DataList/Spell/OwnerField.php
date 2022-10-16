@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataList\DataField\Spell;
+namespace App\DataList\Spell;
 
 use App\DataList\AbstractField;
 use Doctrine\ORM\QueryBuilder;

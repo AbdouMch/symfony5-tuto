@@ -3,7 +3,7 @@
 namespace App\Controller\API\V1;
 
 use App\Controller\API\BaseApiController;
-use App\DataList\SpellDataList;
+use App\DataList\Spell\SpellDataList;
 use App\Entity\Spell;
 use App\Form\Exception\Api\FormValidationException;
 use App\Form\SpellTypeTest;
@@ -27,7 +27,7 @@ class SpellController extends BaseApiController
      * @Rest\Get("", name="spells_list")
      * @Rest\QueryParam(name="name", map=true, nullable=true, description="search by spell name")
      * @Rest\QueryParam(name="constant_code", map=true, nullable=true, description="search by spell constant code")
-     * @Rest\QueryParam(name="fields", map=false, nullable=true, description="List of visible fields")
+     * @Rest\QueryParam(name="owner", map=true, nullable=true, description="search by owner id")
      * @Rest\QueryParam(name="sort", requirements="(asc|desc)", allowBlank=false, default="asc", description="Sort direction")
      */
     public function getSpellList(Request $request, ParamFetcher $paramFetcher, SpellDataList $dataList): JsonResponse
@@ -35,20 +35,13 @@ class SpellController extends BaseApiController
         $page = (int) $request->query->get('page', 1);
         $limit = (int) $request->query->get('limit', 10);
 
-        $name = $paramFetcher->get('name');
-        $fields = $paramFetcher->get('fields');
-
         $spells = $dataList->list(
             $limit,
             $page,
             'name',
             'ASC',
             [
-                'filters' => [
-                    'name' => [
-                        'contains' => 'Patronum',
-                    ]
-                ]
+                'filters' => $this->getFilters($paramFetcher, $dataList),
             ]
         );
 
@@ -84,14 +77,5 @@ class SpellController extends BaseApiController
         }
 
         throw new FormValidationException($form);
-    }
-
-    private function getFields(?string $fields)
-    {
-        if (null === $fields) {
-            return [];
-        }
-
-        return explode(',', $fields);
     }
 }

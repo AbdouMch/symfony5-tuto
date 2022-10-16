@@ -2,8 +2,6 @@
 
 namespace App\DataList;
 
-use App\DataList\DataField\Spell\NameField;
-use App\DataList\DataField\Spell\OwnerField;
 use App\Repository\SpellRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Connection;
@@ -12,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SpellDataList
+abstract class AbstractDataList
 {
     private SpellRepository $spellRepository;
 
@@ -21,18 +19,9 @@ class SpellDataList
         $this->spellRepository = $spellRepository;
     }
 
-    public function configureOptions(array $options): array
+    public function getFields(): array
     {
-        $resolver = new OptionsResolver();
-        $resolver->setDefaults([
-            'visible_fields' => [
-                'name',
-                'constantCode',
-            ],
-            'filters' => [],
-        ]);
-
-        return $resolver->resolve($options);
+        return array_keys($this->getDataFieldsClasses());
     }
 
     public function list(int $limit, int $page, string $orderBy, ?string $order, array $options): Result
@@ -43,9 +32,10 @@ class SpellDataList
         $offset = ($page - 1) * $limit;
 
         // init query builder
+        $rootAlias = $this->getRootAlias();
         $qb = $this->spellRepository
-            ->createQueryBuilder('spell')
-            ->orderBy("spell.$orderBy", $order)
+            ->createQueryBuilder($rootAlias)
+            ->orderBy("$rootAlias.$orderBy", $order)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
@@ -65,24 +55,39 @@ class SpellDataList
         );
     }
 
+    abstract protected function getRootAlias(): string;
+
+    abstract protected function getDataFieldsClasses(): array;
+
+    protected function configureOptions(array $options): array
+    {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            'visible_fields' => $this->getFields(),
+            'filters' => [],
+        ]);
+
+        return $resolver->resolve($options);
+    }
+
     protected function totalCount(): int
     {
-        return $this->spellRepository->createQueryBuilder('spell')
-            ->select('COUNT(spell.id)')
+        $rootAlias = $this->getRootAlias();
+
+        return $this->spellRepository->createQueryBuilder($rootAlias)
+            ->select("COUNT($rootAlias.id)")
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleScalarResult();
     }
 
-    /**
-     * @return string field class name
-     */
-    protected function getField(string $fieldName): ?string
+    protected function getDataField(string $fieldName, QueryBuilder $qb): ?AbstractField
     {
-        $fields = [
-            'name' => NameField::class,
-            'owner' => OwnerField::class
-        ];
+        $fields = $this->getDataFieldsClasses();
+
+        if (isset($fields[$fieldName])) {
+            return new $fields[$fieldName]($qb);
+        }
 
         return $fields[$fieldName] ?? null;
     }
@@ -92,19 +97,16 @@ class SpellDataList
         $i = 1;
 
         foreach ($filters as $field => $fieldFilters) {
-            $dataFieldClass = $this->getField($field);
+            $dataField = $this->getDataField($field, $qb);
 
-            // add joins and select
-            /** @var AbstractField $dataField */
-            $dataField = new $dataFieldClass($qb);
-            // skip empty filters
-            if (empty($fieldFilters)) {
+            // skip empty filters or unmapped fields
+            if (null === $dataField || empty($fieldFilters)) {
                 continue;
             }
 
             if (\is_array($fieldFilters)) {
                 foreach ($fieldFilters as $operator => $value) {
-                    $parameter = $field . '_' . $operator . '_param_' . $i;
+                    $parameter = $field.'_'.$operator.'_param_'.$i;
                     $qb = $this->andWhere($qb, $dataField->getField(), $operator, $parameter, $value);
                 }
             } else {
@@ -126,12 +128,11 @@ class SpellDataList
 
     private function andWhere(
         QueryBuilder $qb,
-        string       $field,
-        string       $operator,
-        string       $parameter,
-        string       $value
-    ): QueryBuilder
-    {
+        string $field,
+        string $operator,
+        string $parameter,
+        string $value
+    ): QueryBuilder {
         switch ($operator) {
             case 'eq':
                 $qb->andWhere("$field = :$parameter")->setParameter($parameter, $value);
@@ -153,11 +154,11 @@ class SpellDataList
                 break;
             case 'contains':
                 $qb->andWhere("LOWER($field) LIKE :$parameter")->setParameter($parameter,
-                    '%' . strtolower($value) . '%');
+                    '%'.strtolower($value).'%');
                 break;
             case 'startsWith':
                 $qb->andWhere("LOWER($field) LIKE :$parameter")->setParameter($parameter,
-                    strtolower($value) . '%');
+                    strtolower($value).'%');
                 break;
             case 'in':
                 $value = json_decode($value, true);
@@ -168,19 +169,13 @@ class SpellDataList
                 break;
             case 'endsWith':
                 $qb->andWhere("LOWER($field) LIKE :$parameter")->setParameter($parameter,
-                    '%' . strtolower($value));
+                    '%'.strtolower($value));
                 break;
             case 'gtOrNull':
                 $qb->andWhere("$field > :$parameter OR $field IS NULL")->setParameter($parameter, $value);
                 break;
-            case 'equalDate':
-                $date = new \DateTime($value);
-                $qb->andWhere($qb->expr()->between("$field", ':date_start', ':date_end'))
-                    ->setParameter('date_start', $date->format('Y-m-d 00:00:00'))
-                    ->setParameter('date_end', $date->format('Y-m-d 23:59:59'));
-                break;
             default:
-                throw new HttpException(Response::HTTP_BAD_REQUEST, 'Unknown comparison operator: ' . $operator);
+                throw new HttpException(Response::HTTP_BAD_REQUEST, 'Unknown comparison operator: '.$operator);
         }
 
         return $qb;

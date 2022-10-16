@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataList\DataField\Spell;
+namespace App\DataList\Spell;
 
 use App\DataList\AbstractField;
 use Doctrine\ORM\QueryBuilder;
@@ -14,7 +14,7 @@ class NameField extends AbstractField
 
     public function getField(): string
     {
-        return $this->rootAlias .  '.name';
+        return $this->rootAlias.'.name';
     }
 
     protected function addJoins(QueryBuilder $qb): QueryBuilder

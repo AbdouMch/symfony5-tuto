@@ -14,7 +14,7 @@ abstract class AbstractField
     {
         $this->qb = $qb;
         $this->rootAlias = $qb->getRootAliases()[0];
-        $qb->addSelect($this->getField());
+//        $qb->addSelect($this->getField());
         $this->addJoins($qb);
     }
 
@@ -40,7 +40,9 @@ abstract class AbstractField
 
     protected function innerJoin(string $rootAlias, $join, $joinAlias): void
     {
-        if ($this->hasJoin($this->qb, Join::INNER_JOIN, "$rootAlias.$join", $joinAlias)) {
+        $join = "$rootAlias.$join";
+
+        if ($this->hasJoin($this->qb, Join::INNER_JOIN, $join, $joinAlias)) {
             return;
         }
 
