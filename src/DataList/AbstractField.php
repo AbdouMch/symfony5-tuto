@@ -22,7 +22,12 @@ abstract class AbstractField
 
     abstract public function getField(): string;
 
-    abstract protected function addJoins(QueryBuilder $qb): QueryBuilder;
+    protected function addJoins(QueryBuilder $qb): QueryBuilder
+    {
+        // default function
+        // no joins for the moment
+        return $qb;
+    }
 
     protected function hasJoin(QueryBuilder $queryBuilder, string $joinType, string $join, string $joinAlias): bool
     {

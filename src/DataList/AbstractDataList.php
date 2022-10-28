@@ -2,21 +2,23 @@
 
 namespace App\DataList;
 
-use App\Repository\SpellRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractDataList
 {
-    private SpellRepository $spellRepository;
+    private EntityRepository $entityRepository;
 
-    public function __construct(SpellRepository $spellRepository)
+    public function __construct(EntityManagerInterface $em, string $entityClass)
     {
-        $this->spellRepository = $spellRepository;
+        $this->entityRepository = $em->getRepository($entityClass);
     }
 
     public function getFields(): array
@@ -24,16 +26,23 @@ abstract class AbstractDataList
         return array_keys($this->getDataFieldsClasses());
     }
 
-    public function list(int $limit, int $page, string $orderBy, ?string $order, array $options): Result
+    public function list(ParamFetcher $paramFetcher): Result
     {
-        $options = $this->configureOptions($options);
+        $limit = $paramFetcher->get('limit', true);
+        $page = $paramFetcher->get('page', true);
+        $order = $paramFetcher->get('sort', true);
+        $orderBy = $paramFetcher->get('sort_by', true);
+
+        $options = $this->configureOptions([
+            'filters' => $this->getFilters($paramFetcher),
+        ]);
 
         // prepare the offset
         $offset = ($page - 1) * $limit;
 
         // init query builder
         $rootAlias = $this->getRootAlias();
-        $qb = $this->spellRepository
+        $qb = $this->entityRepository
             ->createQueryBuilder($rootAlias)
             ->orderBy("$rootAlias.$orderBy", $order)
             ->setFirstResult($offset)
@@ -51,13 +60,26 @@ abstract class AbstractDataList
             $limit,
             $page,
             $this->totalCount(),
-            count($spells)
+            $this->filteredCount($qb)
         );
     }
 
     abstract protected function getRootAlias(): string;
 
     abstract protected function getDataFieldsClasses(): array;
+
+    protected function getFilters(ParamFetcher $paramFetcher): array
+    {
+        $filters = [];
+        $params = $paramFetcher->all();
+        foreach ($this->getFields() as $field) {
+            if (isset($params[$field])) {
+                $filters[$field] = $params[$field];
+            }
+        }
+
+        return $filters;
+    }
 
     protected function configureOptions(array $options): array
     {
@@ -74,8 +96,21 @@ abstract class AbstractDataList
     {
         $rootAlias = $this->getRootAlias();
 
-        return $this->spellRepository->createQueryBuilder($rootAlias)
+        return $this->entityRepository->createQueryBuilder($rootAlias)
             ->select("COUNT($rootAlias.id)")
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    protected function filteredCount(QueryBuilder $qb): int
+    {
+        $rootAlias = $this->getRootAlias();
+        $qb->resetDQLParts(['orderBy']);
+
+        return $qb
+            ->select("COUNT($rootAlias.id)")
+            ->setFirstResult(null)
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleScalarResult();

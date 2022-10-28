@@ -29,21 +29,13 @@ class SpellController extends BaseApiController
      * @Rest\QueryParam(name="constant_code", map=true, nullable=true, description="search by spell constant code")
      * @Rest\QueryParam(name="owner", map=true, nullable=true, description="search by owner id")
      * @Rest\QueryParam(name="sort", requirements="(asc|desc)", allowBlank=false, default="asc", description="Sort direction")
+     * @Rest\QueryParam(name="sort_by", requirements="\w+", default="name", description="Sort by field name")
+     * @Rest\QueryParam(name="limit", map=false, requirements="\d+", default=23, description="size of the page")
+     * @Rest\QueryParam(name="page", map=false, requirements="\d+", default=1, description="page number")
      */
-    public function getSpellList(Request $request, ParamFetcher $paramFetcher, SpellDataList $dataList): JsonResponse
+    public function getSpellList(ParamFetcher $paramFetcher, SpellDataList $dataList): JsonResponse
     {
-        $page = (int) $request->query->get('page', 1);
-        $limit = (int) $request->query->get('limit', 10);
-
-        $spells = $dataList->list(
-            $limit,
-            $page,
-            'name',
-            'ASC',
-            [
-                'filters' => $this->getFilters($paramFetcher, $dataList),
-            ]
-        );
+        $spells = $dataList->list($paramFetcher);
 
         return $this->translatedJson(
             $spells,

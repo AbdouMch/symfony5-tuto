@@ -1,10 +1,10 @@
 <?php
 
-namespace App\DataList\Spell;
+namespace App\DataList\User;
 
 use App\DataList\AbstractField;
 
-class NameField extends AbstractField
+class EmailField extends AbstractField
 {
     public function getDefaultFilter(): string
     {
@@ -13,6 +13,6 @@ class NameField extends AbstractField
 
     public function getField(): string
     {
-        return $this->rootAlias.'.name';
+        return $this->rootAlias.'.email';
     }
 }
