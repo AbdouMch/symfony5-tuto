@@ -5,7 +5,7 @@ namespace App\Form\Type;
 use App\Form\DataTransformer\StringToSpellTransformer;
 use App\Repository\SpellRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,7 +27,7 @@ class SpellSelectTextType extends AbstractType
 
     public function getParent(): string
     {
-        return TextType::class;
+        return ChoiceType::class;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

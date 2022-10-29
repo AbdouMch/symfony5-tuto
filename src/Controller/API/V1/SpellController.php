@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 /**
@@ -24,7 +25,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 class SpellController extends BaseApiController
 {
     /**
-     * @Rest\Get("", name="spells_list")
+     * @Route("", name="api_v1_spells_list", methods={"GET"})
      * @Rest\QueryParam(name="name", map=true, nullable=true, description="search by spell name")
      * @Rest\QueryParam(name="constant_code", map=true, nullable=true, description="search by spell constant code")
      * @Rest\QueryParam(name="owner", map=true, nullable=true, description="search by owner id")
@@ -46,7 +47,7 @@ class SpellController extends BaseApiController
     }
 
     /**
-     * @Rest\Post("", name="spell_create")
+     * @Route("", name="api_v1_spell_create", methods={"POST"})
      */
     public function create(Request $request, SpellRepository $spellRepo): Response
     {

@@ -12,3 +12,6 @@ form:
   spell:
     label: 'Related to'
     placeholder: 'Want to know more about the spell'
+  user:
+    label: 'Tag a user'
+    help: 'You have a user in your mind to ask !'

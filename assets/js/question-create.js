@@ -1,7 +1,8 @@
 import '../css/question_create.css';
 
 import $ from 'jquery';
-import 'bootstrap-datetime-picker'
+import 'bootstrap-datetime-picker';
+import '../js/common/select2/autocomplete.js';
 
 $(document).ready(() => {
     $('.js-datepicker').datetimepicker({
@@ -10,5 +11,5 @@ $(document).ready(() => {
         autoclose: true,
         todayHighlight: true,
         format: 'yyyy-mm-dd hh:ii'
-    })
+    });
 });

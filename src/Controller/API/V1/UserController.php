@@ -4,21 +4,21 @@ namespace App\Controller\API\V1;
 
 use App\Controller\API\BaseApiController;
 use App\DataList\User\UserDataList;
-use App\Model\Api\Response as ApiResponse;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use FOS\RestBundle\View\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Rest\Route("/users")
+ * @Route("/users")
  * @IsGranted("ROLE_USER")
  */
 class UserController extends BaseApiController
 {
     /**
-     * @Rest\Get("", name="users_list")
+     * @Route("", name="api_v1_users_list", methods={"GET"})
      * @Rest\QueryParam(name="email", map=true, nullable=true, description="search by user email")
      * @Rest\QueryParam(name="sort", requirements="(asc|desc)", allowBlank=false, default="asc", description="Sort direction")
      * @Rest\QueryParam(name="sort_by", requirements="\w+", default="email", description="Sort by field name")
