@@ -12,6 +12,7 @@ $(document).ready(() => {
         const $autocompleteInput = $(this);
         const apiUrl = $autocompleteInput.data('autocomplete-url');
         const searchField = $autocompleteInput.data('autocomplete-search-field');
+        const choiceValue = $autocompleteInput.data('autocomplete-choice-value');
         const operator = $autocompleteInput.data('autocomplete-search-operator');
         const limit = $autocompleteInput.data('autocomplete-page-size') || 10;
         const minimumInputLength = $autocompleteInput.data('autocomplete-search-length') || 2;
@@ -38,7 +39,7 @@ $(document).ready(() => {
 
                     const datas = $.map(response.result, function (data) {
                         return {
-                            id: data[searchField],
+                            id: data[choiceValue],
                             text: data[searchField]
                         }
                     })

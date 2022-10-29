@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 class QuestionController extends BaseApiController
 {
     /**
-     * @Route("", name="api_v1_question_create", methods={"POST"})
+     * @Route("", name="api_v1_question_create", methods="POST")
      */
     public function create(Request $request, QuestionRepository $questionRepository): Response
     {

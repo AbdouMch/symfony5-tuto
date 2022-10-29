@@ -7,16 +7,19 @@ use App\Repository\SpellRepository;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Form\Exception\TransformationFailedException;
+use Symfony\Component\Yaml\Yaml;
 
 class StringToSpellTransformer implements DataTransformerInterface
 {
     private SpellRepository $spellRepository;
     private string $searchField;
+    private string $projectDir;
 
-    public function __construct(SpellRepository $spellRepository, string $searchField)
+    public function __construct(SpellRepository $spellRepository, string $searchField, string $projectDir)
     {
         $this->spellRepository = $spellRepository;
         $this->searchField = $searchField;
+        $this->projectDir = $projectDir;
     }
 
     public function transform($value)
@@ -37,6 +40,10 @@ class StringToSpellTransformer implements DataTransformerInterface
         if (null === $value) {
             return null;
         }
+
+        $translations = Yaml::parseFile($this->projectDir.'/translations/spell.en.yaml');
+
+        $value = array_search($value, $translations, true);
 
         $spell = $this->spellRepository->findOneBy([
             $this->searchField => $value,

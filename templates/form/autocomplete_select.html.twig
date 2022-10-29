@@ -1,0 +1,12 @@
+{% block autocomplete_select_row %}
+    <div class="form-group mb-4">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_help(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
+
+{% block  autocomplete_select_widget %}
+    {{- block('choice_widget_collapsed') -}}
+{% endblock %}

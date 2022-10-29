@@ -45,3 +45,7 @@ services:
             $environment: '%kernel.environment%'
         tags:
             - { name: kernel.event_listener, event: kernel.exception}
+
+    App\Form\Type\SpellSelectTextType:
+        arguments:
+            $projectDir: '%kernel.project_dir%'

@@ -4,3 +4,4 @@ twig:
         main_title: '%env(APP_TITLE)%'
     form_themes:
         - 'bootstrap_4_layout.html.twig'
+        - 'form/autocomplete_select.html.twig'

@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Question;
+use App\Entity\User;
 use App\Form\Type\SpellSelectTextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -52,17 +54,17 @@ class QuestionFormType extends AbstractType
                 'html5' => false,
             ])
             ->add('spell', SpellSelectTextType::class, [
+                'label' => 'form.spell.label',
+                'help' => 'form.spell.placeholder',
                 'required' => false,
                 'search_field' => $spellSearchField,
-                'multiple' => false,
-                'attr' => [
-                    'class' => 'autocomplete-js',
-                    'data-autocomplete-url' => $this->urlGenerator->generate('api_v1_spells_list', [], UrlGeneratorInterface::ABSOLUTE_URL),
-                    'data-autocomplete-search-field' => 'name',
-                    'data-autocomplete-search-operator' => 'contains',
-                ],
+                'api_path' => 'api_v1_spells_list',
+                'choice_value' => 'name',
             ])
-            ->add('user', TextType::class, [
+            ->add('user', EntityType::class, [
+                'class' => User::class,
+                'choice_value' => 'email',
+                'choice_label' => 'email',
                 'label' => 'form.user.label',
                 'help' => 'form.user.help',
                 'mapped' => false,
@@ -70,6 +72,7 @@ class QuestionFormType extends AbstractType
                     'class' => 'autocomplete-js',
                     'data-autocomplete-url' => $this->urlGenerator->generate('api_v1_users_list', [], UrlGeneratorInterface::ABSOLUTE_URL),
                     'data-autocomplete-search-field' => 'email',
+                    'data-autocomplete-choice-value' => 'email',
                     'data-autocomplete-search-operator' => 'startsWith',
                     'data-autocomplete-page-size' => 5,
                     'data-autocomplete-search-length' => 3,
