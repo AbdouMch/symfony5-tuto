@@ -42,6 +42,7 @@ class QuestionFormType extends AbstractType
             ->add('question', TextareaType::class, [
                 'label' => 'form.question.label',
                 'help' => 'form.question.help',
+                'rows' => 5, // custom option added by TextAriaSizeExtension
             ])
             ->add('askedAt', DateTimeType::class, [
                 'widget' => 'single_text',
