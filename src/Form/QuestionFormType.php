@@ -33,6 +33,9 @@ class QuestionFormType extends AbstractType
             // in api we search the spells by id
             $spellSearchField = 'id';
         }
+        /** @var Question|null $question */
+        $question = $options['data'] ?? null;
+        $isEditMode = $question && $question->getId();
 
         $builder
             ->add('name', TextType::class, [
@@ -44,16 +47,6 @@ class QuestionFormType extends AbstractType
                 'help' => 'form.question.help',
                 'rows' => 5, // custom option added by TextAriaSizeExtension
             ])
-            ->add('askedAt', DateTimeType::class, [
-                'widget' => 'single_text',
-                'label' => 'form.asked_at.label',
-                'help' => 'form.asked_at.help',
-                'attr' => [
-                    'class' => 'js-datepicker',
-                ],
-                // to give the js datepicker widget the control and force symfony to not add the type date to the input
-                'html5' => false,
-            ])
             ->add('spell', SpellSelectTextType::class, [
                 'label' => 'form.spell.label',
                 'help' => 'form.spell.placeholder',
@@ -64,6 +57,7 @@ class QuestionFormType extends AbstractType
             ])
             ->add('user', EntityType::class, [
                 'class' => User::class,
+                'disabled' => $isEditMode,
                 'choice_value' => 'email',
                 'choice_label' => 'email',
                 'label' => 'form.user.label',
@@ -80,6 +74,19 @@ class QuestionFormType extends AbstractType
                 ],
             ])
         ;
+
+        if ($options['include_asked_at']) {
+            $builder->add('askedAt', DateTimeType::class, [
+                'widget' => 'single_text',
+                'label' => 'form.asked_at.label',
+                'help' => 'form.asked_at.help',
+                'attr' => [
+                    'class' => 'js-datepicker',
+                ],
+                // to give the js datepicker widget the control and force symfony to not add the type date to the input
+                'html5' => false,
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -88,6 +95,7 @@ class QuestionFormType extends AbstractType
            'data_class' => Question::class,
             'translation_domain' => 'question',
             'mode' => self::WEB_MODE,
+            'include_asked_at'=>false,
         ]);
     }
 }

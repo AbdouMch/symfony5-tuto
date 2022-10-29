@@ -80,7 +80,9 @@ class QuestionController extends BaseController
      */
     public function edit(Question $question, Request $request, EntityManagerInterface $em): Response
     {
-        $form = $this->createForm(QuestionFormType::class, $question);
+        $form = $this->createForm(QuestionFormType::class, $question, [
+            'include_asked_at' => true,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
