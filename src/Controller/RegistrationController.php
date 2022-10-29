@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\Model\UserRegistrationFormModel;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Service\MailSender\ConfirmationEmailSender;
@@ -32,19 +33,24 @@ class RegistrationController extends AbstractController
         VerifyEmailHelperInterface $verifyEmailHelper,
         ConfirmationEmailSender $confirmationEmailSender
     ): Response {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UserRegistrationFormModel $userModel */
+            $userModel = $form->getData();
+
+            $user = new User();
+            $user->setEmail($userModel->email)
+                ->setFirstName($userModel->firstName)
             // encode the plain password
-            $user->setPassword(
+            ->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    $userModel->plainPassword
                 )
             );
-            if ($form->get('agreeTerms')->getData()) {
+            if ($userModel->agreeTerms) {
                 $user->agreeTerms();
             }
             $userRepository->add($user, true);

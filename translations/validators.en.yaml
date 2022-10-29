@@ -9,6 +9,10 @@ question:
   spell:
     invalid: 'The spell you selected is invalid'
 registration:
+  email:
+    empty: 'Please enter an email'
+  firstName:
+    empty: 'Please enter a firstname'
   agree_terms:
     not_checked: 'You should agree to our terms'
   password:
