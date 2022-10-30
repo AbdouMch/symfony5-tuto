@@ -9,8 +9,11 @@ question:
   spell:
     invalid: 'The spell you selected is invalid'
 registration:
+  user:
+    unique: 'We think that you already registered 😎'
   email:
     empty: 'Please enter an email'
+    unique: 'There is already an account with this email'
   firstName:
     empty: 'Please enter a firstname'
   agree_terms:

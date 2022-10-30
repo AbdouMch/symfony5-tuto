@@ -2,16 +2,18 @@
 
 namespace App\Form\Model;
 
+use App\Validator\UniqueUser;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * a DTO for user registration
+ * a DTO for user registration.
  */
 class UserRegistrationFormModel
 {
     /**
      * @Assert\NotBlank(message="registration.email.empty")
      * @Assert\Email()
+     * @UniqueUser(message="registration.user.unique")
      */
     public string $email;
     /**
