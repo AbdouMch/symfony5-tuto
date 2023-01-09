@@ -42,7 +42,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     apt-get install yarn;
 
 RUN pecl install apcu && \
-	pecl install xdebug && \
+	pecl install xdebug-3.1.5 && \
     pecl clear-cache && \
 	docker-php-ext-enable apcu \
     xdebug \

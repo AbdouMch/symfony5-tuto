@@ -23,7 +23,7 @@ services:
     links:
       - database_symfony_5
     ports:
-      - "80:80"
+      - "88:80"
     volumes:
       - ./docker/php/conf.d/000-default.conf:/etc/apache2/sites-available/000-default.conf
       - ./:/srv/app
