@@ -49,9 +49,18 @@ class Question
     private User $owner;
 
     /**
+     * The question is about a spell
+     *
      * @ORM\ManyToOne(targetEntity=Spell::class, inversedBy="questions")
      */
     private ?Spell $spell;
+
+    /**
+     * This question is for a user
+     *
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="askedQuestions")
+     */
+    private ?User $toUser;
 
     public function getId(): ?int
     {

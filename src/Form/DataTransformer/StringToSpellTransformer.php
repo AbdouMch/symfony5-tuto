@@ -41,9 +41,16 @@ class StringToSpellTransformer implements DataTransformerInterface
             return null;
         }
 
-        $translations = Yaml::parseFile($this->projectDir.'/translations/spell.en.yaml');
+        // The Spell name field is translated.
+        // If the spell is retrieved by the name field, we should reverse the translation.
+        if ('name' === $this->searchField) {
+            $translations = Yaml::parseFile($this->projectDir.'/translations/spell.en.yaml');
 
-        $value = array_search($value, $translations, true);
+            $originalNameValue = array_search($value, $translations, true);
+            if ($originalNameValue) {
+                $value = $originalNameValue;
+            }
+        }
 
         $spell = $this->spellRepository->findOneBy([
             $this->searchField => $value,

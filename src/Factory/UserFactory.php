@@ -54,7 +54,6 @@ final class UserFactory extends ModelFactory
             'firstName' => self::faker()->firstName(),
             'plainPassword' => 'password',
             'isVerified' => true,
-            'agreedTermsAt' => new DateTimeImmutable(),
         ];
     }
 
@@ -70,6 +69,7 @@ final class UserFactory extends ModelFactory
                     )
                     ->eraseCredentials();
             }
+            $user->agreeTerms();
         });
     }
 

@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -33,9 +35,6 @@ class QuestionFormType extends AbstractType
             // in api we search the spells by id
             $spellSearchField = 'id';
         }
-        /** @var Question|null $question */
-        $question = $options['data'] ?? null;
-        $isEditMode = $question && $question->getId();
 
         $builder
             ->add('name', TextType::class, [
@@ -49,31 +48,15 @@ class QuestionFormType extends AbstractType
             ])
             ->add('spell', SpellSelectTextType::class, [
                 'label' => 'form.spell.label',
-                'help' => 'form.spell.placeholder',
+                'placeholder' => 'form.spell.placeholder',
                 'required' => false,
                 'search_field' => $spellSearchField,
                 'api_path' => 'api_v1_spells_list',
                 'choice_value' => 'name',
             ])
-            ->add('user', EntityType::class, [
-                'class' => User::class,
-                'disabled' => $isEditMode,
-                'choice_value' => 'email',
-                'choice_label' => 'email',
-                'label' => 'form.user.label',
-                'help' => 'form.user.help',
-                'mapped' => false,
-                'attr' => [
-                    'class' => 'autocomplete-js',
-                    'data-autocomplete-url' => $this->urlGenerator->generate('api_v1_users_list', [], UrlGeneratorInterface::ABSOLUTE_URL),
-                    'data-autocomplete-search-field' => 'email',
-                    'data-autocomplete-choice-value' => 'email',
-                    'data-autocomplete-search-operator' => 'startsWith',
-                    'data-autocomplete-page-size' => 5,
-                    'data-autocomplete-search-length' => 3,
-                ],
-            ])
         ;
+
+        $this->addToUserField($builder, $options['data'] ?? null);
 
         if ($options['include_asked_at']) {
             $builder->add('askedAt', DateTimeType::class, [
@@ -96,6 +79,39 @@ class QuestionFormType extends AbstractType
             'translation_domain' => 'question',
             'mode' => self::WEB_MODE,
             'include_asked_at' => false,
+        ]);
+    }
+
+    protected function addToUserField(FormBuilderInterface $builder, ?Question $question): void
+    {
+        $spell = $question ? $question->getSpell() : null;
+
+        if (null === $spell) {
+            $builder->remove('toUser');
+
+            return;
+        }
+
+        $toUserChoices = $spell->getOwner() ? [$spell->getOwner()] : null;
+        $couldEditToUser = null !== $question->getToUser();
+
+        $builder->add('toUser', EntityType::class, [
+            'class' => User::class,
+            'disabled' => $couldEditToUser,
+            'choice_value' => 'email',
+            'choice_label' => 'email',
+            'label' => 'form.user.label',
+            'placeholder' => 'form.user.help',
+            'choices' => $toUserChoices,
+            'attr' => [
+                'class' => 'autocomplete-js',
+                'data-autocomplete-url' => $this->urlGenerator->generate('api_v1_users_list', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                'data-autocomplete-search-field' => 'email',
+                'data-autocomplete-choice-value' => 'email',
+                'data-autocomplete-search-operator' => 'startsWith',
+                'data-autocomplete-page-size' => 5,
+                'data-autocomplete-search-length' => 3,
+            ],
         ]);
     }
 }

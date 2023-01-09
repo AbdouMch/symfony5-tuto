@@ -10,8 +10,8 @@ form:
     label: 'Asked At'
     help: 'When to ask the question!!'
   spell:
-    label: 'Related to'
+    label: 'About a spell'
     placeholder: 'Want to know more about the spell'
   user:
-    label: 'Tag a user'
+    label: 'For'
     help: 'You have a user in your mind to ask !'
