@@ -1,7 +1,14 @@
 ARG PHP_VERSION=7.4
 FROM php:${PHP_VERSION}-apache-bullseye
 
+
 COPY ./conf.d/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY ./conf.d/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
+
+# configure ssl certificate
+RUN a2enmod rewrite && a2enmod ssl && a2enmod socache_shmcb
+RUN sed -i '/SSLCertificateFile.*snakeoil\.pem/c\SSLCertificateFile \/etc\/ssl\/certs\/mycert.crt' /etc/apache2/sites-available/default-ssl.conf && sed -i '/SSLCertificateKeyFile.*snakeoil\.key/cSSLCertificateKeyFile /etc/ssl/private/mycert.key\' /etc/apache2/sites-available/default-ssl.conf
+RUN a2ensite default-ssl
 
 ENV APACHE_DOCUMENT_ROOT /srv/app/public
 
