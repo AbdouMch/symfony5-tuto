@@ -55,13 +55,6 @@ class Question
      */
     private ?Spell $spell;
 
-    /**
-     * This question is for a user.
-     *
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="askedQuestions")
-     */
-    private ?User $toUser;
-
     public function getId(): ?int
     {
         return $this->id;
