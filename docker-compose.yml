@@ -10,6 +10,8 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ${DB_PATH}:/var/lib/mysql:cached
     ports:
       - ${MYSQL_PORT}:3306
     networks:
