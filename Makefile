@@ -1,5 +1,6 @@
 # Docker containers
 PHP_CONTAINER = symfony_5
+MERCURE_CONTAINER = mercure_symfo_5
 
 # Executables (local)
 DOCKER_COMP = docker-compose
@@ -39,6 +40,10 @@ logs: ## Show live logs
 php: ## Enter PHP container as root
 	@echo "Entering PHP container..."
 	$(DOCKER_EXEC) -it $(PHP_CONTAINER) /bin/bash
+
+mercure: ## Enter PHP container as root
+	@echo "Entering PHP container..."
+	$(DOCKER_EXEC) -it $(MERCURE_CONTAINER) /bin/sh
 
 install-vendors:
 	@$(PHP_EXEC) /usr/local/bin/install-vendors.sh
