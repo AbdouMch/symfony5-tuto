@@ -29,6 +29,7 @@
         "symfony/form": "5.4.*",
         "symfony/framework-bundle": "5.4.*",
         "symfony/mailer": "5.4.*",
+        "symfony/mercure-bundle": "^0.3.5",
         "symfony/monolog-bundle": "^3.0",
         "symfony/property-access": "5.4.*",
         "symfony/property-info": "5.4.*",

@@ -18,5 +18,12 @@
     {#  Questions list  #}
     {% include 'question/questions_show.html.twig' with { questions: questions }%}
 </div>
+    <script>
+        const eventSource = new EventSource("http://127.0.0.1:32793/.well-known/mercure?topic=http://example.com/my-private-topic");
+        eventSource.onmessage = event => {
+            // Will be called every time an update is published by the server
+            console.log(JSON.parse(event.data));
+        }
+    </script>
 {% endblock %}
 
