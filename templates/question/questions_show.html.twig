@@ -1,4 +1,4 @@
-<div class="row">
+<div id="question-partial-list" class="row js-question-partial-list" data-realtime_channel="{{ mercure(path('app_questions_partial_list')) }}">
     {% for question in questions %}
         {% set owner = question.owner %}
         <div class="col-12">
