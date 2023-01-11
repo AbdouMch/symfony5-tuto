@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class QuestionController extends BaseController
 {
@@ -53,7 +54,7 @@ class QuestionController extends BaseController
      * @IsGranted("IS_VERIFIED")
      * @Route("/question/create", name="app_question_create")
      */
-    public function create(Request $request, QuestionRepository $questionRepository, HubInterface $hub): Response
+    public function create(Request $request, QuestionRepository $questionRepository): Response
     {
         $form = $this->createForm(QuestionFormType::class);
         $form->handleRequest($request);
@@ -64,13 +65,6 @@ class QuestionController extends BaseController
             $question->setOwner($this->getUser());
             $question->setAskedAt($question->getAskedAt() ?? new \DateTime());
             $questionRepository->add($question, true);
-
-            $update = new Update(
-                'http://example.com/my-private-topic',
-                json_encode(['question_id' => $question->getId()], JSON_THROW_ON_ERROR)
-            );
-
-            $hub->publish($update);
 
             $this->addFlash('success', 'Question submitted. Enjoy !');
 
@@ -86,7 +80,7 @@ class QuestionController extends BaseController
      * @IsGranted("EDIT", subject="question")
      * @Route("/question/{id}/edit", name="app_question_edit")
      */
-    public function edit(Question $question, Request $request, EntityManagerInterface $em, HubInterface $hub): Response
+    public function edit(Question $question, Request $request, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(QuestionFormType::class, $question, [
             'include_asked_at' => true,
@@ -94,13 +88,6 @@ class QuestionController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $update = new Update(
-                'http://example.com/my-private-topic',
-                json_encode(['question_id' => $question->getId()], JSON_THROW_ON_ERROR)
-            );
-
-            $hub->publish($update);
-
             $em->flush();
             $this->addFlash('success', 'Question updated. Hooyaa !');
 
@@ -133,6 +120,20 @@ class QuestionController extends BaseController
         $questions = $questionRepository->findBy([], ['askedAt' => 'DESC']);
 
         return $this->render('question/list.html.twig', [
+            'questions' => $questions,
+        ]);
+    }
+
+    /**
+     * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
+     *
+     * @Route("/questions/partial-list", name="app_questions_partial_list")
+     */
+    public function partialList(QuestionRepository $questionRepository): Response
+    {
+        $questions = $questionRepository->findBy([], ['askedAt' => 'DESC']);
+
+        return $this->render('question/questions_show.html.twig', [
             'questions' => $questions,
         ]);
     }
