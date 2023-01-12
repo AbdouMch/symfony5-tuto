@@ -113,7 +113,7 @@ class QuestionController extends BaseController
 
     /**
      * @IsGranted("IS_VERIFIED")
-     * @Route("/questions", name="app_questions_list")
+     * @Route("/questions", options={"expose"=true}, name="app_questions_list")
      */
     public function list(QuestionRepository $questionRepository): Response
     {
@@ -127,13 +127,13 @@ class QuestionController extends BaseController
     /**
      * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
      *
-     * @Route("/questions/partial-list", name="app_questions_partial_list")
+     * @Route("/questions/partial-list", options={"expose"=true}, name="app_questions_partial_list")
      */
     public function partialList(QuestionRepository $questionRepository): Response
     {
         $questions = $questionRepository->findBy([], ['askedAt' => 'DESC']);
 
-        return $this->render('question/questions_show.html.twig', [
+        return $this->render('question/_partial_list.html.twig', [
             'questions' => $questions,
         ]);
     }

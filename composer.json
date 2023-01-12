@@ -12,6 +12,7 @@
         "doctrine/orm": "^2.13",
         "endroid/qr-code-bundle": "^4.1",
         "friendsofphp/php-cs-fixer": "^3.11",
+        "friendsofsymfony/jsrouting-bundle": "^2.8",
         "friendsofsymfony/rest-bundle": "^3.4",
         "knplabs/knp-time-bundle": "^1.19",
         "league/commonmark": "^2.3",

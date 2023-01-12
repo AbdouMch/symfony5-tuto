@@ -35,6 +35,8 @@
             Made with <i style="color: red;" class="fa fa-heart"></i> by the guys and gals at <a style="color: #444; text-decoration: underline;" href="https://symfonycasts.com">SymfonyCasts</a>
         </footer>
         {% block javascripts %}
+            <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </body>

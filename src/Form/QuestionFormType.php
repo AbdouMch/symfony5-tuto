@@ -95,7 +95,7 @@ class QuestionFormType extends AbstractType
         }
 
         $toUserChoices = $spell->getOwner() ? [$spell->getOwner()] : null;
-        $couldEditToUser = null !== $question->getToUser();
+        $couldEditToUser = false;
 
         $builder->add('toUser', EntityType::class, [
             'class' => User::class,
