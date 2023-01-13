@@ -113,7 +113,7 @@ class QuestionController extends BaseController
 
     /**
      * @IsGranted("IS_VERIFIED")
-     * @Route("/questions", options={"expose"=true}, name="app_questions_list")
+     * @Route("/questions", name="app_questions_list")
      */
     public function list(QuestionRepository $questionRepository): Response
     {
