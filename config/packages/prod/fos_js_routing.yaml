@@ -1,0 +1,7 @@
+fos_js_routing:
+    cache_control:
+        public: false
+        maxage: 28800
+        smaxage: null
+        expires: null
+        vary: []
