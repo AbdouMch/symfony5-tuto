@@ -21,14 +21,14 @@ class Question
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="question.title.not_blank")
-     * @Assert\Length(min=10, minMessage="question.title.min_length")
+     * @Assert\Length(min=4, minMessage="question.title.min_length")
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank(message="question.content.not_blank")
-     * @Assert\Length(min=10, minMessage="question.content.min_length")
+     * @Assert\Length(min=4, minMessage="question.content.min_length")
      */
     private $question;
 
