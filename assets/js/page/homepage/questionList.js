@@ -1,12 +1,11 @@
 import {RealtimeSubscriberInterface} from "../../common/realtime/realtime";
 import $ from "jquery";
-import {UrlGenerator} from "../../common/url-generator/url_generator";
+import {Router} from "../../common/url-generator/url_generator";
 
 class QuestionList extends RealtimeSubscriberInterface {
     constructor() {
         super();
-        this._url = UrlGenerator.generate('app_questions_partial_list');
-        // this._url2 = UrlGenerator.generate('app_questions_list');
+        this._url = Router.generate('app_questions_partial_list');
     }
     onmessage() {
         $.ajax({
