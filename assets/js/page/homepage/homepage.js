@@ -23,9 +23,10 @@ $(document).ready(() => {
     const $questionList = $('#question-partial-list[class*="js-question-partial-list"]');
     if ($questionList) {
         const realtimeChannelUrl = $questionList.data('realtime_channel');
+        const topic = $questionList.data('realtime_topic');
         if (realtimeChannelUrl) {
             const questionList = new QuestionList();
-            const questionChannel = new RealtimeChannel(realtimeChannelUrl);
+            const questionChannel = new RealtimeChannel(realtimeChannelUrl, topic, true);
             questionChannel
                 .connect()
                 .subscribe(questionList);
