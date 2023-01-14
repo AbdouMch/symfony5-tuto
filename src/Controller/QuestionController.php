@@ -10,10 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mercure\HubInterface;
-use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class QuestionController extends BaseController
 {
@@ -126,7 +123,6 @@ class QuestionController extends BaseController
 
     /**
      * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
-     *
      * @Route("/questions/partial-list", options={"expose"=true}, name="app_questions_partial_list")
      */
     public function partialList(QuestionRepository $questionRepository): Response
