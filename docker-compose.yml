@@ -56,7 +56,7 @@ services:
       MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeThisMercureHubJWTSecretKey!'
       # Set the URL of your Symfony project (without trailing slash!) as value of the cors_origins directive
       MERCURE_EXTRA_DIRECTIVES: |
-        cors_origins *
+        cors_origins https://127.0.0.1:8443
       SERVER_NAME: ':80'
     ports:
       - "32784:80"

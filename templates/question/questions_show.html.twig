@@ -1,4 +1,10 @@
-<div id="question-partial-list" class="row js-question-partial-list" data-realtime_channel="{{ mercure(path('app_questions_partial_list')) }}">
+{% set topic = 'questions_list' %}
+<div
+        id="question-partial-list"
+        class="row js-question-partial-list"
+        data-realtime_channel="{{ mercure(topic) }}"
+        data-realtime_topic="{{ topic }}"
+>
     {% include 'question/_partial_list.html.twig' with { questions: questions } %}
 </div>
 
