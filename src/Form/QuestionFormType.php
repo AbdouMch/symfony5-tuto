@@ -5,14 +5,13 @@ namespace App\Form;
 use App\Entity\Question;
 use App\Entity\User;
 use App\Form\Type\SpellSelectTextType;
+use App\Repository\SpellRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -21,10 +20,12 @@ class QuestionFormType extends AbstractType
     public const WEB_MODE = 'WEB';
     public const API_MODE = 'API';
     private UrlGeneratorInterface $urlGenerator;
+    private SpellRepository $spellRepository;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator, SpellRepository $spellRepository)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->spellRepository = $spellRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -53,10 +54,11 @@ class QuestionFormType extends AbstractType
                 'search_field' => $spellSearchField,
                 'api_path' => 'api_v1_spells_list',
                 'choice_value' => 'name',
-            ])
-        ;
+                'choice_translation_domain' => 'spell',
+                'choice_label' => 'name',
+            ]);
 
-        $this->addToUserField($builder, $options['data'] ?? null);
+//        $this->addToUserField($builder, $options['data'] ?? null);
 
         if ($options['include_asked_at']) {
             $builder->add('askedAt', DateTimeType::class, [
@@ -75,7 +77,7 @@ class QuestionFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-           'data_class' => Question::class,
+            'data_class' => Question::class,
             'translation_domain' => 'question',
             'mode' => self::WEB_MODE,
             'include_asked_at' => false,

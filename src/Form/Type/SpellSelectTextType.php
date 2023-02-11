@@ -2,6 +2,7 @@
 
 namespace App\Form\Type;
 
+use App\Entity\Spell;
 use App\Form\DataTransformer\StringToSpellTransformer;
 use App\Repository\SpellRepository;
 use Symfony\Component\Form\AbstractType;
@@ -34,6 +35,7 @@ class SpellSelectTextType extends AbstractType
         $resolver->setDefaults([
             'invalid_message' => 'question.spell.invalid',
             'search_field' => 'name',
+            'entity' => Spell::class,
         ]);
     }
 }
