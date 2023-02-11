@@ -10,6 +10,7 @@ class CommentController extends BaseController
 {
     /**
      * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
+     *
      * @Route("/comments/{id}/vote/{direction<up|down>}", methods="POST")
      */
     public function commentVote($id, $direction, LoggerInterface $logger, LoggerInterface $votingLogger)

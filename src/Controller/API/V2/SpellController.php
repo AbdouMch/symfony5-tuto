@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Rest\Route("/spells")
+ *
  * @IsGranted("ROLE_SPELL_READ")
  */
 class SpellController extends BaseApiController
@@ -38,6 +39,7 @@ class SpellController extends BaseApiController
 
     /**
      * @Rest\Post("", name="spell_create")
+     *
      * @Rest\View(serializerGroups={"api:spell:details", "api:response", "api:user"})
      */
     public function create(Request $request): View

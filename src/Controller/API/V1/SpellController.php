@@ -20,12 +20,14 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 /**
  * @Rest\Route("/spells")
+ *
  * @IsGranted("ROLE_SPELL_READ")
  */
 class SpellController extends BaseApiController
 {
     /**
      * @Route("", name="api_v1_spells_list", methods="GET")
+     *
      * @Rest\QueryParam(name="name", map=true, nullable=true, description="search by spell name")
      * @Rest\QueryParam(name="constant_code", map=true, nullable=true, description="search by spell constant code")
      * @Rest\QueryParam(name="owner", map=true, nullable=true, description="search by owner id")

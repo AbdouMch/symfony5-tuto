@@ -115,6 +115,7 @@ class RegistrationController extends AbstractController
 
     /**
      * @Route("/resend-verification-email", name="app_resend_verification_email")
+     *
      * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
      */
     public function resendVerificationEmail(

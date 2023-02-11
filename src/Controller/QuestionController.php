@@ -49,6 +49,7 @@ class QuestionController extends BaseController
 
     /**
      * @IsGranted("IS_VERIFIED")
+     *
      * @Route("/question/create", name="app_question_create")
      */
     public function create(Request $request, QuestionRepository $questionRepository): Response
@@ -75,6 +76,7 @@ class QuestionController extends BaseController
 
     /**
      * @IsGranted("EDIT", subject="question")
+     *
      * @Route("/question/{id}/edit", name="app_question_edit")
      */
     public function edit(Question $question, Request $request, EntityManagerInterface $em): Response
@@ -101,6 +103,7 @@ class QuestionController extends BaseController
 
     /**
      * @IsGranted("ROLE_QUESTION_DELETE")
+     *
      * @Route("/question/{id}/delete")
      */
     public function delete(int $id): Response
@@ -110,6 +113,7 @@ class QuestionController extends BaseController
 
     /**
      * @IsGranted("IS_VERIFIED")
+     *
      * @Route("/questions", name="app_questions_list")
      */
     public function list(QuestionRepository $questionRepository): Response
@@ -123,6 +127,7 @@ class QuestionController extends BaseController
 
     /**
      * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
+     *
      * @Route("/questions/partial-list", options={"expose"=true}, name="app_questions_partial_list")
      */
     public function partialList(QuestionRepository $questionRepository): Response

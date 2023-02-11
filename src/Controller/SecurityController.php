@@ -33,6 +33,7 @@ class SecurityController extends BaseController
 
     /**
      * @IsGranted("IS_AUTHENTICATED_FULLY")
+     *
      * @Route("/change-password", name="app_change_password")
      */
     public function changPassword(): Response
@@ -43,6 +44,7 @@ class SecurityController extends BaseController
     /**
      * @Route("/authentication/2fa/enable", name="app_2fa_enable")
      *  // extra security so the user needs to be authenticated fully and not via a remember_me cookie
+     *
      * @IsGranted("ROLE_USER")
      */
     public function enable2fa(

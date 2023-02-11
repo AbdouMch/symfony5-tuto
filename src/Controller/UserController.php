@@ -15,6 +15,7 @@ class UserController extends BaseController
 {
     /**
      * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
+     *
      * @Route("/api/user", name="api_user")
      */
     public function apiUser(): JsonResponse

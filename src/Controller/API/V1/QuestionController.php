@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 /**
  * @Rest\Route("/questions")
+ *
  * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
  */
 class QuestionController extends BaseApiController

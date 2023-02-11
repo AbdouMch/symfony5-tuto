@@ -67,7 +67,8 @@
         "platform": {},
         "allow-plugins": {
             "symfony/flex": true,
-            "endroid/installer": true
+            "endroid/installer": true,
+            "php-http/discovery": true
         }
     },
     "autoload": {

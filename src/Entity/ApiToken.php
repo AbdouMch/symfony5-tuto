@@ -13,7 +13,9 @@ class ApiToken
 {
     /**
      * @ORM\Id
+     *
      * @ORM\GeneratedValue
+     *
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -30,6 +32,7 @@ class ApiToken
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="apiTokens")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private User $user;

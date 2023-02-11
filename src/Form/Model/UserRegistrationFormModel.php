@@ -12,7 +12,9 @@ class UserRegistrationFormModel
 {
     /**
      * @Assert\NotBlank(message="registration.email.empty")
+     *
      * @Assert\Email()
+     *
      * @UniqueUser(message="registration.user.unique")
      */
     public string $email;
@@ -22,6 +24,7 @@ class UserRegistrationFormModel
     public string $firstName;
     /**
      * @Assert\NotBlank(message="registration.password.empty")
+     *
      * @Assert\Length(min=10, minMessage="registration.password.min_length", max=4096)
      */
     public string $plainPassword;

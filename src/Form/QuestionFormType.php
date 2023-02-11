@@ -8,7 +8,6 @@ use App\Entity\Question;
 use App\Entity\Spell;
 use App\Entity\User;
 use App\Form\Type\AutocompleteSelectType;
-use App\Form\Type\SpellSelectTextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
