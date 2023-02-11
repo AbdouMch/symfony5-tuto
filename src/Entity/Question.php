@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\QuestionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -13,21 +15,27 @@ class Question
 {
     /**
      * @ORM\Id()
+     *
      * @ORM\GeneratedValue()
+     *
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
      * @Assert\NotBlank(message="question.title.not_blank")
+     *
      * @Assert\Length(min=4, minMessage="question.title.min_length")
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
+     *
      * @Assert\NotBlank(message="question.content.not_blank")
+     *
      * @Assert\Length(min=4, minMessage="question.content.min_length")
      */
     private $question;
@@ -44,6 +52,7 @@ class Question
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="questions")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private User $owner;
@@ -54,6 +63,22 @@ class Question
      * @ORM\ManyToOne(targetEntity=Spell::class, inversedBy="questions")
      */
     private ?Spell $spell;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="pendingQuestions")
+     *
+     * @ORM\JoinTable(
+     *     name="questions_to_users",
+     *     joinColumns={@ORM\JoinColumn(name="question_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     * )
+     */
+    private $toUsers;
+
+    public function __construct()
+    {
+        $this->toUsers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -149,6 +174,30 @@ class Question
     public function setSpell(?Spell $spell): self
     {
         $this->spell = $spell;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getToUsers()
+    {
+        return $this->toUsers;
+    }
+
+    public function addToUser(User $toUser): self
+    {
+        if (!$this->toUsers->contains($toUser)) {
+            $this->toUsers[] = $toUser;
+        }
+
+        return $this;
+    }
+
+    public function removeToUser(User $toUser): self
+    {
+        $this->toUsers->removeElement($toUser);
 
         return $this;
     }

@@ -21,6 +21,7 @@ class UserDataList extends AbstractDataList
     protected function getDataFieldsClasses(): array
     {
         return [
+            'id' => IdField::class,
             'email' => EmailField::class,
         ];
     }

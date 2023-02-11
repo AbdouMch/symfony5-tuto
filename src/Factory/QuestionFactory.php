@@ -4,6 +4,7 @@ namespace App\Factory;
 
 use App\Entity\Question;
 use App\Repository\QuestionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -44,6 +45,7 @@ final class QuestionFactory extends ModelFactory
             'askedAt' => self::faker()->dateTimeBetween('-100 days', '-1 minute'),
             'votes' => random_int(-20, 50),
             'owner' => UserFactory::new(),
+            'toUsers' => new ArrayCollection(),
         ];
     }
 

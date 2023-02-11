@@ -41,6 +41,10 @@ class StringToSpellTransformer implements DataTransformerInterface
             return null;
         }
 
+        if ($value instanceof Spell) {
+            return $value;
+        }
+
         // The Spell name field is translated.
         // If the spell is retrieved by the name field, we should reverse the translation.
         if ('name' === $this->searchField) {

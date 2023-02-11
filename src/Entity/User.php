@@ -15,13 +15,16 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ *
  * @UniqueEntity(fields={"email"}, message="registration.email.unique")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
     /**
      * @ORM\Id
+     *
      * @ORM\GeneratedValue
+     *
      * @ORM\Column(type="integer")
      */
     private int $id;
@@ -88,11 +91,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
      */
     private \DateTimeImmutable $agreedTermsAt;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Question::class, mappedBy="toUsers")
+     */
+    private Collection $pendingQuestions;
+
     public function __construct()
     {
         $this->apiTokens = new ArrayCollection();
         $this->questions = new ArrayCollection();
         $this->spells = new ArrayCollection();
+        $this->pendingQuestions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -352,6 +361,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function agreeTerms(): self
     {
         $this->agreedTermsAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Question>
+     */
+    public function getPendingQuestions(): Collection
+    {
+        return $this->pendingQuestions;
+    }
+
+    public function setPendingQuestions(ArrayCollection $questions): self
+    {
+        $this->pendingQuestions = $questions;
+
+        return $this;
+    }
+
+    public function addPendingQuestion(Question $pendingQuestion): self
+    {
+        if (!$this->pendingQuestions->contains($pendingQuestion)) {
+            $this->pendingQuestions[] = $pendingQuestion;
+            $pendingQuestion->addToUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePendingQuestion(Question $pendingQuestion): self
+    {
+        if ($this->pendingQuestions->removeElement($pendingQuestion)) {
+            $pendingQuestion->removeToUser($this);
+        }
 
         return $this;
     }

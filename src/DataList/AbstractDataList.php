@@ -41,17 +41,12 @@ abstract class AbstractDataList
         $offset = ($page - 1) * $limit;
 
         // init query builder
-        $rootAlias = $this->getRootAlias();
-        $qb = $this->entityRepository
-            ->createQueryBuilder($rootAlias)
-            ->orderBy("$rootAlias.$orderBy", $order)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
-
-        $this->addCriteria($qb, $options['filters']);
+        $qb = $this->getQueryBuilder($options['filters'], $orderBy, $order);
 
         // get result
         $spells = $qb
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
 
@@ -62,6 +57,19 @@ abstract class AbstractDataList
             $this->totalCount(),
             $this->filteredCount($qb)
         );
+    }
+
+    public function getQueryBuilder($filters, string $orderBy, string $order): QueryBuilder
+    {
+        $rootAlias = $this->getRootAlias();
+        $qb = $this->entityRepository
+            ->createQueryBuilder($rootAlias)
+            ->orderBy("$rootAlias.$orderBy", $order)
+        ;
+
+        $this->addCriteria($qb, $filters);
+
+        return $qb;
     }
 
     abstract protected function getRootAlias(): string;

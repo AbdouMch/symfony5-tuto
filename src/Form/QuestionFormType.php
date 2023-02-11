@@ -2,30 +2,34 @@
 
 namespace App\Form;
 
+use App\DataList\Spell\SpellDataList;
+use App\DataList\User\UserDataList;
 use App\Entity\Question;
+use App\Entity\Spell;
 use App\Entity\User;
+use App\Form\Type\AutocompleteSelectType;
 use App\Form\Type\SpellSelectTextType;
-use App\Repository\SpellRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
 
 class QuestionFormType extends AbstractType
 {
     public const WEB_MODE = 'WEB';
     public const API_MODE = 'API';
-    private UrlGeneratorInterface $urlGenerator;
-    private SpellRepository $spellRepository;
+    private UserDataList $userDataList;
+    private Security $security;
+    private SpellDataList $spellDataList;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator, SpellRepository $spellRepository)
+    public function __construct(UserDataList $userDataList, SpellDataList $spellDataList, Security $security)
     {
-        $this->urlGenerator = $urlGenerator;
-        $this->spellRepository = $spellRepository;
+        $this->userDataList = $userDataList;
+        $this->security = $security;
+        $this->spellDataList = $spellDataList;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -47,18 +51,20 @@ class QuestionFormType extends AbstractType
                 'help' => 'form.question.help',
                 'rows' => 5, // custom option added by TextAriaSizeExtension
             ])
-            ->add('spell', SpellSelectTextType::class, [
+            ->add('spell', AutocompleteSelectType::class, [
+                'entity' => Spell::class,
                 'label' => 'form.spell.label',
                 'placeholder' => 'form.spell.placeholder',
                 'required' => false,
                 'search_field' => $spellSearchField,
                 'api_path' => 'api_v1_spells_list',
-                'choice_value' => 'name',
+                'choice_value' => 'id',
                 'choice_translation_domain' => 'spell',
                 'choice_label' => 'name',
+                'query_builder' => $this->spellDataList->getQueryBuilder([], 'name', 'ASC'),
             ]);
 
-//        $this->addToUserField($builder, $options['data'] ?? null);
+        $this->addToUserField($builder, $builder->getData());
 
         if ($options['include_asked_at']) {
             $builder->add('askedAt', DateTimeType::class, [
@@ -89,31 +95,25 @@ class QuestionFormType extends AbstractType
         $spell = $question ? $question->getSpell() : null;
 
         if (null === $spell) {
-            $builder->remove('toUser');
+            $builder->remove('toUsers');
 
             return;
         }
 
-        $toUserChoices = $spell->getOwner() ? [$spell->getOwner()] : null;
-        $couldEditToUser = false;
+        $userId = $this->security->getUser()->getId();
 
-        $builder->add('toUser', EntityType::class, [
-            'class' => User::class,
-            'disabled' => $couldEditToUser,
-            'choice_value' => 'email',
+        $builder->add('toUsers', AutocompleteSelectType::class, [
+            'entity' => User::class,
+            'multiple' => true,
+            'required' => false,
+            'choice_value' => 'id',
             'choice_label' => 'email',
             'label' => 'form.user.label',
             'placeholder' => 'form.user.help',
-            'choices' => $toUserChoices,
-            'attr' => [
-                'class' => 'autocomplete-js',
-                'data-autocomplete-url' => $this->urlGenerator->generate('api_v1_users_list', [], UrlGeneratorInterface::ABSOLUTE_URL),
-                'data-autocomplete-search-field' => 'email',
-                'data-autocomplete-choice-value' => 'email',
-                'data-autocomplete-search-operator' => 'startsWith',
-                'data-autocomplete-page-size' => 5,
-                'data-autocomplete-search-length' => 3,
-            ],
+            'api_path' => 'api_v1_users_list',
+            'search_field' => 'email',
+            'query_builder' => $this->userDataList->getQueryBuilder([], 'id', 'ASC')
+                ->andWhere("user.id != ($userId)"),
         ]);
     }
 }

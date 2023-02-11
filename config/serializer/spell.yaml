@@ -1,5 +1,7 @@
 App\Entity\Spell:
   attributes:
+    id:
+      groups: [ 'api:spell' ]
     name:
       groups: ['api:spell', 'api:spell:details']
     constant_code:
