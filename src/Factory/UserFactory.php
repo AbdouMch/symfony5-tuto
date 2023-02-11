@@ -5,7 +5,6 @@ namespace App\Factory;
 use App\Entity\ApiToken;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use DateTimeImmutable;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;

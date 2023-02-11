@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use RuntimeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +28,7 @@ class SecurityController extends BaseController
      */
     public function logout(): void
     {
-        throw new RuntimeException('This route should not be reached');
+        throw new \RuntimeException('This route should not be reached');
     }
 
     /**

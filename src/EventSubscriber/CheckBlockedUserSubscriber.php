@@ -4,7 +4,6 @@ namespace App\EventSubscriber;
 
 use App\Entity\User;
 use App\Security\Exception\BlockedUserException;
-use RuntimeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
@@ -31,7 +30,7 @@ class CheckBlockedUserSubscriber implements EventSubscriberInterface
         $userBadge = $passport->getBadge(UserBadge::class);
         $user = $userBadge->getUser();
         if (!$user instanceof User) {
-            throw new RuntimeException('Unexpected user type');
+            throw new \RuntimeException('Unexpected user type');
         }
         if ($user->isIsBlocked()) {
             throw new BlockedUserException();

@@ -6,7 +6,6 @@ use App\Entity\Question;
 use App\Form\QuestionFormType;
 use App\Repository\QuestionRepository;
 use App\Service\Markdown\MarkdownConverterInterface;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,7 +60,7 @@ class QuestionController extends BaseController
             /** @var Question $question */
             $question = $form->getData();
             $question->setOwner($this->getUser());
-            $question->setAskedAt($question->getAskedAt() ?? new DateTime());
+            $question->setAskedAt($question->getAskedAt() ?? new \DateTime());
             $questionRepository->add($question, true);
 
             $this->addFlash('success', 'Question submitted. Enjoy !');

@@ -49,14 +49,14 @@ class Question
     private User $owner;
 
     /**
-     * The question is about a spell
+     * The question is about a spell.
      *
      * @ORM\ManyToOne(targetEntity=Spell::class, inversedBy="questions")
      */
     private ?Spell $spell;
 
     /**
-     * This question is for a user
+     * This question is for a user.
      *
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="askedQuestions")
      */

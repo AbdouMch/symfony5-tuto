@@ -2,15 +2,11 @@
 
 namespace App\Form\Exception\Api;
 
-use function array_key_exists;
-use function count;
-
-use Exception;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class FormValidationException extends Exception
+class FormValidationException extends \Exception
 {
     protected $message = 'Validation failed';
     protected FormInterface $form;
@@ -39,7 +35,7 @@ class FormValidationException extends Exception
         foreach ($form->all() as $field) {
             $fieldKey = $field->getName();
 
-            if (1 <= count($field->all())) {
+            if (1 <= \count($field->all())) {
                 $fieldErrors = $this->getErrors($field);
 
                 if (!empty($fieldErrors)) {
@@ -57,7 +53,7 @@ class FormValidationException extends Exception
     {
         foreach ($form->getErrors($deep) as $error) {
             $fieldKey = $error->getOrigin() ? $error->getOrigin()->getName() : null;
-            if (array_key_exists($fieldKey, $errors)) {
+            if (\array_key_exists($fieldKey, $errors)) {
                 $errors[$fieldKey][] = $error->getMessage();
             } else {
                 $errors[$fieldKey] = [$error->getMessage()];
