@@ -110,6 +110,7 @@ class QuestionFormType extends AbstractType
             'label' => 'form.user.label',
             'placeholder' => 'form.user.help',
             'api_path' => 'api_v1_users_list',
+            'api_parameters' => ['id' => ['neq' => $userId]],
             'search_field' => 'email',
             'query_builder' => $this->userDataList->getQueryBuilder([], 'id', 'ASC')
                 ->andWhere("user.id != ($userId)"),

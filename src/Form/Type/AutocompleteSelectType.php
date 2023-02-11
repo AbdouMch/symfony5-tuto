@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\DataTransformer\CollectionToArrayTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\ChoiceList;
-use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,7 +43,7 @@ class AutocompleteSelectType extends AbstractType
         $class .= 'autocomplete-js mb-2';
         $attr = array_merge($options['attr'], [
             'class' => $class,
-            'data-autocomplete-url' => $this->router->generate($options['api_path']),
+            'data-autocomplete-url' => $this->router->generate($options['api_path'], $options['api_parameters']),
             'data-autocomplete-search-field' => $options['search_field'],
             'data-autocomplete-choice-value' => $options['choice_value'],
             'data-autocomplete-search-operator' => $options['search_operator'],
@@ -74,12 +73,12 @@ class AutocompleteSelectType extends AbstractType
                     throw new MissingOptionsException('Option "choices" is null so "query_builder" should not be null.');
                 }
 
-                return ChoiceList::loader(
+                return ChoiceList::lazy(
                     $this,
-                    new CallbackChoiceLoader(function () use ($queryBuilder) {
+                    static function () use ($queryBuilder) {
                         return $queryBuilder->getQuery()
                             ->getResult();
-                    }),
+                    },
                     $options['entity']
                 );
             }
@@ -105,6 +104,7 @@ class AutocompleteSelectType extends AbstractType
                 'choices' => null,
                 'query_builder' => null,
                 'choice_loader' => $choiceLoader,
+                'api_parameters' => [],
             ]);
     }
 
