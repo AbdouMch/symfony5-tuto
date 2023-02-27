@@ -1,8 +1,10 @@
 # Docker containers
 PHP_CONTAINER = symfony_5
+DB_CONTAINER = database_symfony_5
 MERCURE_CONTAINER = mercure_symfo_5
 
 # Executables (local)
+DOCKER = docker
 DOCKER_COMP = docker-compose
 DOCKER_EXEC = docker exec
 PHP_EXEC = $(DOCKER_EXEC) $(PHP_CONTAINER)
@@ -24,9 +26,12 @@ help: ## Outputs this help screen
 build: ## Builds the Docker images
 	@$(DOCKER_COMP) build --pull --no-cache
 
-init: down up ## Build and start the containers
+init: down init-network up install-vendors check-db-container db-init db-fixtures yarn-i yarn-dev ## Build and start the containers
 
-reset: down up install-vendors ## Reset the project by installing or updating the php/js vendors
+reset: down up check-db-container db-init install-vendors ## Reset the project by installing or updating the php/js vendors
+
+init-network: ## Create project docker network if not exists
+	@$(DOCKER) network create symfony_5 || echo "Don't worry! We can continue..."
 
 up: ## Start the docker's containers
 	@$(DOCKER_COMP) up -d --build
@@ -56,6 +61,25 @@ composer: ## Run composer, pass the parameter "c=" to run a given command, examp
 vendor: ## Install vendors according to the current composer.lock file
 vendor: c=install --prefer-dist --no-dev --no-progress --no-scripts --no-interaction
 vendor: composer
+
+# —— Database 🗄 ——————————————————————————————————————————————————————————————
+check-db-container: ## Check db container is up
+	@$(DOCKER) info > /dev/null 2>&1 # Docker is up
+	$(DOCKER) inspect --format "{{json .State.Status }}" $(DB_CONTAINER) # Db container is running
+	sleep 10 # Waiting until Db container is 100% ready.
+
+db-init: db-clear-meta db-migrate db-fixtures ## install database schema and run doctrine fixtures
+
+db-reset: db-clear-meta db-migrate ## check database schema
+
+db-migrate: ## Execute doctrine migrations
+	$(SYMFONY) doctrine:migrations:migrate --no-interaction -vv
+
+db-clear-meta: ## Clear doctrine metadata cache
+	$(SYMFONY) doctrine:cache:clear-metadata
+
+db-fixtures:
+	$(SYMFONY) doctrine:fixtures:load --no-interaction -vv
 
 ## —— Symfony 🎵 ———————————————————————————————————————————————————————————————
 sf: ## List all Symfony commands or pass the parameter "c=" to run a given command, example: make sf c=about

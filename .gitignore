@@ -5,7 +5,6 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/public/bundles/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
@@ -21,3 +20,7 @@ yarn-error.log
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
+
+###> docker ###
+docker-compose.override.yml
+###< docker ###

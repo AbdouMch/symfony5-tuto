@@ -2,8 +2,10 @@
 <div
         id="question-partial-list"
         class="row js-question-partial-list"
-        data-realtime_channel="{{ mercure(topic) }}"
-        data-realtime_topic="{{ topic }}"
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            data-realtime_channel="{{ mercure(topic) }}"
+            data-realtime_topic="{{ topic }}"
+        {% endif %}
 >
     {% include 'question/_partial_list.html.twig' with { questions: questions } %}
 </div>
