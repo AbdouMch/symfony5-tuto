@@ -1,6 +1,7 @@
 import $ from "jquery";
 import {RealtimeChannel} from "../../common/realtime/realtime";
 import {QuestionList} from "./questionList";
+import {UrlGenerator} from "../../common/url-generator/url_generator";
 
 
 $(document).ready(() => {
@@ -11,10 +12,11 @@ $(document).ready(() => {
     $container.find('a').on('click', function (e) {
         e.preventDefault();
         const $link = $(e.currentTarget);
+        const questionId = $link.parent().data('question_id');
+        const url = UrlGenerator.generate('app_vote_cache', {id: questionId, direction: $link.data('direction')});
 
-        $.ajax({
-            url: '/comments/10/vote/' + $link.data('direction'),
-            method: 'POST'
+        $.get({
+            url,
         }).then(function (data) {
             $container.find('.js-vote-total').text(data.votes);
         });

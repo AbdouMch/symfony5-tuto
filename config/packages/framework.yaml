@@ -19,3 +19,5 @@ framework:
         default_options:
             verify_peer: false
             verify_host: false
+
+    http_cache: true

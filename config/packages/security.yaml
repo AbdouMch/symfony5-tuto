@@ -72,6 +72,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/time, role: PUBLIC_ACCESS }
         - { path: ^/authentication/2fa/qr-code, role: ROLE_USER }
         - { path: ^/authentication/qr-code, role: ROLE_USER }
         # This makes the logout route accessible during two-factor authentication. Allows the user to
