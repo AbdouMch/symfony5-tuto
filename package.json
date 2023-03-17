@@ -8,6 +8,10 @@
         "bootstrap-datetime-picker": "^2.4.4",
         "chart.js": "^3.4.1",
         "core-js": "^3.0.0",
+        "eslint-config-standard": "^17.0.0",
+        "eslint-plugin-import": "^2.25.2",
+        "eslint-plugin-n": "^15.0.0",
+        "eslint-plugin-promise": "^6.0.0",
         "fos-router": "./vendor/friendsofsymfony/jsrouting-bundle/Resources/",
         "jquery": "^3.4.1",
         "regenerator-runtime": "^0.13.2",
@@ -23,7 +27,12 @@
     },
     "dependencies": {
         "@ttskch/select2-bootstrap4-theme": "^1.5.2",
+        "eslint": "^8.0.1",
         "popper.js": "^1.16.1",
         "select2": "^4.1.0-rc.0"
-    }
+    },
+    "name": "symfony_5",
+    "version": "1.0.0",
+    "description": "tuto",
+    "main": "index.js"
 }

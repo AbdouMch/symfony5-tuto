@@ -1,0 +1,14 @@
+includes:
+  - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+  symfony:
+    container_xml_path: '%currentWorkingDirectory%/var/cache/dev/App_KernelDevDebugContainer.xml'
+    console_application_loader: '%currentWorkingDirectory%/tests/console-application.php'
+  doctrine:
+    objectManagerLoader: '%currentWorkingDirectory%/tests/object-manager.php'
+
+  level: 7
+
+services:
+# Custom services and configuration options go here, if any
