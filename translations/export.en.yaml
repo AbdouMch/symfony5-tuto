@@ -1,0 +1,11 @@
+export:
+  create:
+    success:
+      title: 'Export created successfully'
+      message: 'The %entity% export is created successfully, and is processed on background. You can navigate safely, and you will be notified when it is ready.'
+    failure:
+      title: 'Export creation failed'
+      message: 'The %entity% export has failed'
+    pending:
+      title: 'Pending export'
+      message: 'There is already an in progress export'

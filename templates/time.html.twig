@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div>
+        <p>server time {{ date() | date('d/m/Y H:i:s') }}</p>
+        <p id="js"></p>
+    </div>
+    <script>
+        document.getElementById("js").innerHTML = "browser time" + (new Date()).toLocaleTimeString();
+    </script>
+    <div>
+        <a href="{{ path('app_time') }}">This page link</a>
+    </div>
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+
