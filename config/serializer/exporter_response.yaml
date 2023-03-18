@@ -1,0 +1,10 @@
+App\Exporter\Response:
+  attributes:
+    title:
+      groups: []
+    message:
+      groups: []
+    exrtra:
+      groups: []
+    error:
+      groups: []

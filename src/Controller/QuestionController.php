@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Question;
+use App\Exporter\QuestionExporter;
 use App\Form\QuestionFormType;
 use App\Repository\QuestionRepository;
 use App\Service\DateTimeService;
@@ -148,5 +149,22 @@ class QuestionController extends BaseController
         return $this->render('question/_partial_list.html.twig', [
             'questions' => $questions,
         ]);
+    }
+
+    /**
+     * @Route("/questions/download", name="app_questions_download")
+     */
+    public function downloadQuestions(Request $request, QuestionExporter $exporter): Response
+    {
+        $user = $this->getUser();
+        $response = $exporter->create($user);
+
+        if (null !== $response->getError()) {
+            $this->addFlash('error', $response->getMessage());
+        } else {
+            $this->addFlash('success', $response->getMessage());
+        }
+
+        return $this->redirectToReferer();
     }
 }
