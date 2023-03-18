@@ -4,6 +4,7 @@
         "@popperjs/core": "^2.11.6",
         "@symfony/ux-chartjs": "file:vendor/symfony/ux-chartjs/assets",
         "@symfony/webpack-encore": "^0.28.2",
+        "@types/toastr": "^2.1.40",
         "bootstrap": "^4.4.1",
         "bootstrap-datetime-picker": "^2.4.4",
         "chart.js": "^3.4.1",
@@ -29,7 +30,8 @@
         "@ttskch/select2-bootstrap4-theme": "^1.5.2",
         "eslint": "^8.0.1",
         "popper.js": "^1.16.1",
-        "select2": "^4.1.0-rc.0"
+        "select2": "^4.1.0-rc.0",
+        "toastr": "^2.1.4"
     },
     "name": "symfony_5",
     "version": "1.0.0",
