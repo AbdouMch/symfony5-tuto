@@ -21,9 +21,6 @@
         {#    navigation    #}
         {% include 'shell.html.twig' %}
 
-        {#    flash messages    #}
-        {% include 'flash.html.twig' %}
-
         {#    email verification banner    #}
         {% if false == is_granted('IS_ANONYMOUS') and false == is_granted('IS_VERIFIED') %}
             <div class="alert alert-warning m-0 text-center"><p>Please verify your email to get full access to our site
@@ -38,5 +35,8 @@
             {{ encore_entry_script_tags('app') }}
             <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setRoutingData' }) }}"></script>
         {% endblock %}
+
+        {#    flash messages    #}
+        {% include 'flash.html.twig' %}
     </body>
 </html>

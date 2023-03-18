@@ -7,6 +7,7 @@ use App\Exporter\QuestionExporter;
 use App\Form\QuestionFormType;
 use App\Repository\QuestionRepository;
 use App\Service\DateTimeService;
+use App\Service\FlashMessageService\FlashMessageService;
 use App\Service\Markdown\MarkdownConverterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -154,15 +155,15 @@ class QuestionController extends BaseController
     /**
      * @Route("/questions/download", name="app_questions_download")
      */
-    public function downloadQuestions(Request $request, QuestionExporter $exporter): Response
+    public function downloadQuestions(FlashMessageService $flashMessage, QuestionExporter $exporter): Response
     {
         $user = $this->getUser();
         $response = $exporter->create($user);
 
         if (null !== $response->getError()) {
-            $this->addFlash('error', $response->getMessage());
+            $flashMessage->add(FlashMessageService::ERROR, $response->getTitle(), $response->getMessage());
         } else {
-            $this->addFlash('success', $response->getMessage());
+            $flashMessage->add(FlashMessageService::SUCCESS, $response->getTitle(), $response->getMessage());
         }
 
         return $this->redirectToReferer();

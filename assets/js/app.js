@@ -6,7 +6,8 @@
  */
 
 // any CSS you import will output into a single css file (app.css in this case)
-import "bootstrap";
-import '../css/app.css';
+import 'bootstrap'
+import '../css/app.css'
 // configuring fosJsRouting bundle
-import '../js/common/url-generator/install';
+import '../js/common/url-generator/install'
+import '../js/common/flash-message/flash-message'
