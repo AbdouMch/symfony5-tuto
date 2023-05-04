@@ -91,11 +91,15 @@ security:
             - ROLE_QUESTION_DELETE
             - ROLE_USER_EDIT
             - ROLE_ALLOWED_TO_SWITCH
+            - ROLE_QUESTION_MANAGER
 
         ROLE_HUMAN_RESOURCES:
             - ROLE_USER_EDIT
         ROLE_USER:
             - ROLE_SPELL_READ
+        ROLE_QUESTION_MANAGER:
+            - ROLE_QUESTIONS_EXPORT
+
 
 when@test:
     security:

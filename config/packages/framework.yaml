@@ -19,3 +19,9 @@ framework:
         default_options:
             verify_peer: false
             verify_host: false
+
+    rate_limiter:
+        question_export:
+            policy: 'fixed_window'
+            limit: 1
+            interval: '15 minutes'
