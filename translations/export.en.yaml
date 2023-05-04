@@ -9,3 +9,6 @@ export:
     pending:
       title: 'Pending export'
       message: 'There is already an in progress export'
+    too_many_request:
+      title: 'Too many export request'
+      message: 'You have made too many export attempts. Please try again after {retry_after}!'

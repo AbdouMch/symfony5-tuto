@@ -57,7 +57,8 @@ RUN pecl install apcu && \
     xdebug \
     opcache \
     && docker-php-ext-configure intl \
-    && docker-php-ext-install pdo_mysql gd intl zip calendar dom mbstring zip gd xsl;
+    && docker-php-ext-configure sysvsem --enable-sysvsem \
+    && docker-php-ext-install pdo_mysql gd intl zip calendar dom mbstring zip gd xsl sysvsem;
 
 COPY ./conf.d/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 

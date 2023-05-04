@@ -6,7 +6,9 @@
             <div class="row mb-3">
                 <div class="col">
                     <a class="btn btn-question" href="{{ path('app_question_create') }}">Ask a Question</a>
-                    <a class="btn btn-question" href="{{ path('app_questions_download') }}">Export list</a>
+                    {% if is_granted('ROLE_QUESTIONS_EXPORT') %}
+                        <a class="btn btn-question" href="{{ path('app_questions_download') }}">Export list</a>
+                    {% endif %}
                 </div>
             </div>
         {% endif %}

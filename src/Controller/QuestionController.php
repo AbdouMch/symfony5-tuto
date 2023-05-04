@@ -13,7 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QuestionController extends BaseController
 {
@@ -154,10 +156,33 @@ class QuestionController extends BaseController
 
     /**
      * @Route("/questions/download", name="app_questions_download")
+     *
+     * @IsGranted("ROLE_QUESTIONS_EXPORT")
      */
-    public function downloadQuestions(FlashMessageService $flashMessage, QuestionExporter $exporter): Response
-    {
+    public function downloadQuestions(
+        FlashMessageService $flashMessage,
+        QuestionExporter $exporter,
+        RateLimiterFactory $questionExportLimiter,
+        TranslatorInterface $translator
+    ): Response {
         $user = $this->getUser();
+        $limiter = $questionExportLimiter->create("{$user->getUserIdentifier()}::{$user->getId()}");
+
+        $limit = $limiter->consume();
+
+        if (false === $limit->isAccepted()) {
+            $flashMessage->add(
+                FlashMessageService::ERROR,
+                $translator->trans('export.create.too_many_request.title', [], 'export'),
+                $translator->trans(
+                    'export.create.too_many_request.message',
+                    ['{retry_after}' => $limit->getRetryAfter()->format('d/m/Y H:i')],
+                    'export'
+                )
+            );
+
+            return $this->redirectToReferer();
+        }
         $response = $exporter->create($user);
 
         if (null !== $response->getError()) {
