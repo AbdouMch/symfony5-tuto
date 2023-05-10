@@ -170,19 +170,19 @@ class QuestionController extends BaseController
 
         $limit = $limiter->consume();
 
-        if (false === $limit->isAccepted()) {
-            $flashMessage->add(
-                FlashMessageService::ERROR,
-                $translator->trans('export.create.too_many_request.title', [], 'export'),
-                $translator->trans(
-                    'export.create.too_many_request.message',
-                    ['{retry_after}' => $limit->getRetryAfter()->format('d/m/Y H:i')],
-                    'export'
-                )
-            );
-
-            return $this->redirectToReferer();
-        }
+//        if (false === $limit->isAccepted()) {
+//            $flashMessage->add(
+//                FlashMessageService::ERROR,
+//                $translator->trans('export.create.too_many_request.title', [], 'export'),
+//                $translator->trans(
+//                    'export.create.too_many_request.message',
+//                    ['{retry_after}' => $limit->getRetryAfter()->format('d/m/Y H:i')],
+//                    'export'
+//                )
+//            );
+//
+//            return $this->redirectToReferer();
+//        }
         $response = $exporter->create($user);
 
         if (null !== $response->getError()) {

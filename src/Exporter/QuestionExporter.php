@@ -16,12 +16,15 @@ class QuestionExporter
     private MessageBusInterface $bus;
     private EntityManagerInterface $em;
     private TranslatorInterface $translator;
+    private QuestionExportCache $cache;
 
     public function __construct(
         MessageBusInterface $bus,
         EntityManagerInterface $em,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        QuestionExportCache $cache
     ) {
+        $this->cache = $cache;
         $this->bus = $bus;
         $this->em = $em;
         $this->translator = $translator;
@@ -29,29 +32,35 @@ class QuestionExporter
 
     public function create(User $user): Response
     {
-        $userId = $user->getId();
-
-        $exportRepository = $this->em->getRepository(Export::class);
-
-        $export = $exportRepository->findOneBy([
-            'userId' => $userId,
-            'entity' => Question::class,
-            'status' => [Export::PENDING, Export::IN_PROGRESS],
-        ]);
+        $export = $this->cache->getExportForUser($user);
 
         if (null !== $export) {
-            return new Response(
-                $this->translator->trans('export.create.pending.title', [], 'export'),
-                $this->translator->trans('export.create.pending.message', ['%entity%' => 'question'], 'export'),
-                $export,
-                null,
-                'export already launched'
-            );
+            if (Export::COMPLETE === $export->getStatus()) {
+                $response = new Response(
+                    $this->translator->trans('export.create.complete.title', [], 'export'),
+                    $this->translator->trans('export.create.complete.message', ['{filename}' => $export->getData()], 'export'),
+                    $export,
+                    null,
+                    'available export file'
+                );
+            } else {
+                $response = new Response(
+                    $this->translator->trans('export.create.pending.title', [], 'export'),
+                    $this->translator->trans('export.create.pending.message', [], 'export'),
+                    $export,
+                    null,
+                    'export already launched'
+                );
+            }
+
+            return $response;
         }
 
-        $export = ExportFactory::create(Question::class, $userId, null);
+        $export = ExportFactory::create(Question::class, $user->getId(), null);
         $this->em->persist($export);
         $this->em->flush();
+
+        $this->cache->saveExportForUser($user, $export);
 
         $this->bus->dispatch(
             new QuestionExport($export->getId())

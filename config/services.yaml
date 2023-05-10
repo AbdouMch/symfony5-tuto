@@ -54,3 +54,7 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postPersist, entity: App\Entity\Question }
             - { name: doctrine.event_listener, event: postUpdate, entity: App\Entity\Question }
+
+    App\Exporter\QuestionExportCache:
+        arguments:
+            $client: '@snc_redis.default'

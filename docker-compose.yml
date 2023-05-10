@@ -23,9 +23,11 @@ services:
     depends_on:
       - database_symfony_5
       - mercure_symfo_5
+      - redis_symfo_5
     links:
       - database_symfony_5
       - mercure_symfo_5
+      - redis_symfo_5
     ports:
       - ${HTTP_PORT}:80
       - ${HTTPS_PORT}:443
@@ -69,6 +71,16 @@ services:
     networks:
       - symfony_5
 ###< symfony/mercure-bundle ###
+
+  redis_symfo_5:
+    container_name: redis_symfo_5
+    image: redis:7.0.11-alpine
+    ports:
+      - ${REDIS_PORT}:6379
+    volumes:
+      - ${REDIS_PATH}:/data:cached
+    networks:
+      - symfony_5
 
 networks:
   symfony_5:
