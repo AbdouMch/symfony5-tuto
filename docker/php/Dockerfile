@@ -52,10 +52,12 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
 
 RUN pecl install apcu && \
 	pecl install xdebug-3.1.5 && \
+	pecl install redis && \
     pecl clear-cache && \
 	docker-php-ext-enable apcu \
     xdebug \
     opcache \
+    redis \
     && docker-php-ext-configure intl \
     && docker-php-ext-configure sysvsem --enable-sysvsem \
     && docker-php-ext-install pdo_mysql gd intl zip calendar dom mbstring zip gd xsl sysvsem;

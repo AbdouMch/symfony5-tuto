@@ -22,7 +22,9 @@
         "scheb/2fa-totp": "^5.13",
         "sensio/framework-extra-bundle": "^6.0",
         "sentry/sentry-symfony": "^4.3",
+        "snc/redis-bundle": "^4.6",
         "symfony/asset": "5.4.*",
+        "symfony/cache": "5.4.*",
         "symfony/console": "5.4.*",
         "symfony/debug-bundle": "5.4.*",
         "symfony/doctrine-messenger": "5.4.*",
@@ -52,7 +54,8 @@
         "twig/cssinliner-extra": "^3.4",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/markdown-extra": "^3.4",
-        "twig/twig": "^2.12|^3.0"
+        "twig/twig": "^2.12|^3.0",
+        "ext-redis": "*"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",

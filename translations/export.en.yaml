@@ -12,3 +12,6 @@ export:
     too_many_request:
       title: 'Too many export request'
       message: 'You have made too many export attempts. Please try again after {retry_after}!'
+    complete:
+      title: 'You have an available export'
+      message: 'There is an available export file. You can download it from <a href={filename} title="export file">download</a>'
