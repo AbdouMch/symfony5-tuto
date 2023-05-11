@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "ext-redis": "*",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/doctrine-migrations-bundle": "^3.2",
@@ -23,6 +24,7 @@
         "sensio/framework-extra-bundle": "^6.0",
         "sentry/sentry-symfony": "^4.3",
         "snc/redis-bundle": "^4.6",
+        "stof/doctrine-extensions-bundle": "^1.7",
         "symfony/asset": "5.4.*",
         "symfony/cache": "5.4.*",
         "symfony/console": "5.4.*",
@@ -54,8 +56,7 @@
         "twig/cssinliner-extra": "^3.4",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/markdown-extra": "^3.4",
-        "twig/twig": "^2.12|^3.0",
-        "ext-redis": "*"
+        "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",

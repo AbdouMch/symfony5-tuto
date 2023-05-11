@@ -5,8 +5,8 @@ namespace App\EventListener\Doctrine;
 use App\Entity\Question;
 use App\Entity\User;
 use App\Exporter\QuestionExportCache;
-use Doctrine\ORM\Event\PostPersistEventArgs;
-use Doctrine\ORM\Event\PostUpdateEventArgs;
+use App\Exporter\QuestionExportLimiter;
+use App\Repository\QuestionRepository;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Security\Core\Security;
@@ -16,25 +16,30 @@ class QuestionListener
     private HubInterface $mercureHub;
     private QuestionExportCache $cache;
     private Security $security;
+    private QuestionExportLimiter $questionExportLimiter;
+    private QuestionRepository $questionRepository;
 
-    public function __construct(HubInterface $hub, QuestionExportCache $cache, Security $security)
-    {
+    public function __construct(
+        HubInterface $hub,
+        QuestionExportCache $cache,
+        Security $security,
+        QuestionExportLimiter $questionExportLimiter,
+        QuestionRepository $questionRepository
+    ) {
         $this->mercureHub = $hub;
         $this->cache = $cache;
         $this->security = $security;
+        $this->questionExportLimiter = $questionExportLimiter;
+        $this->questionRepository = $questionRepository;
     }
 
-    public function postPersist(PostPersistEventArgs $args): void
+    public function postPersist(Question $question): void
     {
-        /** @var Question $question */
-        $question = $args->getObject();
         $this->handleUpdate($question);
     }
 
-    public function postUpdate(PostUpdateEventArgs $args): void
+    public function postUpdate(Question $question): void
     {
-        /** @var Question $question */
-        $question = $args->getObject();
         $this->handleUpdate($question);
     }
 
@@ -54,5 +59,7 @@ class QuestionListener
         $user = $this->security->getUser();
 
         $this->cache->deleteExportForUser($user);
+        $this->questionExportLimiter->reset($user);
+        $this->questionRepository->deleteCachedKey(QuestionRepository::LAST_UPDATED_CACHE_KEY);
     }
 }

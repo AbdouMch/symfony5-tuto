@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity()
  */
 class Export
 {
+    use TimestampableEntity;
+
     public const IN_PROGRESS = 'in_progress';
     public const PENDING = 'pending';
     public const COMPLETE = 'complete';

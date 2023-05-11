@@ -166,23 +166,7 @@ class QuestionController extends BaseController
         TranslatorInterface $translator
     ): Response {
         $user = $this->getUser();
-        $limiter = $questionExportLimiter->create("{$user->getUserIdentifier()}::{$user->getId()}");
 
-        $limit = $limiter->consume();
-
-//        if (false === $limit->isAccepted()) {
-//            $flashMessage->add(
-//                FlashMessageService::ERROR,
-//                $translator->trans('export.create.too_many_request.title', [], 'export'),
-//                $translator->trans(
-//                    'export.create.too_many_request.message',
-//                    ['{retry_after}' => $limit->getRetryAfter()->format('d/m/Y H:i')],
-//                    'export'
-//                )
-//            );
-//
-//            return $this->redirectToReferer();
-//        }
         $response = $exporter->create($user);
 
         if (null !== $response->getError()) {

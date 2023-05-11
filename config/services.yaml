@@ -52,8 +52,8 @@ services:
 
     App\EventListener\Doctrine\QuestionListener:
         tags:
-            - { name: doctrine.event_listener, event: postPersist, entity: App\Entity\Question }
-            - { name: doctrine.event_listener, event: postUpdate, entity: App\Entity\Question }
+            - { name: doctrine.orm.entity_listener, event: postPersist, entity: App\Entity\Question }
+            - { name: doctrine.orm.entity_listener, event: postUpdate, entity: App\Entity\Question }
 
     App\Exporter\QuestionExportCache:
         arguments:
