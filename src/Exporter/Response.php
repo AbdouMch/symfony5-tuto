@@ -8,7 +8,7 @@ class Response
 {
     private string $title;
     private string $message;
-    private Export $export;
+    private ?Export $export;
     private ?string $error;
     /**
      * @var mixed
@@ -18,7 +18,7 @@ class Response
     /**
      * @param mixed $extra
      */
-    public function __construct(string $title, string $message, Export $export, $extra, ?string $error)
+    public function __construct(string $title, string $message, ?Export $export, $extra, ?string $error)
     {
         $this->title = $title;
         $this->message = $message;
@@ -37,7 +37,7 @@ class Response
         return $this->message;
     }
 
-    public function getExport(): Export
+    public function getExport(): ?Export
     {
         return $this->export;
     }

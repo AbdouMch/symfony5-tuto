@@ -17,24 +17,46 @@ class QuestionExporter
     private EntityManagerInterface $em;
     private TranslatorInterface $translator;
     private QuestionExportCache $cache;
+    private QuestionExportLimiter $questionExportLimiter;
 
     public function __construct(
         MessageBusInterface $bus,
         EntityManagerInterface $em,
         TranslatorInterface $translator,
-        QuestionExportCache $cache
+        QuestionExportCache $cache,
+        QuestionExportLimiter $questionExportLimiter
     ) {
         $this->cache = $cache;
         $this->bus = $bus;
         $this->em = $em;
         $this->translator = $translator;
+        $this->questionExportLimiter = $questionExportLimiter;
     }
 
     public function create(User $user): Response
     {
+        $limiter = $this->questionExportLimiter->getLimiter($user);
+        $limit = $limiter->consume();
+
+        if (false === $limit->isAccepted()) {
+            return new Response(
+                $this->translator->trans('export.create.too_many_request.title', [], 'export'),
+                $this->translator->trans(
+                    'export.create.too_many_request.message',
+                    ['{retry_after}' => $limit->getRetryAfter()->format('d/m/Y H:i')],
+                    'export'
+                ),
+                null,
+                null,
+                'too many requests'
+            );
+        }
+
+        $lastQuestionUpdatedAt = $this->em->getRepository(Question::class)->getLastUpdatedAt();
+
         $export = $this->cache->getExportForUser($user);
 
-        if (null !== $export) {
+        if (null !== $export && $lastQuestionUpdatedAt < $export->getCreatedAt()) {
             if (Export::COMPLETE === $export->getStatus()) {
                 $response = new Response(
                     $this->translator->trans('export.create.complete.title', [], 'export'),

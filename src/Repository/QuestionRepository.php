@@ -15,6 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class QuestionRepository extends ServiceEntityRepository
 {
+    public const LAST_UPDATED_CACHE_KEY = 'question_last_updated_at';
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Question::class);
@@ -54,6 +56,33 @@ class QuestionRepository extends ServiceEntityRepository
         return $qb->setMaxResults($count)
             ->getQuery()
             ->getResult();
+    }
+
+    public function getLastUpdatedAt(): ?\DateTime
+    {
+        $lastUpdatedAt = $this->createQueryBuilder('e')
+            ->select('e.updatedAt')
+            ->orderBy('e.updatedAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->enableResultCache(750, self::LAST_UPDATED_CACHE_KEY)
+            ->getOneOrNullResult()
+        ;
+
+        if (null !== $lastUpdatedAt) {
+            return current($lastUpdatedAt);
+        }
+
+        return null;
+    }
+
+    public function deleteCachedKey(string $cacheKey): void
+    {
+        $cache = $this->_em->getConfiguration()->getResultCache();
+
+        if (null !== $cache) {
+            $cache->deleteItem($cacheKey);
+        }
     }
 
     private function addIsAskedQueryBuilder(QueryBuilder $qb = null): QueryBuilder
