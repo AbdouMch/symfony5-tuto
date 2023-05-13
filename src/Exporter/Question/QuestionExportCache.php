@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exporter;
+namespace App\Exporter\Question;
 
 use App\Entity\Export;
 use App\Entity\ExportStatus;

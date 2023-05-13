@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Question;
-use App\Exporter\QuestionExporter;
+use App\Exporter\Question\QuestionExporter;
 use App\Form\QuestionFormType;
 use App\Repository\QuestionRepository;
 use App\Service\DateTimeService;

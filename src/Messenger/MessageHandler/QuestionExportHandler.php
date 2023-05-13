@@ -5,7 +5,7 @@ namespace App\Messenger\MessageHandler;
 use App\Entity\Export;
 use App\Entity\ExportStatus;
 use App\Entity\User;
-use App\Exporter\QuestionExportCache;
+use App\Exporter\Question\QuestionExportCache;
 use App\Messenger\Message\QuestionExport;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

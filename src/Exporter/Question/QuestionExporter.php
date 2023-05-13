@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Exporter;
+namespace App\Exporter\Question;
 
 use App\Entity\ExportStatus;
 use App\Entity\Question;
 use App\Entity\User;
+use App\Exporter\Response;
 use App\Factory\ExportFactory;
 use App\Messenger\Message\QuestionExport;
 use Doctrine\ORM\EntityManagerInterface;
@@ -54,8 +55,9 @@ class QuestionExporter
 
         $export = $this->cache->getExportForUser($user);
         $completedStatus = $this->em->getRepository(ExportStatus::class)->findOneByConstantCode(ExportStatus::COMPLETED);
+        $questionsLastUpdatedAt = $this->em->getRepository(Question::class)->getLastUpdatedAt();
 
-        if (null !== $export) {
+        if (null !== $export && $questionsLastUpdatedAt < $export->getCreatedAt()) {
             if ($completedStatus->getConstantCode() === $export->getStatus()->getConstantCode()) {
                 $response = new Response(
                     $this->translator->trans('export.create.complete.title', [], 'export'),
