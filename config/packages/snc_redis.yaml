@@ -10,4 +10,7 @@ snc_redis:
       type: phpredis
       alias: default
       dsn: '%env(REDIS_URL)%/%env(REDIS_DEFAULT_DB)%'
-      logging: '%kernel.debug%'
+    doctrine:
+      type: phpredis
+      alias: doctrine
+      dsn: '%env(REDIS_URL)%/%env(REDIS_DOCTRINE_DB)%'

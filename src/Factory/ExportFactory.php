@@ -12,7 +12,6 @@ final class ExportFactory
         $export->setEntity($entity)
             ->setUserId($userId)
             ->setProgress(0)
-            ->setStatus(Export::PENDING)
             ->setData($data);
 
         return $export;

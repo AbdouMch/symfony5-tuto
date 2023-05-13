@@ -2,7 +2,7 @@
 
 namespace App\Exporter;
 
-use App\Entity\Export;
+use App\Entity\ExportStatus;
 use App\Entity\Question;
 use App\Entity\User;
 use App\Factory\ExportFactory;
@@ -52,15 +52,14 @@ class QuestionExporter
             );
         }
 
-        $lastQuestionUpdatedAt = $this->em->getRepository(Question::class)->getLastUpdatedAt();
-
         $export = $this->cache->getExportForUser($user);
+        $completedStatus = $this->em->getRepository(ExportStatus::class)->findOneByConstantCode(ExportStatus::COMPLETED);
 
-        if (null !== $export && $lastQuestionUpdatedAt < $export->getCreatedAt()) {
-            if (Export::COMPLETE === $export->getStatus()) {
+        if (null !== $export) {
+            if ($completedStatus->getConstantCode() === $export->getStatus()->getConstantCode()) {
                 $response = new Response(
                     $this->translator->trans('export.create.complete.title', [], 'export'),
-                    $this->translator->trans('export.create.complete.message', ['{filename}' => $export->getData()], 'export'),
+                    $this->translator->trans('export.create.complete.message', ['{filename}' => $export->getResult()], 'export'),
                     $export,
                     null,
                     'available export file'
@@ -77,8 +76,11 @@ class QuestionExporter
 
             return $response;
         }
+        $pendingStatus = $this->em->getRepository(ExportStatus::class)->findOneByConstantCode(ExportStatus::PENDING);
 
         $export = ExportFactory::create(Question::class, $user->getId(), null);
+        $export->setStatus($pendingStatus);
+
         $this->em->persist($export);
         $this->em->flush();
 
