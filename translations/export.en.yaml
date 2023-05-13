@@ -1,4 +1,9 @@
 export:
+  status:
+    pending: 'Pending'
+    in_progress: 'In progress'
+    completed: 'Completed'
+    failed: 'Failed'
   create:
     success:
       title: 'Export created successfully'

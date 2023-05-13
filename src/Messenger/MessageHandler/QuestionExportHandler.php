@@ -3,6 +3,7 @@
 namespace App\Messenger\MessageHandler;
 
 use App\Entity\Export;
+use App\Entity\ExportStatus;
 use App\Entity\User;
 use App\Exporter\QuestionExportCache;
 use App\Messenger\Message\QuestionExport;
@@ -31,8 +32,11 @@ class QuestionExportHandler implements MessageHandlerInterface
         /** @var User $user */
         $user = $this->em->getRepository(User::class)->find($export->getUserId());
         $filename = sprintf('/questions-%s.pdf', $user->getId());
-        $export->setStatus(Export::COMPLETE)
-            ->setData($filename)
+
+        $completedStatus = $this->em->getRepository(ExportStatus::class)->findOneByConstantCode(ExportStatus::COMPLETED);
+
+        $export->setStatus($completedStatus)
+            ->setResult($filename)
             ->setProgress(100);
 
         $this->em->flush();

@@ -3,7 +3,7 @@
 namespace App\Exporter;
 
 use App\Entity\Export;
-use App\Entity\Question;
+use App\Entity\ExportStatus;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
@@ -22,12 +22,8 @@ class QuestionExportCache extends RedisAdapter
     public function getExportForUser(User $user): ?Export
     {
         return $this->get((string) $user->getId(), function () use ($user) {
-            /* @var Export|null $export */
-            return $this->em->getRepository(Export::class)->findOneBy([
-                'userId' => $user->getId(),
-                'entity' => Question::class,
-                'status' => [Export::PENDING, Export::IN_PROGRESS],
-            ]);
+            return $this->em->getRepository(Export::class)
+                ->findByUserAndStatus($user, [ExportStatus::PENDING, ExportStatus::IN_PROGRESS]);
         });
     }
 

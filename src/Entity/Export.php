@@ -2,20 +2,16 @@
 
 namespace App\Entity;
 
+use App\Repository\ExportRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass=ExportRepository::class)
  */
 class Export
 {
     use TimestampableEntity;
-
-    public const IN_PROGRESS = 'in_progress';
-    public const PENDING = 'pending';
-    public const COMPLETE = 'complete';
-    public const FAILED = 'failed';
 
     /**
      * @ORM\Id
@@ -37,11 +33,6 @@ class Export
     private int $progress = 0;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private string $status;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private int $userId;
@@ -55,6 +46,13 @@ class Export
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $result;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ExportStatus::class)
+     *
+     * @ORM\JoinColumn(name="export_status_id", referencedColumnName="id", nullable=true)
+     */
+    private ExportStatus $status;
 
     public function setId(int $id): void
     {
@@ -86,18 +84,6 @@ class Export
     public function setProgress(int $progress): self
     {
         $this->progress = $progress;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
 
         return $this;
     }
@@ -134,6 +120,18 @@ class Export
     public function setResult(?string $result): self
     {
         $this->result = $result;
+
+        return $this;
+    }
+
+    public function getStatus(): ExportStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(ExportStatus $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
