@@ -58,7 +58,7 @@ class QuestionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getLastUpdatedAt(): ?\DateTime
+    public function getLastUpdatedAt(): \DateTime
     {
         $lastUpdatedAt = $this->createQueryBuilder('e')
             ->select('e.updatedAt')
@@ -73,7 +73,7 @@ class QuestionRepository extends ServiceEntityRepository
             return current($lastUpdatedAt);
         }
 
-        return null;
+        return new \DateTime();
     }
 
     public function deleteCachedKey(string $cacheKey): void

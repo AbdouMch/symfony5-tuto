@@ -4,8 +4,8 @@ namespace App\EventListener\Doctrine;
 
 use App\Entity\Question;
 use App\Entity\User;
-use App\Exporter\QuestionExportCache;
-use App\Exporter\QuestionExportLimiter;
+use App\Exporter\Question\QuestionExportCache;
+use App\Exporter\Question\QuestionExportLimiter;
 use App\Repository\QuestionRepository;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
