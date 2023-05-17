@@ -32,7 +32,10 @@ RUN apt-get update \
     libxml2-dev \
     libzip-dev \
     libonig-dev \
-    libxslt-dev;
+    libxslt-dev \
+    wkhtmltopdf \
+    xvfb \
+    ;
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     echo "fr_FR.UTF-8 UTF-8" >> /etc/locale.gen && \
@@ -63,6 +66,10 @@ RUN pecl install apcu && \
     && docker-php-ext-install pdo_mysql gd intl zip calendar dom mbstring zip gd xsl sysvsem;
 
 COPY ./conf.d/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+# configure wkhtmltopdf
+RUN ln -s /usr/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf;
+RUN chmod +x /usr/local/bin/wkhtmltopdf;
 
 # install dependencies
 COPY ./install-vendors.sh /usr/local/bin/install-vendors.sh
