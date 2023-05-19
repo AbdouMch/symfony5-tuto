@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Question;
 use App\Form\QuestionFormType;
 use App\Repository\QuestionRepository;
+use App\Service\DateTimeService;
 use App\Service\Markdown\MarkdownConverterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -17,7 +18,7 @@ class QuestionController extends BaseController
     /**
      * @Route("/", name="app_homepage")
      */
-    public function homepage(QuestionRepository $questionRepository)
+    public function homepage(QuestionRepository $questionRepository): Response
     {
         $questions = $questionRepository->findTopNewestQuestions(3);
 
@@ -29,7 +30,7 @@ class QuestionController extends BaseController
     /**
      * @Route("/question/{id}", name="app_question_show", requirements={"id"="\d+"})
      */
-    public function show(Question $question, MarkdownConverterInterface $converter)
+    public function show(Question $question, MarkdownConverterInterface $converter): Response
     {
         $answers = [
             'Make sure `your cat is sitting` purrrfectly still 🤣',
@@ -52,8 +53,11 @@ class QuestionController extends BaseController
      *
      * @Route("/question/create", name="app_question_create")
      */
-    public function create(Request $request, QuestionRepository $questionRepository): Response
-    {
+    public function create(
+        Request $request,
+        QuestionRepository $questionRepository,
+        DateTimeService $dateTimeService
+    ): Response {
         $form = $this->createForm(QuestionFormType::class);
         $form->handleRequest($request);
 
@@ -63,8 +67,9 @@ class QuestionController extends BaseController
             $question->setOwner($this->getUser());
             $question->setAskedAt($question->getAskedAt() ?? new \DateTime());
             $questionRepository->add($question, true);
-
-            $this->addFlash('success', 'Question submitted. Enjoy !');
+            $now = $dateTimeService->getUserFriendlyDatetime(new \DateTime());
+            $message = sprintf('Question submitted at %s. Enjoy!', $now->format('Y-m-d H:i'));
+            $this->addFlash('success', $message);
 
             return $this->redirectToRoute('app_questions_list');
         }
@@ -79,8 +84,12 @@ class QuestionController extends BaseController
      *
      * @Route("/question/{id}/edit", name="app_question_edit")
      */
-    public function edit(Question $question, Request $request, EntityManagerInterface $em): Response
-    {
+    public function edit(
+        Question $question,
+        Request $request,
+        EntityManagerInterface $em,
+        DateTimeService $dateTimeService
+    ): Response {
         $form = $this->createForm(QuestionFormType::class, $question, [
             'include_asked_at' => true,
         ]);
@@ -88,7 +97,9 @@ class QuestionController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
-            $this->addFlash('success', 'Question updated. Hooyaa !');
+            $now = $dateTimeService->getUserFriendlyDatetime(new \DateTime());
+            $message = sprintf('Question updated at %s. Hooyaa!', $now->format('Y-m-d H:i'));
+            $this->addFlash('success', $message);
 
             return $this->redirectToRoute('app_question_edit', [
                 'id' => $question->getId(),

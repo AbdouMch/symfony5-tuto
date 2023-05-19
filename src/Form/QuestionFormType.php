@@ -8,6 +8,7 @@ use App\Entity\Question;
 use App\Entity\Spell;
 use App\Entity\User;
 use App\Form\Type\AutocompleteSelectType;
+use App\Service\DateTimeService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -23,12 +24,18 @@ class QuestionFormType extends AbstractType
     private UserDataList $userDataList;
     private Security $security;
     private SpellDataList $spellDataList;
+    private DateTimeService $dateTimeService;
 
-    public function __construct(UserDataList $userDataList, SpellDataList $spellDataList, Security $security)
-    {
+    public function __construct(
+        UserDataList $userDataList,
+        SpellDataList $spellDataList,
+        Security $security,
+        DateTimeService $dateTimeService
+    ) {
         $this->userDataList = $userDataList;
         $this->security = $security;
         $this->spellDataList = $spellDataList;
+        $this->dateTimeService = $dateTimeService;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -66,8 +73,11 @@ class QuestionFormType extends AbstractType
         $this->addToUserField($builder, $builder->getData());
 
         if ($options['include_asked_at']) {
+            $userTimezone = $this->dateTimeService->getUserTimezone()->getName();
+
             $builder->add('askedAt', DateTimeType::class, [
                 'widget' => 'single_text',
+                'view_timezone' => $userTimezone,
                 'label' => 'form.asked_at.label',
                 'help' => 'form.asked_at.help',
                 'attr' => [
@@ -91,7 +101,7 @@ class QuestionFormType extends AbstractType
 
     protected function addToUserField(FormBuilderInterface $builder, ?Question $question): void
     {
-        $spell = $question ? $question->getSpell() : null;
+        $spell = null !== $question ? $question->getSpell() : null;
 
         if (null === $spell) {
             $builder->remove('toUsers');
