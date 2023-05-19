@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Exporter\Response;
 use App\Factory\ExportFactory;
 use App\Messenger\Message\QuestionExport;
+use App\Service\DateTimeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -19,19 +20,23 @@ class QuestionExporter
     private TranslatorInterface $translator;
     private QuestionExportCache $cache;
     private QuestionExportLimiter $questionExportLimiter;
+    private DateTimeService $dateTimeService;
 
     public function __construct(
-        MessageBusInterface $bus,
+        MessageBusInterface    $bus,
         EntityManagerInterface $em,
-        TranslatorInterface $translator,
-        QuestionExportCache $cache,
-        QuestionExportLimiter $questionExportLimiter
-    ) {
+        TranslatorInterface    $translator,
+        QuestionExportCache    $cache,
+        QuestionExportLimiter  $questionExportLimiter,
+        DateTimeService        $dateTimeService
+    )
+    {
         $this->cache = $cache;
         $this->bus = $bus;
         $this->em = $em;
         $this->translator = $translator;
         $this->questionExportLimiter = $questionExportLimiter;
+        $this->dateTimeService = $dateTimeService;
     }
 
     public function create(User $user): Response
@@ -40,11 +45,16 @@ class QuestionExporter
         $limit = $limiter->consume();
 
         if (false === $limit->isAccepted()) {
+            $retryAfter = $limit
+                ->getRetryAfter()
+                ->setTimezone(
+                    $this->dateTimeService->getUserTimezone()
+                );
             return new Response(
                 $this->translator->trans('export.create.too_many_request.title', [], 'export'),
                 $this->translator->trans(
                     'export.create.too_many_request.message',
-                    ['{retry_after}' => $limit->getRetryAfter()->format('d/m/Y H:i')],
+                    ['{retry_after}' => $retryAfter->format('d/m/Y H:i')],
                     'export'
                 ),
                 null,

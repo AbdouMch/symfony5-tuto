@@ -73,7 +73,7 @@ class QuestionExportHandler implements MessageHandlerInterface
 
     private function getExportFileName(User $user): string
     {
-        $today = (new \DateTime())->format("YY-mm-dd");
+        $today = (new \DateTime())->format("YmdHis");
 
         return sprintf("%s/questions/questions_%s_%s.pdf", $this->exportDir, $today, $user->getId());
     }
