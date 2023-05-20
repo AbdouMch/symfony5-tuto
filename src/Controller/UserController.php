@@ -43,20 +43,23 @@ class UserController extends BaseController
     }
 
     /**
+     * Get the time zone of the client and save it in a cookie (@see DateTimeService::TIMEZONE_KEY).
+     *
      * @Route("/sync-timezone", name="app_sync_timezone", options={"expose"=true})
      */
     public function syncTimezone(Request $request, DateTimeService $dateTimeService, LoggerInterface $logger): Response
     {
         $data = $request->request->get('timezone');
+        $response = new JsonResponse('', 200, [], true);
 
-        if (null !== $data && $request->hasSession()) {
+        if (null !== $data) {
             /** @var string $data */
             $data = filter_var($data, FILTER_SANITIZE_STRING);
             $validator = Validation::createValidator();
             $violations = $validator->validate($data, [new Timezone()]);
 
             if (0 !== $violations->count()) {
-                return $this->json(false);
+                return $response->setData(false);
             }
 
             try {
@@ -66,9 +69,10 @@ class UserController extends BaseController
 
                 return $this->json(false);
             }
-            $dateTimeService->saveTimezoneInSession($timezone);
+            $timezoneCookie = $dateTimeService->getTimezoneCookie($timezone);
+            $response->headers->setCookie($timezoneCookie);
         }
 
-        return $this->json(true);
+        return $response->setData(true);
     }
 }
