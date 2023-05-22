@@ -24,10 +24,12 @@ services:
       - database_symfony_5
       - mercure_symfo_5
       - redis_symfo_5
+      - elasticsearch_symfo_5
     links:
       - database_symfony_5
       - mercure_symfo_5
       - redis_symfo_5
+      - elasticsearch_symfo_5
     ports:
       - ${HTTP_PORT}:80
       - ${HTTPS_PORT}:443
@@ -79,6 +81,70 @@ services:
       - ${REDIS_PORT}:6379
     volumes:
       - ${REDIS_PATH}:/data:cached
+    networks:
+      - symfony_5
+
+  elasticsearch_symfo_5:
+    container_name: elasticsearch_symfo_5
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # 512mo HEAP
+#      - node.name=elasticsearch_symfo_5
+      - cluster.name=${ES_CLUSTER_NAME}
+#      - cluster.initial_master_nodes=off
+      - ELASTIC_PASSWORD=${ES_PASSWORD}
+      - bootstrap.memory_lock=true
+#      - xpack.security.enabled=true
+#      - xpack.security.http.ssl.enabled=false
+#      - xpack.license.self_generated.type=${ES_LICENSE}
+#      - xpack.security.http.ssl.key=certs/elasticsearch_symfo_5/elasticsearch_symfo_5.key
+#      - xpack.security.http.ssl.certificate=certs/elasticsearch_symfo_5/elasticsearch_symfo_5.crt
+#      - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+#      - xpack.security.transport.ssl.enabled=true
+#      - xpack.security.transport.ssl.key=certs/elasticsearch_symfo_5/elasticsearch_symfo_5.key
+#      - xpack.security.transport.ssl.certificate=certs/elasticsearch_symfo_5/elasticsearch_symfo_5.crt
+#      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+#      - xpack.security.transport.ssl.verification_mode=certificate
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+#    healthcheck:
+#      test:
+#        [
+#            "CMD-SHELL",
+#            "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+#        ]
+#      interval: 10s
+#      timeout: 10s
+#      retries: 120
+#    mem_limit: ${MEM_LIMIT}
+    volumes:
+#      - certs:/usr/share/elasticsearch/config/certs
+      - ${ES_PATH}:/usr/share/elasticsearch/data
+    ports:
+      - ${ES_PORT}:9200
+    networks:
+      - symfony_5
+
+  kibana_symfo_5:
+    container_name: kibana_symfo_5
+    image: docker.elastic.co/kibana/kibana:${ES_VERSION}
+    depends_on:
+      - elasticsearch_symfo_5
+    links:
+      - elasticsearch_symfo_5
+    volumes:
+      - ${KIBANA_PATH}:/usr/share/kibana/data
+    ports:
+      - ${KIBANA_PORT}:5601
+    environment:
+      - SERVERNAME=kibana
+      - ELASTICSEARCH_HOSTS=http://elasticsearch_symfo_5:9200
+      - ELASTICSEARCH_USERNAME=${KIBANA_USER}
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+#      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
     networks:
       - symfony_5
 

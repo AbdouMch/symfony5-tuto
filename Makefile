@@ -2,6 +2,7 @@
 PHP_CONTAINER = symfony_5
 DB_CONTAINER = database_symfony_5
 MERCURE_CONTAINER = mercure_symfo_5
+ES_CONTAINER = elasticsearch_symfo_5
 
 # Executables (local)
 DOCKER = docker
@@ -46,9 +47,13 @@ php: ## Enter PHP container as root
 	@echo "Entering PHP container..."
 	$(DOCKER_EXEC) -it $(PHP_CONTAINER) /bin/bash
 
-mercure: ## Enter PHP container as root
-	@echo "Entering PHP container..."
+mercure: ## Enter Mercure container as root
+	@echo "Entering Mercure container..."
 	$(DOCKER_EXEC) -it $(MERCURE_CONTAINER) /bin/sh
+
+elastic: ## Enter Elasticsearch container as root
+	@echo "Entering Elasticsearch container..."
+	$(DOCKER_EXEC) -it $(ES_CONTAINER) /bin/bash
 
 install-vendors:
 	@$(PHP_EXEC) /usr/local/bin/install-vendors.sh
