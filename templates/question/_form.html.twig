@@ -1,4 +1,34 @@
 {{ form_start(questionForm) }}
-    {{ form_widget(questionForm) }}
+    {{ form_row(questionForm.name) }}
+    {% if new_updates is not null %}
+        <div class="alert alert-primary" role="alert">
+            {{ new_updates.name }}
+        </div>
+    {% endif %}
+    {{ form_row(questionForm.question) }}
+    {% if new_updates is not null %}
+        <div class="alert alert-primary" role="alert">
+            {{ new_updates.question }}
+        </div>
+    {% endif %}
+    {{ form_row(questionForm.spell) }}
+    {% if new_updates is not null and new_updates.spell is not null %}
+        <div class="alert alert-primary" role="alert">
+            {{ new_updates.spell.name }}
+        </div>
+    {% endif %}
+    {{ form_row(questionForm.askedAt) }}
+    {% if new_updates is not null %}
+        <div class="alert alert-primary" role="alert">
+            {{ new_updates.askedAt | format_datetime('short', 'short', locale=constant('USER_LOCAL'), timezone=constant('USER_TIMEZONE')) }}
+        </div>
+    {% endif %}
+    {% if new_updates is not null %}
+        <input
+                type="hidden"
+                name="{{ field_name(questionForm.version) }}"
+                value="{{ new_updates.version }}"
+        >
+    {% endif %}
     <button type="submit" class="btn btn-primary">{{ button_text }}</button>
 {{ form_end(questionForm) }}

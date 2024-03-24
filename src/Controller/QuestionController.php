@@ -9,7 +9,9 @@ use App\Repository\QuestionRepository;
 use App\Service\DateTimeService;
 use App\Service\FlashMessageService\FlashMessageService;
 use App\Service\Markdown\MarkdownConverterInterface;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,27 +94,44 @@ class QuestionController extends BaseController
         Question $question,
         Request $request,
         EntityManagerInterface $em,
-        DateTimeService $dateTimeService
+        DateTimeService $dateTimeService,
+        FlashMessageService $flashMessage
     ): Response {
+        $newUpdates = null;
+
+        if ($request->isMethod('POST')) {
+            $uow = $em->getUnitOfWork();
+            $uow->computeChangeSet($em->getClassMetadata(get_class($question)), $question);
+            $newUpdates = $uow->getOriginalEntityData($question);
+        }
+
         $form = $this->createForm(QuestionFormType::class, $question, [
             'include_asked_at' => true,
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->flush();
-            $now = $dateTimeService->getUserFriendlyDatetime(new \DateTime());
-            $message = sprintf('Question updated at %s. Hooyaa!', $now->format('Y-m-d H:i'));
-            $this->addFlash('success', $message);
+            try {
+                $em->lock($question, LockMode::OPTIMISTIC, $question->getVersion());
 
-            return $this->redirectToRoute('app_question_edit', [
-                'id' => $question->getId(),
-            ]);
+                $em->flush();
+                $now = $dateTimeService->getUserFriendlyDatetime(new \DateTime());
+                $message = sprintf('Question updated at %s. Hooyaa!', $now->format('Y-m-d H:i'));
+                $flashMessage->add(FlashMessageService::SUCCESS, null, $message);
+
+                return $this->redirectToRoute('app_question_edit', [
+                    'id' => $question->getId(),
+                ]);
+            } catch (OptimisticLockException $exception) {
+                $flashMessage->add(FlashMessageService::ERROR, null, 'Sorry, but someone else has already changed this question. Please apply the changes again!');
+            }
         }
 
         return $this->render('question/edit.html.twig', [
             'question' => $question,
             'questionForm' => $form->createView(),
+            'new_updates' => $newUpdates,
         ]);
     }
 
