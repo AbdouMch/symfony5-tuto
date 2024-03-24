@@ -6,6 +6,9 @@
 parameters:
     app.cache_ttl: 3600
     app.exports_dir: '%kernel.project_dir%/var/exports'
+    locale: en
+    # This parameter defines the codes of the locales (languages) enabled in the application
+    locales: en|fr
 services:
     # default configuration for services in *this* file
     _defaults:

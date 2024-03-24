@@ -77,6 +77,13 @@ class Question
      */
     private $toUsers;
 
+    /**
+     * @ORM\Column(type="smallint", options={"unsigned": true})
+     *
+     * @ORM\Version()
+     */
+    private int $version = 1;
+
     public function __construct()
     {
         $this->toUsers = new ArrayCollection();
@@ -200,6 +207,18 @@ class Question
     public function removeToUser(User $toUser): self
     {
         $this->toUsers->removeElement($toUser);
+
+        return $this;
+    }
+
+    public function getVersion(): int
+    {
+        return $this->version;
+    }
+
+    public function setVersion(string $version): self
+    {
+        $this->version = $version;
 
         return $this;
     }
