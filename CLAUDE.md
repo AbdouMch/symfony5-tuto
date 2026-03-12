@@ -103,6 +103,12 @@ Docker services: PHP/Apache (`symfony_5`), MySQL 5.6 (`database_symfony_5`), Mer
 
 The app code is volume-mounted at `/srv/app` inside the container. HTTPS is served on localhost with a self-signed cert.
 
+## Frontend Assets
+
+After modifying any CSS or JS file in `assets/`, always:
+1. Run `make yarn-dev` (or `make yarn-watch`) to recompile
+2. **Hard-refresh the browser** (Ctrl+Shift+R) or clear the browser cache before verifying changes — the browser may serve the old compiled file from cache, making it appear the fix had no effect.
+
 ## Key Conventions
 
 - Doctrine annotations (not attributes) are used for ORM mapping
