@@ -27,7 +27,9 @@
                     <a href="{{ path('app_resend_verification_email') }}">Resend Verification Email</a></p></div>
         {% endif %}
 
-        {% block body %}{% endblock %}
+        <main class="flex-grow-1">
+            {% block body %}{% endblock %}
+        </main>
         <footer class="mt-5 p-3 text-center">
             Made with <i style="color: red;" class="fa fa-heart"></i> by the guys and gals at <a style="color: #444; text-decoration: underline;" href="https://symfonycasts.com">SymfonyCasts</a>
         </footer>
