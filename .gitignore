@@ -33,3 +33,7 @@ docker-compose.override.yml
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+
+###> claude ###
+.claude/settings.local.json
+###< claude ###
