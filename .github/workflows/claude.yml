@@ -19,16 +19,45 @@ jobs:
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      pull-requests: read
-      issues: read
+      contents: write
+      pull-requests: write
+      issues: write
       id-token: write
-      actions: read # Required for Claude to read CI results on PRs
+      actions: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
+      - name: Create Docker network
+        run: docker network create symfony_5 || true
+
+      - name: Start Docker services
+        run: docker-compose up -d --build
+
+      - name: Wait for MySQL to be ready
+        run: |
+          timeout 90 bash -c '
+            until docker exec database_symfony_5 mysqladmin ping -h 127.0.0.1 --silent 2>/dev/null; do
+              echo "Waiting for MySQL..."
+              sleep 3
+            done
+          '
+
+      - name: Install PHP vendors
+        run: docker exec symfony_5 composer install --no-interaction --prefer-dist
+
+      - name: Run database migrations
+        run: docker exec symfony_5 php bin/console doctrine:migrations:migrate --no-interaction
+
+      - name: Load database fixtures
+        run: docker exec symfony_5 php bin/console doctrine:fixtures:load --no-interaction
+
+      - name: Build frontend assets
+        run: |
+          docker exec symfony_5 yarn install
+          docker exec symfony_5 yarn dev
 
       - name: Run Claude Code
         id: claude
@@ -36,15 +65,27 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
 
-          # This is an optional setting that allows Claude to read CI results on PRs
+          custom_instruction: |
+              The project is already set up with all dependencies installed.
+              The server is already running at localhost/fr/. If needed, use the mcp__playwright
+              set of tools to launch a browser and interact with the app.
+
+          mcp_config: |
+            {
+              "mcpServers": {
+                "playwright": {
+                  "command": "npx",
+                  "args": [
+                    "@playwright/mcp@latest",
+                    "--allowed-origins",
+                    "localhost:3000;cdn.tailwindcss.com;esm.sh"
+                  ]
+                }
+              }
+            }
+
+          # Required for Claude to read CI results on PRs
           additional_permissions: |
             actions: read
 
-          # Optional: Give a custom prompt to Claude. If this is not specified, Claude will perform the instructions specified in the comment that tagged it.
-          # prompt: 'Update the pull request description to include a summary of changes.'
-
-          # Optional: Add claude_args to customize behavior and configuration
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
-          # claude_args: '--allowed-tools Bash(gh pr:*)'
-
+          allowed_tools: "Bash(docker:*),mcp__playwright__browser_snapshot,mcp__playwright__browser_click, mcp__playwright__browser_navigate"
