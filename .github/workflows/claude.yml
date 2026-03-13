@@ -34,7 +34,7 @@ jobs:
         run: docker network create symfony_5 || true
 
       - name: Start Docker services
-        run: docker-compose up -d --build
+        run: docker compose up -d --build
 
       - name: Wait for MySQL to be ready
         run: |
