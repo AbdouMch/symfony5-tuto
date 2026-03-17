@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Symfony 5.4 application (Q&A platform) running in Docker. It features a REST API with versioning (FosRESTBundle), real-time push notifications via Mercure, 2FA (TOTP), async message processing via Symfony Messenger, CSV/PDF export, and Redis caching.
 
+**PHP version: 7.4** — constructor property promotion and PHP 8 attributes are not available. Use traditional constructor syntax and Doctrine annotations.
+
 ## Development Setup
 
 All commands run inside Docker via `make`. The PHP container is named `symfony_5`.
