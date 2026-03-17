@@ -2,6 +2,8 @@
 
 namespace App\EventListener\Doctrine;
 
+use App\Contract\SilenceableListenerInterface;
+use App\Contract\SilenceableListenerTrait;
 use App\Entity\Question;
 use App\Entity\User;
 use App\Exporter\Question\QuestionExportCache;
@@ -11,8 +13,10 @@ use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Security\Core\Security;
 
-class QuestionListener
+class QuestionListener implements SilenceableListenerInterface
 {
+    use SilenceableListenerTrait;
+
     private HubInterface $mercureHub;
     private QuestionExportCache $cache;
     private Security $security;
@@ -45,6 +49,9 @@ class QuestionListener
 
     private function handleUpdate(Question $question): void
     {
+        if (!$this->isEnabled()) {
+            return;
+        }
         /** @var non-empty-string $data */
         $data = json_encode(['question_id' => $question->getId()], JSON_THROW_ON_ERROR);
 

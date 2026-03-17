@@ -30,10 +30,16 @@ class UTCDateTimeType extends DateTimeType
             return $value;
         }
 
+        $timezone = self::getUtc();
+
+        if (defined('USER_TIMEZONE')) {
+            $timezone = USER_TIMEZONE;
+        }
+
         $converted = \DateTime::createFromFormat(
             $platform->getDateTimeFormatString(),
             $value,
-            self::getUtc()
+            $timezone
         );
 
         if (false === $converted) {
@@ -45,6 +51,6 @@ class UTCDateTimeType extends DateTimeType
 
     private static function getUtc(): \DateTimeZone
     {
-        return self::$utc ??= new \DateTimeZone(USER_TIMEZONE);
+        return self::$utc ??= new \DateTimeZone('UTC');
     }
 }
