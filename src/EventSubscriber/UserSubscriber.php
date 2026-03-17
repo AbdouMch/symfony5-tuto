@@ -2,6 +2,8 @@
 
 namespace App\EventSubscriber;
 
+use App\Contract\SilenceableListenerInterface;
+use App\Contract\SilenceableListenerTrait;
 use App\Entity\User;
 use App\Service\Markdown\MarkdownConverterInterface;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
@@ -11,9 +13,10 @@ use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\Contracts\Service\ServiceSubscriberTrait;
 
-class UserSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
+class UserSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface, SilenceableListenerInterface
 {
     use ServiceSubscriberTrait;
+    use SilenceableListenerTrait;
 
     public function __construct(ContainerInterface $locator)
     {
@@ -22,6 +25,10 @@ class UserSubscriber implements EventSubscriberInterface, ServiceSubscriberInter
 
     public function postPersist(LifecycleEventArgs $args): void
     {
+        if (!$this->isEnabled()) {
+            return;
+        }
+
         $entity = $args->getObject();
         if (!$entity instanceof User) {
             return;

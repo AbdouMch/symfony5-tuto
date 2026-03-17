@@ -57,8 +57,17 @@ services:
 
     App\EventListener\Doctrine\QuestionListener:
         tags:
+            - { name: app.silenceable_listener }
             - { name: doctrine.orm.entity_listener, event: postPersist, entity: App\Entity\Question }
             - { name: doctrine.orm.entity_listener, event: postUpdate, entity: App\Entity\Question }
+
+    App\EventSubscriber\UserSubscriber:
+        tags:
+            - { name: app.silenceable_listener }
+
+    App\EventSubscriber\DoctrineListenerDisablerSubscriber:
+        arguments:
+            $listeners: !tagged_iterator app.silenceable_listener
 
     App\Exporter\Question\QuestionExportCache:
         arguments:
