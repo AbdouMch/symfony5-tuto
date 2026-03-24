@@ -53,3 +53,25 @@ yarn encore dev --watch
 
 If you have suggestions or questions, please feel free to
 open an issue on this repository 🙂
+
+## Claude code
+
+### Dump the stdin input for a hook
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq . > post-log.json"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
