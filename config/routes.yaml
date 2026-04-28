@@ -8,3 +8,7 @@ v2_api_controllers:
   type: annotation
   prefix: /api/v2
   name_prefix: api_v2_
+
+homepage:
+  path: /
+  controller: App\Controller\QuestionController::homepage

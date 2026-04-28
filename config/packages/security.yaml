@@ -25,14 +25,18 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api:
+            pattern: ^/api/
+            stateless: true
+            custom_authenticator:
+                - App\Security\ApiTokenAuthenticator
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator:
-                - App\Security\ApiTokenAuthenticator
             #   - App\Security\LoginFormAuthenticator
 
-            logout: true
+            logout:
+                path: app_logout
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -41,7 +45,7 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 # automatically add a remember_me cookie
-                always_remember_me: true
+                always_remember_me: false
                 # sign the REMEMBERME cookie by the password to invalidate the cookie if the user change it
                 # the cookie is signed with the password by default
                 signature_properties:
@@ -72,6 +76,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/api/docs, roles: PUBLIC_ACCESS }
         - { path: ^/authentication/2fa/qr-code, role: ROLE_USER }
         - { path: ^/authentication/qr-code, role: ROLE_USER }
         # This makes the logout route accessible during two-factor authentication. Allows the user to

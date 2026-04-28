@@ -26,7 +26,8 @@ class ExceptionEventListener
     private TranslatorInterface $translator;
 
     public function __construct(
-        string $environment, UrlGeneratorInterface $urlGenerator,
+        string $environment,
+        UrlGeneratorInterface $urlGenerator,
         SerializerInterface $serializer,
         TranslatorInterface $translator
     ) {
@@ -38,6 +39,10 @@ class ExceptionEventListener
 
     public function onKernelException(ExceptionEvent $event): void
     {
+        if ('dev' === $this->environment) {
+            return;
+        }
+
         $this->event = $event;
         $exception = $this->event->getThrowable();
         $message = $exception->getMessage();
@@ -63,7 +68,7 @@ class ExceptionEventListener
 
     private function setResponse(string $message, int $statusCode): void
     {
-        if ('dev' !== $this->environment && Response::HTTP_INTERNAL_SERVER_ERROR === $statusCode) {
+        if (Response::HTTP_INTERNAL_SERVER_ERROR === $statusCode) {
             $message = $this->translator->trans('technical_error.message', [], 'exception');
         }
 
@@ -91,12 +96,10 @@ class ExceptionEventListener
             return;
         }
 
-        if ('dev' !== $this->environment) {
-            $session = $this->event->getRequest()->getSession();
-            $session->getFlashBag()->add('error', $message);
-            $this->event->setResponse(
-                new RedirectResponse($this->urlGenerator->generate('app_homepage'))
-            );
-        }
+        $session = $this->event->getRequest()->getSession();
+        $session->getFlashBag()->add('error', $message);
+        $this->event->setResponse(
+            new RedirectResponse($this->urlGenerator->generate('app_homepage'))
+        );
     }
 }

@@ -4,9 +4,9 @@ namespace App\DoctrineExtensions\DBAL\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
-use Doctrine\DBAL\Types\DateTimeType;
+use Doctrine\DBAL\Types\DateTimeType as BaseDateTimeType;
 
-class UTCDateTimeType extends DateTimeType
+class DateTimeType extends BaseDateTimeType
 {
     private static \DateTimeZone $utc;
 
@@ -33,7 +33,7 @@ class UTCDateTimeType extends DateTimeType
         $timezone = self::getUtc();
 
         if (defined('USER_TIMEZONE')) {
-            $timezone = USER_TIMEZONE;
+            $timezone = new \DateTimeZone(USER_TIMEZONE);
         }
 
         $converted = \DateTime::createFromFormat(

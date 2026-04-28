@@ -1500,6 +1500,11 @@ batch@0.6.1:
   resolved "https://registry.npmjs.org/batch/-/batch-0.6.1.tgz"
   integrity sha1-3DQxT05nkxgJP8dgJyUl+UvyXBY=
 
+bazinga-translator@8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/bazinga-translator/-/bazinga-translator-8.0.0.tgz#a27449d61374164cb0963ba96ccfad7a5f5fec2d"
+  integrity sha512-J6fZ09Bbwh5122N7VrHACp0xZuFjfOWjyib1PD+zRThM1kxCu0k2zaYkoead0TJE9423PbRCCm3ApJdPBysG4A==
+
 big.js@^5.2.2:
   version "5.2.2"
   resolved "https://registry.npmjs.org/big.js/-/big.js-5.2.2.tgz"

@@ -82,4 +82,7 @@ config.resolve.alias = {
     'jquery': path.join(__dirname, 'node_modules/jquery/src/jquery')
 };
 
+// Resolve bazinga-translator to the global loaded via script tag in base.html.twig
+config.externals = { 'bazinga-translator': 'Translator' };
+
 module.exports = config;

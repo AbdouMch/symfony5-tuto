@@ -1,6 +1,9 @@
 "Username could not be found.": 'Invalid email or password'
 "Invalid credentials.": 'Invalid email or password'
-user:
-  blocked_account:
-    title: 'Access Denied: Blocked Account'
-    message: 'Your account is blocked for some reasons. Please contact the site admin <a href="mailto: abc@example.com">Send Email</a>'
+user.blocked_account.title: 'Access Denied: Blocked Account'
+user.blocked_account.message: 'Your account is blocked for some reasons. Please contact the site admin <a href="mailto: abc@example.com">Send Email</a>'
+form.login.title: 'Please login'
+form.login.field.email: 'Email'
+form.login.field.password: 'Password'
+form.login.field.remember_me: 'Remember me'
+form.login.button.login: 'Login'

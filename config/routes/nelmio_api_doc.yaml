@@ -1,0 +1,19 @@
+app_nelmio_ui_v1:
+    path: /api/docs/v1
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger_ui, area: v1 }
+
+app_nelmio_ui_v2:
+    path: /api/docs/v2
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger_ui, area: v2 }
+
+app_nelmio_json_v1:
+    path: /api/docs/v1.json
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger, area: v1 }
+
+app_nelmio_json_v2:
+    path: /api/docs/v2.json
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger, area: v2 }

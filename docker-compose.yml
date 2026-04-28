@@ -42,11 +42,13 @@ services:
     networks:
       - symfony_5
 
-  ###> symfony/mailer ###
-#  mailer:
-#    image: schickling/mailcatcher
-#    ports: [ "1025", "1080" ]
-  ###< symfony/mailer ###
+  ##> symfony/mailer ###
+  mailer:
+    image: schickling/mailcatcher
+    ports:
+      - ${MAIL_TRAP_SMTP}:1025
+      - ${MAIL_TRAP_UI}:1080
+  ##< symfony/mailer ###
 
 ###> symfony/mercure-bundle ###
   mercure_symfo_5:

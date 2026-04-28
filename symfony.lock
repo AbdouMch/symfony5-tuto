@@ -119,6 +119,19 @@
     "monolog/monolog": {
         "version": "2.0.2"
     },
+    "nelmio/api-doc-bundle": {
+        "version": "4.11",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "c8e0c38e1a280ab9e37587a8fa32b251d5bc1c94"
+        },
+        "files": [
+            "config/packages/nelmio_api_doc.yaml",
+            "config/routes/nelmio_api_doc.yaml"
+        ]
+    },
     "php": {
         "version": "7.2.5"
     },
@@ -557,6 +570,18 @@
     },
     "twig/twig": {
         "version": "v3.0.1"
+    },
+    "willdurand/js-translation-bundle": {
+        "version": "8.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.0",
+            "ref": "02b720a49f6d36b44d557e0b18e48bf09e0a8e07"
+        },
+        "files": [
+            "config/routes/js_translation.yaml"
+        ]
     },
     "zenstruck/foundry": {
         "version": "1.21",

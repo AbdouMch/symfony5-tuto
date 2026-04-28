@@ -1,0 +1,105 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: 'Q&A Platform API'
+            description: 'REST API — authenticate via the auth-token header'
+            version: '1.0.0'
+        components:
+            securitySchemes:
+                ApiToken:
+                    type: apiKey
+                    in: header
+                    name: auth-token
+                    description: "Value format: Bearer {identifier}.{secret}"After adding
+            schemas:
+                UserRead:
+                    type: object
+                    description: "User fields exposed by the API"
+                    properties:
+                        id:
+                            type: integer
+                            example: 1
+                        email:
+                            type: string
+                            format: email
+                            example: user@example.com
+                        firstName:
+                            type: string
+                            example: Alice
+                SpellRead:
+                    type: object
+                    description: "Spell — list view (no owner)"
+                    properties:
+                        id:
+                            type: integer
+                            example: 42
+                        name:
+                            type: string
+                            example: Fireball
+                        constantCode:
+                            type: string
+                            example: SPELL_FIREBALL
+                SpellDetails:
+                    type: object
+                    description: "Spell — detail view (includes owner)"
+                    properties:
+                        id:
+                            type: integer
+                            example: 42
+                        name:
+                            type: string
+                            example: Fireball
+                        constantCode:
+                            type: string
+                            example: SPELL_FIREBALL
+                        owner:
+                            $ref: '#/components/schemas/UserRead'
+                QuestionRead:
+                    type: object
+                    description: "Question as returned by the API"
+                    properties:
+                        name:
+                            type: string
+                            example: My question title
+                        question:
+                            type: string
+                            example: What is the nature of Fireball?
+                        spell:
+                            $ref: '#/components/schemas/SpellRead'
+                        owner:
+                            $ref: '#/components/schemas/UserRead'
+                ApiTokenRead:
+                    type: object
+                    description:  "An API Token"
+                    properties:
+                        identifier:
+                            type: string
+                            example: 1234567890
+                        createdAt:
+                            type: string
+                            format: date-time
+                            example: 2020-01-01T00:00:00+00:00
+                        updatedAt:
+                            type: string
+                            format: date-time
+                            example: 2020-01-01T00:00:00+00:00
+                        lastUsedAt:
+                            type: string
+                            format: date-time
+                            example: 2020-01-01T00:00:00+00:00
+
+    areas:
+        default:
+            path_patterns: [^/api/v]
+        v1:
+            path_patterns: [^/api/v1]
+            documentation:
+                info:
+                    title: 'Q&A Platform API — V1'
+                    version: '1.0.0'
+        v2:
+            path_patterns: [^/api/v2]
+            documentation:
+                info:
+                    title: 'Q&A Platform API — V2'
+                    version: '2.0.0'
