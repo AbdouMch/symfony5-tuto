@@ -10,7 +10,7 @@ nelmio_api_doc:
                     type: apiKey
                     in: header
                     name: auth-token
-                    description: "Value format: Bearer {identifier}.{secret}"After adding
+                    description: "Value format: Bearer {identifier}.{secret}"
             schemas:
                 UserRead:
                     type: object

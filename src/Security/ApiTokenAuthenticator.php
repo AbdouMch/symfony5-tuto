@@ -33,6 +33,7 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
+        dump($request->headers->has($this->authTokenHeader), );
         return $request->headers->has($this->authTokenHeader)
             && 0 === strpos($request->headers->get($this->authTokenHeader), 'Bearer ');
     }
@@ -43,13 +44,16 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
         $token = str_ireplace('Bearer ', '', $bearerToken);
 
         $userBadge = new UserBadge($token, function ($token) {
-            /** @var ApiToken|null $apiToken */
-            $apiToken = $this->apiTokenRepository->findOneBy(['token' => $token]);
-            if (null === $apiToken) {
-                throw new CustomUserMessageAuthenticationException('Token not found', [], Response::HTTP_UNAUTHORIZED);
+            $parts = explode(ApiToken::DELIMITER, $token, 2);
+            if (2 !== \count($parts)) {
+                throw new CustomUserMessageAuthenticationException('Invalid token format', [], Response::HTTP_UNAUTHORIZED);
             }
-            if ($apiToken->isExpired()) {
-                throw new CustomUserMessageAuthenticationException('Token expired', [], Response::HTTP_UNAUTHORIZED);
+            [$identifier, $secret] = $parts;
+
+            /** @var ApiToken|null $apiToken */
+            $apiToken = $this->apiTokenRepository->findOneByIdentifier($identifier);
+            if (null === $apiToken || !$apiToken->verifySecret($secret)) {
+                throw new CustomUserMessageAuthenticationException('Token not found', [], Response::HTTP_UNAUTHORIZED);
             }
 
             return $apiToken->getUser();

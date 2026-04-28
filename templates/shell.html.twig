@@ -47,6 +47,9 @@
                         <a class="dropdown-item" href="{{ path('app_change_password') }}">{{ 'shell.title.change_password'|trans({}, 'shell') }}</a>
                     </li>
                 {% endif %}
+                <li class="dropdown-item">
+                    <a class="dropdown-item" href="{{ path('app_api_token_list') }}">{{ 'shell.title.api_tokens'|trans({}, 'shell') }}</a>
+                </li>
                 {# ROLE_PREVIOUS_ADMIN is added when a user has switched to the current user with impersonation #}
                 {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
                     <li class="dropdown-item">

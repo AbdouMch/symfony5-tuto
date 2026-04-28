@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'page.title'|trans({}, 'api_token') }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ 'page.title'|trans({}, 'api_token') }}</h1>
+        <form method="post" action="{{ path('app_api_token_create') }}">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-plus mr-1"></i>{{ 'button.new'|trans({}, 'api_token') }}
+            </button>
+        </form>
+    </div>
+
+    {% if tokens is empty %}
+        <p class="text-muted">{{ 'table.empty'|trans({}, 'api_token') }}</p>
+    {% else %}
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th>{{ 'table.identifier'|trans({}, 'api_token') }}</th>
+                    <th>{{ 'table.created_at'|trans({}, 'api_token') }}</th>
+                    <th>{{ 'table.last_used_at'|trans({}, 'api_token') }}</th>
+                    <th>{{ 'table.actions'|trans({}, 'api_token') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for token in tokens %}
+                <tr>
+                    <td><code>{{ token.identifier }}</code></td>
+                    <td>{{ token.createdAt|date('Y-m-d H:i') }}</td>
+                    <td>
+                        {% if token.lastUsedAt %}
+                            {{ token.lastUsedAt|date('Y-m-d H:i') }}
+                        {% else %}
+                            <span class="text-muted">{{ 'table.never'|trans({}, 'api_token') }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form
+                            method="post"
+                            action="{{ path('app_api_token_delete', {identifier: token.identifier}) }}"
+                            class="js-token-delete-form d-inline"
+                        >
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_api_token_' ~ token.identifier) }}">
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash mr-1"></i>{{ 'button.delete'|trans({}, 'api_token') }}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+
+{% set new_token_flashes = app.flashes('new_api_token') %}
+{% if new_token_flashes is not empty %}
+<div class="modal fade" id="js-new-token-modal" tabindex="-1" role="dialog" aria-labelledby="newTokenModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newTokenModalLabel">
+                    <i class="fas fa-key mr-2"></i>{{ 'modal.title'|trans({}, 'api_token') }}
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle mr-1"></i>{{ 'modal.warning'|trans({}, 'api_token') }}
+                </div>
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="js-plain-token"
+                        class="form-control"
+                        value="{{ new_token_flashes[0] }}"
+                        readonly
+                    >
+                    <div class="input-group-append">
+                        <button id="js-copy-token" class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-copy mr-1"></i>{{ 'button.copy'|trans({}, 'api_token') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                    {{ 'modal.close'|trans({}, 'api_token') }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ url('bazinga_jstranslation_js', {domain: 'api_token', _format: 'js'}) }}"></script>
+    {{ encore_entry_script_tags('api_token') }}
+{% endblock %}

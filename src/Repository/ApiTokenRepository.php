@@ -21,6 +21,16 @@ class ApiTokenRepository extends ServiceEntityRepository
         parent::__construct($registry, ApiToken::class);
     }
 
+    public function findOneByIdentifier(string $identifier): ?ApiToken
+    {
+        return $this->findOneBy(['identifier' => $identifier]);
+    }
+
+    public function findOneByIdentifierAndUser(string $identifier, \App\Entity\User $user): ?ApiToken
+    {
+        return $this->findOneBy(['identifier' => $identifier, 'user' => $user]);
+    }
+
     public function add(ApiToken $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
