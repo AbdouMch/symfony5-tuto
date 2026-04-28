@@ -4,7 +4,7 @@
 
 {# here we override a block #}
 {%- block form_row -%}
-    {%- set label = name|humanize -%}
+    {%- set label = label ?? name|humanize -%}
     {%- set widget_attr = { attr: { placeholder: label } } -%}
     {% if errors is not empty %}
         {% set  error_messages = '' %}
@@ -28,8 +28,8 @@
 {%- block _registration_form_agreeTerms_row -%}
     <div class="checkbox mt-3 mb-3">
         <label>
-            <input type="checkbox" name="{{ full_name }}"
-            > Agree to terms I for sure read
+            <input type="checkbox" name="{{ full_name }}">
+            {{ 'form.field.agree_terms.title'|trans({}, 'registration') }}
         </label>
         {{ form_errors(form) }}
     </div>
@@ -40,7 +40,7 @@
 {% block body %}
     <div class="container">
         <div class="mt-5 p-4 bg-light">
-            <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+            <h1 class="h3 mb-3 font-weight-normal">{{ 'form.title'|trans({}, 'registration') }}</h1>
             {{ form_start(registrationForm, {
                 attr: {class: 'form-signin'}
             }) }}
@@ -56,7 +56,8 @@
                     }
                 }) }}
                 {{ form_row(registrationForm.agreeTerms) }}
-                <button type="submit" class="btn btn-secondary">Register</button>
+                {{ form_row(registrationForm.createApiToken) }}
+                <button type="submit" class="btn btn-secondary mt-5">{{ 'form.button.submit'|trans({}, 'registration') }}</button>
             {{ form_end(registrationForm) }}
 
 {#            {{ form_start(registrationForm) }} #}

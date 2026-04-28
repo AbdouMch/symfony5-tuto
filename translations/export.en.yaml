@@ -1,22 +1,14 @@
-export:
-  status:
-    pending: 'Pending'
-    in_progress: 'In progress'
-    completed: 'Completed'
-    failed: 'Failed'
-  create:
-    success:
-      title: 'Export created successfully'
-      message: 'The %entity% export is created successfully, and is processed on background. You can navigate safely, and you will be notified when it is ready.'
-    failure:
-      title: 'Export creation failed'
-      message: 'The %entity% export has failed'
-    pending:
-      title: 'Pending export'
-      message: 'There is already an in progress export'
-    too_many_request:
-      title: 'Too many export request'
-      message: 'You have made too many export attempts. Please try again after {retry_after}!'
-    complete:
-      title: 'You have an available export'
-      message: 'There is an available export file. You can download it from <a href={filename} title="export file">download</a>'
+export.status.pending: 'Pending'
+export.status.in_progress: 'In progress'
+export.status.completed: 'Completed'
+export.status.failed: 'Failed'
+export.create.success.title: 'Export created successfully'
+export.create.success.message: 'The %entity% export is created successfully, and is processed on background. You can navigate safely, and you will be notified when it is ready.'
+export.create.failure.title: 'Export creation failed'
+export.create.failure.message: 'The %entity% export has failed'
+export.create.pending.title: 'Pending export'
+export.create.pending.message: 'There is already an in progress export'
+export.create.too_many_request.title: 'Too many export request'
+export.create.too_many_request.message: 'You have made too many export attempts. Please try again after {retry_after}!'
+export.create.complete.title: 'You have an available export'
+export.create.complete.message: 'There is an available export file. You can download it from <a href={filename} title="export file">download</a>'

@@ -1,17 +1,10 @@
-# question form
-form:
-  name:
-    label: 'Title'
-    help: 'Choose something catchy!!'
-  question:
-    label: 'Content'
-    help: 'There is no stupid question!!'
-  asked_at:
-    label: 'Asked At'
-    help: 'When to ask the question!!'
-  spell:
-    label: 'About a spell'
-    placeholder: 'Want to know more about the spell'
-  user:
-    label: 'For'
-    help: 'You have a user in your mind to ask !'
+form.name.label: 'Title'
+form.name.help: 'Choose something catchy!!'
+form.question.label: 'Content'
+form.question.help: 'There is no stupid question!!'
+form.asked_at.label: 'Asked At'
+form.asked_at.help: 'When to ask the question!!'
+form.spell.label: 'About a spell'
+form.spell.placeholder: 'Want to know more about the spell'
+form.user.label: 'For'
+form.user.help: 'You have a user in your mind to ask !'

@@ -1,0 +1,8 @@
+form.title: 'Registration'
+form.field.email.title: 'email'
+form.field.first_name.title: 'first name'
+form.field.agree_terms.title: 'Agree to terms I for sure read'
+form.field.plain_password.title: 'Plain password'
+form.field.create_api_token.title: 'Auto generate an api token'
+form.field.create_api_token.help: 'The token will be generated and displayed only once.'
+form.button.submit: 'Register'

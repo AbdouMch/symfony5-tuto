@@ -1,0 +1,14 @@
+export.status.pending: 'En attente'
+export.status.in_progress: 'En cours'
+export.status.completed: 'Terminé'
+export.status.failed: 'Échoué'
+export.create.success.title: 'Export créé avec succès'
+export.create.success.message: "L'export %entity% a été créé avec succès et est en cours de traitement en arrière-plan. Vous pouvez naviguer en toute sécurité, vous serez notifié lorsqu'il sera prêt."
+export.create.failure.title: "Échec de la création de l'export"
+export.create.failure.message: "L'export %entity% a échoué"
+export.create.pending.title: 'Export en attente'
+export.create.pending.message: 'Un export est déjà en cours de traitement'
+export.create.too_many_request.title: 'Trop de demandes d''export'
+export.create.too_many_request.message: 'Vous avez effectué trop de tentatives d''export. Veuillez réessayer après {retry_after} !'
+export.create.complete.title: 'Un export est disponible'
+export.create.complete.message: 'Un fichier d''export est disponible. Vous pouvez le télécharger depuis <a href={filename} title="fichier d''export">télécharger</a>'

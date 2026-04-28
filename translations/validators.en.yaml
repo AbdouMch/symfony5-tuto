@@ -1,27 +1,14 @@
-# Validation for the Question Entity
-question:
-  title:
-    not_blank: 'Be more creative and submit a title'
-    min_length: 'Be more creative and submit a more comprehensive message'
-  content:
-    not_blank: 'Be more creative and submit the question content'
-    min_length: 'Be more creative and submit a more detailed question'
-  spell:
-    invalid: 'The spell you selected is invalid'
-registration:
-  user:
-    unique: 'We think that you already registered 😎'
-  email:
-    empty: 'Please enter an email'
-    unique: 'There is already an account with this email'
-  firstName:
-    empty: 'Please enter a firstname'
-  agree_terms:
-    not_checked: 'You should agree to our terms'
-  password:
-    empty: 'Please enter a password'
-    min_length: 'Your password should be at least {{ limit }} characters'
-spell:
-  not_found: 'The spell with the %field%: ''%name%'' was not found'
-  name:
-    not_found: 'The spell with the name ''%name%'' was not found'
+question.title.not_blank: 'Be more creative and submit a title'
+question.title.min_length: 'Be more creative and submit a more comprehensive message'
+question.content.not_blank: 'Be more creative and submit the question content'
+question.content.min_length: 'Be more creative and submit a more detailed question'
+question.spell.invalid: 'The spell you selected is invalid'
+registration.user.unique: 'We think that you already registered 😎'
+registration.email.empty: 'Please enter an email'
+registration.email.unique: 'There is already an account with this email'
+registration.firstName.empty: 'Please enter a firstname'
+registration.agree_terms.not_checked: 'You should agree to our terms'
+registration.password.empty: 'Please enter a password'
+registration.password.min_length: 'Your password should be at least {{ limit }} characters'
+spell.not_found: 'The spell with the %field%: ''%name%'' was not found'
+spell.name.not_found: 'The spell with the name ''%name%'' was not found'

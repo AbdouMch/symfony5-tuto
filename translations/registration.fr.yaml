@@ -1,0 +1,8 @@
+form.title: 'Inscription'
+form.field.email.title: 'e-mail'
+form.field.first_name.title: 'prénom'
+form.field.agree_terms.title: 'J''accepte les conditions que j''ai sûrement lues'
+form.field.plain_password.title: 'Mot de passe'
+form.field.create_api_token.title: 'Générer automatiquement un token API'
+form.field.create_api_token.help: 'Le token sera généré et affiché une seule fois.'
+form.button.submit: 'S''inscrire'

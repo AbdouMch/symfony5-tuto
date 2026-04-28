@@ -38,28 +38,28 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-right" aria-labelledby="user-dropdown">
                 <li class="dropdown-header">
-                    <span>Logged in as {{ app.user.firstName }}</span>
+                    <span>{{ 'shell.title.logged_in_as'|trans({}, 'shell') }} {{ app.user.firstName }}</span>
                 </li>
                 {#      In combination with the IS_AUTHENTICATED_FULLY in the controller this is a perfect way to organize a change password page          #}
                 {#      In this case i f the user is authenticated with the remember me cookie the link is shown so when it navigate to the page it will be redirected to the log in page          #}
                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and false == is_granted('ROLE_PREVIOUS_ADMIN')%} {# switched users cannot change the user's password #}
                     <li class="dropdown-item">
-                        <a class="dropdown-item" href="{{ path('app_change_password') }}">Change password</a>
+                        <a class="dropdown-item" href="{{ path('app_change_password') }}">{{ 'shell.title.change_password'|trans({}, 'shell') }}</a>
                     </li>
                 {% endif %}
                 {# ROLE_PREVIOUS_ADMIN is added when a user has switched to the current user with impersonation #}
                 {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
                     <li class="dropdown-item">
-                        <a class="dropdown-item" href="{{ path('app_homepage', {_switch_user: '_exit'}) }}">Quit Impersonation</a>
+                        <a class="dropdown-item" href="{{ path('app_homepage', {_switch_user: '_exit'}) }}">{{ 'shell.title.quite_impersonation'|trans({}, 'shell') }}</a>
                     </li>
                 {% endif %}
                 {% if false == app.user.isTotpEnabled and is_granted('IS_VERIFIED') %}
                     <li class="dropdown-item">
-                        <a class="dropdown-item" href="{{ path('app_2fa_enable') }}">Enable 2FA</a>
+                        <a class="dropdown-item" href="{{ path('app_2fa_enable') }}">{{ 'shell.title.enable_2FA'|trans({}, 'shell') }}</a>
                     </li>
                 {% endif %}
                 <li class="dropdown-item">
-                    <a class="dropdown-item" href="{{ path('app_logout') }}">Log out</a>
+                    <a class="dropdown-item" href="{{ path('app_logout') }}">{{ 'shell.title.logout'|trans({}, 'shell') }}</a>
                 </li>
             </ul>
         </div>
@@ -67,8 +67,12 @@
 
     {% if is_granted('IS_ANONYMOUS') %}
         <div>
-            <a class="btn btn-secondary" href="{{ path('app_login') }}">Login</a>
-            <a class="btn btn-dark" href="{{ path('app_register') }}">Sign up</a>
+            {% if app.request.attributes.get('_route') != 'app_login' %}
+                <a class="btn btn-secondary" href="{{ path('app_login') }}">{{ 'shell.title.login'|trans({}, 'shell') }}</a>
+            {% endif %}
+            {% if app.request.attributes.get('_route') != 'app_register' %}
+                <a class="btn btn-dark" href="{{ path('app_register') }}">{{ 'shell.title.register'|trans({}, 'shell') }}</a>
+            {% endif %}
         </div>
     {% endif %}
 </nav>

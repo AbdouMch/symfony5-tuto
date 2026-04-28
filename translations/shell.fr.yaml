@@ -1,0 +1,8 @@
+shell.title.logged_in_as: 'Connecté en tant que'
+shell.title.logout: 'Déconnexion'
+shell.title.login: 'Connexion'
+shell.title.register: 'S''inscrire'
+shell.title.change_password: 'Changer le mot de passe'
+shell.title.quite_impersonation: 'Quitter l''usurpation'
+shell.title.enable_2FA: 'Activer la 2FA'
+shell.title.api_tokens: 'Tokens API'

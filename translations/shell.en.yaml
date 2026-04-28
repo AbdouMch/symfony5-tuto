@@ -1,0 +1,8 @@
+shell.title.logged_in_as: 'Logged in as'
+shell.title.logout: 'Logout'
+shell.title.login: 'Login'
+shell.title.register: 'Register'
+shell.title.change_password: 'Change password'
+shell.title.quite_impersonation: 'Quit Impersonation'
+shell.title.enable_2FA: 'Enable 2FA'
+shell.title.api_tokens: 'API Tokens'
