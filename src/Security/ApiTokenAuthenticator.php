@@ -3,11 +3,14 @@
 namespace App\Security;
 
 use App\Entity\ApiToken;
+use App\Messenger\Message\TokenUsed;
 use App\Model\Api\Response as ApiResponse;
 use App\Repository\ApiTokenRepository;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
@@ -23,25 +26,32 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
     private ApiTokenRepository $apiTokenRepository;
     private SerializerInterface $serializer;
     private string $authTokenHeader;
+    private MessageBusInterface $commandBus;
+    private CacheItemPoolInterface $apiTokenThrottleCache;
 
-    public function __construct(string $authTokenHeader, ApiTokenRepository $apiTokenRepository, SerializerInterface $serializer)
-    {
+    public function __construct(
+        string $authTokenHeader,
+        ApiTokenRepository $apiTokenRepository,
+        SerializerInterface $serializer,
+        MessageBusInterface $commandBus,
+        CacheItemPoolInterface $apiTokenThrottleCache
+    ) {
         $this->apiTokenRepository = $apiTokenRepository;
         $this->serializer = $serializer;
         $this->authTokenHeader = $authTokenHeader;
+        $this->commandBus = $commandBus;
+        $this->apiTokenThrottleCache = $apiTokenThrottleCache;
     }
 
     public function supports(Request $request): ?bool
     {
-        dump($request->headers->has($this->authTokenHeader), );
         return $request->headers->has($this->authTokenHeader)
             && 0 === strpos($request->headers->get($this->authTokenHeader), 'Bearer ');
     }
 
     public function authenticate(Request $request): Passport
     {
-        $bearerToken = $request->headers->get($this->authTokenHeader);
-        $token = str_ireplace('Bearer ', '', $bearerToken);
+        $token = $this->extractRawToken($request);
 
         $userBadge = new UserBadge($token, function ($token) {
             $parts = explode(ApiToken::DELIMITER, $token, 2);
@@ -69,7 +79,16 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        // continue to the requested controller
+        $parts = explode(ApiToken::DELIMITER, $this->extractRawToken($request), 2);
+        if (2 === \count($parts)) {
+            $identifier = $parts[0];
+            $cacheItem = $this->apiTokenThrottleCache->getItem('api_token_used_'.$identifier);
+            if (!$cacheItem->isHit()) {
+                $this->apiTokenThrottleCache->save($cacheItem->set('1'));
+                $this->commandBus->dispatch(new TokenUsed($identifier));
+            }
+        }
+
         return null;
     }
 
@@ -82,5 +101,10 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
         );
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED, [], true);
+    }
+
+    private function extractRawToken(Request $request): string
+    {
+        return str_ireplace('Bearer ', '', $request->headers->get($this->authTokenHeader, ''));
     }
 }

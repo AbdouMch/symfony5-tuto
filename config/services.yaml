@@ -40,6 +40,8 @@ services:
     App\Security\ApiTokenAuthenticator:
         arguments:
             $authTokenHeader: '%env(API_TOKEN_HEADER)%'
+            $commandBus: '@command_bus'
+            $apiTokenThrottleCache: '@cache.api_token_throttle'
 
     App\EventListener\UserAgentListener:
         tags:
