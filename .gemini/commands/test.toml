@@ -1,0 +1,6 @@
+description = "Runs the project tests."
+prompt = """
+Please run the tests using `docker exec symfony_5 php bin/phpunit`.
+If any tests fail, analyze the output and suggest fixes.
+!{docker exec symfony_5 php bin/phpunit}
+"""

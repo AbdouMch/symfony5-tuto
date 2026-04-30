@@ -1,0 +1,5 @@
+description = "Runs php-cs-fixer to fix code style."
+prompt = """
+Please fix the code style using `make cs-fix`.
+!{make cs-fix}
+"""

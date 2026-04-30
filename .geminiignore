@@ -1,0 +1,28 @@
+# Gemini CLI Ignore Rules
+# Exclude large, compiled, or irrelevant files to keep context lean
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Symfony specific
+/var/
+/public/bundles/
+/public/build/
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/*.php
+/config/secrets/*/*.php
+
+# IDEs and OS
+/.idea/
+/.vscode/
+.DS_Store
+
+# Logs and cache
+*.log
+/cache/
+
+# Docker
+/docker/db-data/

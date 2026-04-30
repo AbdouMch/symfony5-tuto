@@ -1,0 +1,11 @@
+{
+  "tools": {
+    "allowed": [
+      "run_shell_command(make cc)",
+      "run_shell_command(make cs-fix)",
+      "run_shell_command(make sf c=.*)",
+      "run_shell_command(docker exec symfony_5 php bin/phpunit.*)",
+      "run_shell_command(docker exec symfony_5 ./vendor/bin/phpstan analyse.*)"
+    ]
+  }
+}

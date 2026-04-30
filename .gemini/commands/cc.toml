@@ -1,0 +1,5 @@
+description = "Clears the Symfony cache."
+prompt = """
+Please clear the Symfony cache using `make cc`.
+!{make cc}
+"""

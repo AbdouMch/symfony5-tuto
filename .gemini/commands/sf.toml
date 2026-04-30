@@ -1,0 +1,5 @@
+description = "Runs a Symfony console command via make sf."
+prompt = """
+Please run the Symfony console command: `{{args}}`.
+!{make sf c="{{args}}"}
+"""

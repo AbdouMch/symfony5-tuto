@@ -1,0 +1,6 @@
+description = "Runs PHPStan static analysis."
+prompt = """
+Please run PHPStan using `docker exec symfony_5 ./vendor/bin/phpstan analyse {{args}}`.
+If no arguments are provided, it will run on the default configured paths.
+!{docker exec symfony_5 ./vendor/bin/phpstan analyse {{args}}}
+"""
