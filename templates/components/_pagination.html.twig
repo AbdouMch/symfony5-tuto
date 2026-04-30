@@ -1,0 +1,60 @@
+{# Variables expected: result (App\DataList\Result) #}
+{% set current_page = result.page %}
+{% set total_pages  = result.totalPages %}
+
+{% if total_pages > 1 %}
+<nav aria-label="Pagination" class="mt-4">
+    <ul class="pagination justify-content-center">
+
+        <li class="page-item {{ current_page <= 1 ? 'disabled' }}">
+            <a class="page-link"
+               href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': current_page - 1})) }}">
+                &laquo;
+            </a>
+        </li>
+
+        {% set win_start = max(1, current_page - 3) %}
+        {% set win_end   = min(total_pages, current_page + 3) %}
+
+        {% if win_start > 1 %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': 1})) }}">1</a>
+            </li>
+            {% if win_start > 2 %}
+                <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+        {% endif %}
+
+        {% for i in win_start..win_end %}
+            <li class="page-item {{ i == current_page ? 'active' }}">
+                <a class="page-link"
+                   href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': i})) }}">
+                    {{ i }}
+                </a>
+            </li>
+        {% endfor %}
+
+        {% if win_end < total_pages %}
+            {% if win_end < total_pages - 1 %}
+                <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': total_pages})) }}">{{ total_pages }}</a>
+            </li>
+        {% endif %}
+
+        <li class="page-item {{ current_page >= total_pages ? 'disabled' }}">
+            <a class="page-link"
+               href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': current_page + 1})) }}">
+                &raquo;
+            </a>
+        </li>
+
+    </ul>
+    <p class="text-center text-muted small">
+        Page {{ current_page }} / {{ total_pages }} — {{ result.filteredCount }} results
+    </p>
+</nav>
+{% endif %}

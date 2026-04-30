@@ -13,7 +13,7 @@
         </form>
     </div>
 
-    {% if tokens is empty %}
+    {% if result.result is empty %}
         <p class="text-muted">{{ 'table.empty'|trans({}, 'api_token') }}</p>
     {% else %}
         <table class="table">
@@ -26,7 +26,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for token in tokens %}
+                {% for token in result.result %}
                 <tr>
                     <td><code>{{ token.identifier }}</code></td>
                     <td>{{ token.createdAt|date('Y-m-d H:i') }}</td>
@@ -54,6 +54,8 @@
             </tbody>
         </table>
     {% endif %}
+
+    {% include 'components/_pagination.html.twig' with { result: result } %}
 </div>
 
 {% set new_token_flashes = app.flashes('new_api_token') %}

@@ -2,15 +2,12 @@
 
 namespace App\DataList;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractDataList
 {
@@ -26,34 +23,26 @@ abstract class AbstractDataList
         return array_keys($this->getDataFieldsClasses());
     }
 
-    public function list(ParamFetcher $paramFetcher): Result
+    public function buildInput(array $params): DataListInput
     {
-        $limit = $paramFetcher->get('limit', true);
-        $page = $paramFetcher->get('page', true);
-        $order = $paramFetcher->get('sort', true);
-        $orderBy = $paramFetcher->get('sort_by', true);
+        return DataListInput::fromArray($params, $this->getFields(), $this->getDefaultSortBy());
+    }
 
-        $options = $this->configureOptions([
-            'filters' => $this->getFilters($paramFetcher),
-        ]);
+    public function list(DataListInput $input): Result
+    {
+        $offset = ($input->getPage() - 1) * $input->getLimit();
+        $qb = $this->getQueryBuilder($input->getFilters(), $input->getSortBy(), $input->getSort());
 
-        // prepare the offset
-        $offset = ($page - 1) * $limit;
-
-        // init query builder
-        $qb = $this->getQueryBuilder($options['filters'], $orderBy, $order);
-
-        // get result
-        $spells = $qb
+        $items = $qb
             ->setFirstResult($offset)
-            ->setMaxResults($limit)
+            ->setMaxResults($input->getLimit())
             ->getQuery()
             ->getResult();
 
         return new Result(
-            $spells,
-            $limit,
-            $page,
+            $items,
+            $input->getLimit(),
+            $input->getPage(),
             $this->totalCount(),
             $this->filteredCount($qb)
         );
@@ -76,29 +65,7 @@ abstract class AbstractDataList
 
     abstract protected function getDataFieldsClasses(): array;
 
-    protected function getFilters(ParamFetcher $paramFetcher): array
-    {
-        $filters = [];
-        $params = $paramFetcher->all();
-        foreach ($this->getFields() as $field) {
-            if (isset($params[$field])) {
-                $filters[$field] = $params[$field];
-            }
-        }
-
-        return $filters;
-    }
-
-    protected function configureOptions(array $options): array
-    {
-        $resolver = new OptionsResolver();
-        $resolver->setDefaults([
-            'visible_fields' => $this->getFields(),
-            'filters' => [],
-        ]);
-
-        return $resolver->resolve($options);
-    }
+    abstract protected function getDefaultSortBy(): string;
 
     protected function totalCount(): int
     {
@@ -128,11 +95,11 @@ abstract class AbstractDataList
     {
         $fields = $this->getDataFieldsClasses();
 
-        if (isset($fields[$fieldName])) {
-            return new $fields[$fieldName]($qb);
+        if (!isset($fields[$fieldName])) {
+            return null;
         }
 
-        return $fields[$fieldName] ?? null;
+        return new $fields[$fieldName]($qb);
     }
 
     private function addCriteria(QueryBuilder $qb, array $filters): QueryBuilder
@@ -142,31 +109,25 @@ abstract class AbstractDataList
         foreach ($filters as $field => $fieldFilters) {
             $dataField = $this->getDataField($field, $qb);
 
-            // skip empty filters or unmapped fields
-            if (null === $dataField || empty($fieldFilters)) {
+            if (null === $dataField || '' === $fieldFilters || [] === $fieldFilters) {
+                ++$i;
                 continue;
             }
 
-            if (\is_array($fieldFilters)) {
+            if (is_array($fieldFilters)) {
                 foreach ($fieldFilters as $operator => $value) {
                     $parameter = $field.'_'.$operator.'_param_'.$i;
                     $qb = $this->andWhere($qb, $dataField->getField(), $operator, $parameter, $value);
                 }
             } else {
                 $operator = $dataField->getDefaultFilter();
-                $clause = $this->createCriteria($operator, $field, $fieldFilters);
-                $qb->addCriteria($clause);
+                $parameter = $field.'_'.$operator.'_param_'.$i;
+                $qb = $this->andWhere($qb, $dataField->getField(), $operator, $parameter, $fieldFilters);
             }
             ++$i;
         }
 
         return $qb;
-    }
-
-    private function createCriteria(string $operator, string $field, $value): Criteria
-    {
-        return Criteria::create()
-            ->andWhere(Criteria::expr()->$operator($field, $value));
     }
 
     private function andWhere(

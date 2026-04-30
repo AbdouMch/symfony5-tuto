@@ -17,7 +17,9 @@
             {{ new_updates.spell.name }}
         </div>
     {% endif %}
-    {{ form_row(questionForm.askedAt) }}
+    {% if questionForm.askedAt is defined %}
+        {{ form_row(questionForm.askedAt) }}
+    {% endif %}
     {% if new_updates is not null %}
         <div class="alert alert-primary" role="alert">
             {{ new_updates.askedAt | format_datetime('short', 'short', locale=constant('USER_LOCAL'), timezone=constant('USER_TIMEZONE')) }}

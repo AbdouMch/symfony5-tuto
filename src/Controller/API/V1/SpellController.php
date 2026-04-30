@@ -42,44 +42,63 @@ class SpellController extends BaseApiController
      * @OA\Get(
      *     summary="List spells (paginated)",
      *     security={{"ApiToken":{}}},
+     *
      *     @OA\Parameter(name="name[]", in="query", required=false, description="Filter by spell name",
+     *
      *         @OA\Schema(type="array", @OA\Items(type="string"))
      *     ),
+     *
      *     @OA\Parameter(name="constant_code[]", in="query", required=false, description="Filter by constant code",
+     *
      *         @OA\Schema(type="array", @OA\Items(type="string"))
      *     ),
+     *
      *     @OA\Parameter(name="owner[]", in="query", required=false, description="Filter by owner ID",
+     *
      *         @OA\Schema(type="array", @OA\Items(type="integer"))
      *     ),
+     *
      *     @OA\Parameter(name="sort", in="query", required=false, description="Sort direction",
+     *
      *         @OA\Schema(type="string", enum={"asc","desc"}, default="asc")
      *     ),
+     *
      *     @OA\Parameter(name="sort_by", in="query", required=false, description="Field to sort by",
+     *
      *         @OA\Schema(type="string", default="name")
      *     ),
+     *
      *     @OA\Parameter(name="limit", in="query", required=false, description="Page size",
+     *
      *         @OA\Schema(type="integer", default=23)
      *     ),
+     *
      *     @OA\Parameter(name="page", in="query", required=false, description="Page number",
+     *
      *         @OA\Schema(type="integer", default=1)
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Paginated spell list",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="result", type="array", @OA\Items(ref="#/components/schemas/SpellRead")),
      *             @OA\Property(property="code", type="integer", example=200),
      *             @OA\Property(property="limit", type="integer", example=23),
      *             @OA\Property(property="page", type="integer", example=1)
      *         )
      *     ),
+     *
      *     @OA\Response(response=401, description="Not authenticated"),
      *     @OA\Response(response=403, description="Forbidden — requires ROLE_SPELL_READ")
      * )
      */
     public function getSpellList(ParamFetcher $paramFetcher, SpellDataList $dataList): JsonResponse
     {
-        $spells = $dataList->list($paramFetcher);
+        $input = $dataList->buildInput($paramFetcher->all());
+        $spells = $dataList->list($input);
 
         return $this->translatedJson(
             $spells,
@@ -95,25 +114,33 @@ class SpellController extends BaseApiController
      * @OA\Post(
      *     summary="Create a spell",
      *     security={{"ApiToken":{}}},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\MediaType(
      *             mediaType="application/x-www-form-urlencoded",
+     *
      *             @OA\Schema(
      *                 required={"name", "constantCode"},
+     *
      *                 @OA\Property(property="name", type="string", description="Spell name"),
      *                 @OA\Property(property="constantCode", type="string", description="Spell constant code")
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=201,
      *         description="Spell created",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="result", ref="#/components/schemas/SpellDetails"),
      *             @OA\Property(property="code", type="integer", example=201)
      *         )
      *     ),
+     *
      *     @OA\Response(response=400, description="Validation failed"),
      *     @OA\Response(response=401, description="Not authenticated"),
      *     @OA\Response(response=403, description="Forbidden — requires ROLE_SPELL_READ")

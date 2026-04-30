@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DataList\Question\QuestionDataList;
 use App\Entity\Question;
 use App\Exporter\Question\QuestionExporter;
 use App\Form\QuestionFormType;
@@ -150,12 +151,15 @@ class QuestionController extends BaseController
      *
      * @Route("/questions", name="app_questions_list")
      */
-    public function list(QuestionRepository $questionRepository): Response
+    public function list(Request $request, QuestionDataList $questionDataList): Response
     {
-        $questions = $questionRepository->findBy([], ['askedAt' => 'DESC']);
+        $params = array_merge($request->query->all(), ['limit' => 5]);
+
+        $input = $questionDataList->buildInput($params);
+        $result = $questionDataList->list($input);
 
         return $this->render('question/list.html.twig', [
-            'questions' => $questions,
+            'result' => $result,
         ]);
     }
 

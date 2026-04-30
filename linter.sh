@@ -33,7 +33,7 @@ if [[ -n "$CHANGED_PHP_FILES" ]]; then
     echo "- PHP Errors"
     FAILED_FILES=""
     for (( i=0; i<${#CHANGED_PHP_FILES_ARR[@]}; i++ )); do
-        if ! php -l -d display_errors=0 "${CHANGED_PHP_FILES_ARR[$i]}" >/dev/null; then
+        if ! docker exec -w /srv/app symfony_5  php -l -d display_errors=0 "${CHANGED_PHP_FILES_ARR[$i]}" >/dev/null; then
             FAILED_FILES="$FAILED_FILES ${CHANGED_PHP_FILES_ARR[$i]}"
         fi
     done
@@ -46,7 +46,7 @@ if [[ -n "$CHANGED_PHP_FILES" ]]; then
     if [[ $RC == 1 ]]; then
         echo -e " ${RED} SKIPPED ${NC}"
     else
-        if ./vendor/bin/php-cs-fixer fix --verbose --config=.php-cs-fixer.dist.php --using-cache=no -- "${CHANGED_PHP_FILES_ARR[@]}"; then
+        if docker exec -w /srv/app symfony_5 ./vendor/bin/php-cs-fixer fix --verbose --config=.php-cs-fixer.dist.php --using-cache=no -- "${CHANGED_PHP_FILES_ARR[@]}"; then
             echo ""
         else
             RC=1
@@ -78,7 +78,7 @@ if [[ -n "$CHANGED_JS_FILES" ]]; then
     echo "* JS: ${#CHANGED_JS_FILES_ARR[@]} changed files"
     echo ""
     echo "- XO"
-    if ./node_modules/.bin/eslint --fix -- "${CHANGED_JS_FILES_ARR[@]}"; then
+    if docker exec -w /srv/app symfony_5 ./node_modules/.bin/eslint --fix -- "${CHANGED_JS_FILES_ARR[@]}"; then
         echo ""
     else
         RC=1

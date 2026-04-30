@@ -1,10 +1,10 @@
 <?php
 
-namespace App\DataList\User;
+namespace App\DataList\ApiToken;
 
 use App\DataList\AbstractField;
 
-class IdField extends AbstractField
+class UserField extends AbstractField
 {
     public function getDefaultFilter(): string
     {
@@ -13,6 +13,6 @@ class IdField extends AbstractField
 
     public function getField(): string
     {
-        return $this->rootAlias.'.id';
+        return $this->rootAlias.'.user';
     }
 }

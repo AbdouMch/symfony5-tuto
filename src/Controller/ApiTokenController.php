@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DataList\ApiToken\ApiTokenDataList;
 use App\Entity\ApiToken;
 use App\Repository\ApiTokenRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -19,15 +20,16 @@ class ApiTokenController extends BaseController
     /**
      * @Route("", name="app_api_token_list", methods={"GET"})
      */
-    public function list(ApiTokenRepository $apiTokenRepository): Response
+    public function list(Request $request, ApiTokenDataList $apiTokenDataList): Response
     {
-        $tokens = $apiTokenRepository->findBy(
-            ['user' => $this->getUser()],
-            ['createdAt' => 'DESC']
-        );
+        $params = $request->query->all();
+        $params['user'] = (string) $this->getUser()->getId();
+
+        $input = $apiTokenDataList->buildInput($params);
+        $result = $apiTokenDataList->list($input);
 
         return $this->render('api_token/list.html.twig', [
-            'tokens' => $tokens,
+            'result' => $result,
         ]);
     }
 

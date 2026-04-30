@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ApiTokenDataList extends AbstractDataList
 {
-
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em, ApiToken::class);
@@ -19,12 +18,18 @@ class ApiTokenDataList extends AbstractDataList
         return 'api_token';
     }
 
+    protected function getDefaultSortBy(): string
+    {
+        return 'createdAt';
+    }
+
     protected function getDataFieldsClasses(): array
     {
         return [
             'identifier' => IdentifierField::class,
-            'createdAt'  => CreatedAtField::class,
+            'createdAt' => CreatedAtField::class,
             'lastUsedAt' => LastUsedAtField::class,
+            'user' => UserField::class,
         ];
     }
 }

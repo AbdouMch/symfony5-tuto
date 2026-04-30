@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\ApiTokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ApiTokenRepository::class)
@@ -35,9 +34,10 @@ class ApiToken
 
     /**
      * @Gedmo\Timestampable(on="create")
+     *
      * @ORM\Column(type="datetime_immutable", options={"default": "CURRENT_TIMESTAMP"})
      */
-    protected \DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
@@ -63,7 +63,7 @@ class ApiToken
         $this->identifier = bin2hex(random_bytes(8));
         $secret = bin2hex(random_bytes(32));
         $this->hashedSecret = hash('sha256', $secret);
-        $this->plainToken = $this->identifier . self::DELIMITER . $secret;
+        $this->plainToken = $this->identifier.self::DELIMITER.$secret;
     }
 
     public function getId(): ?int
@@ -92,7 +92,6 @@ class ApiToken
     {
         return $this->createdAt;
     }
-
 
     public function getUser(): User
     {

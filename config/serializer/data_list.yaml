@@ -10,3 +10,5 @@ App\DataList\Result:
       groups: ['api:response:list']
     filtered_count:
       groups: ['api:response:list']
+    total_pages:
+      groups: ['api:response:list']

@@ -1,33 +1,32 @@
 <?php
 
-namespace App\DataList\User;
+namespace App\DataList\Question;
 
 use App\DataList\AbstractDataList;
-use App\Entity\User;
+use App\Entity\Question;
 use Doctrine\ORM\EntityManagerInterface;
 
-class UserDataList extends AbstractDataList
+class QuestionDataList extends AbstractDataList
 {
     public function __construct(EntityManagerInterface $em)
     {
-        parent::__construct($em, User::class);
+        parent::__construct($em, Question::class);
     }
 
     protected function getRootAlias(): string
     {
-        return 'user';
+        return 'question';
     }
 
     protected function getDefaultSortBy(): string
     {
-        return 'email';
+        return 'askedAt';
     }
 
     protected function getDataFieldsClasses(): array
     {
         return [
-            'id' => IdField::class,
-            'email' => EmailField::class,
+            'title' => TitleField::class,
         ];
     }
 }

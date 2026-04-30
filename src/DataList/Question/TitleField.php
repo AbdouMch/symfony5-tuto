@@ -1,18 +1,18 @@
 <?php
 
-namespace App\DataList\User;
+namespace App\DataList\Question;
 
 use App\DataList\AbstractField;
 
-class IdField extends AbstractField
+class TitleField extends AbstractField
 {
     public function getDefaultFilter(): string
     {
-        return 'eq';
+        return 'contains';
     }
 
     public function getField(): string
     {
-        return $this->rootAlias.'.id';
+        return $this->rootAlias.'.name';
     }
 }

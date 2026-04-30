@@ -12,8 +12,16 @@
                 </div>
             </div>
         {% endif %}
-        {#  Questions list  #}
-        {% include 'question/questions_show.html.twig' with { questions: questions }%}
+
+        <form method="get" class="mb-3 d-flex">
+            <input type="text" name="title[contains]" class="form-control mr-2"
+                   placeholder="Search questions…"
+                   value="{{ app.request.query.all.title.contains ?? '' }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        {% include 'question/questions_show.html.twig' with { questions: result.result } %}
+
+        {% include 'components/_pagination.html.twig' with { result: result } %}
     </div>
 {% endblock %}
-

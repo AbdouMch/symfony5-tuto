@@ -13,6 +13,11 @@ class SpellDataList extends AbstractDataList
         parent::__construct($em, Spell::class);
     }
 
+    protected function getDefaultSortBy(): string
+    {
+        return 'name';
+    }
+
     protected function getDataFieldsClasses(): array
     {
         return [

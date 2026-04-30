@@ -14,7 +14,7 @@ abstract class AbstractField
     {
         $this->qb = $qb;
         $this->rootAlias = $qb->getRootAliases()[0];
-//        $qb->addSelect($this->getField());
+        //        $qb->addSelect($this->getField());
         $this->addJoins($qb);
     }
 
@@ -31,12 +31,26 @@ abstract class AbstractField
 
     protected function hasJoin(QueryBuilder $queryBuilder, string $joinType, string $join, string $joinAlias): bool
     {
-        return stripos($queryBuilder->getDQL(), "$joinType join $join $joinAlias");
+        foreach ($queryBuilder->getDQLPart('join') as $joinGroup) {
+            foreach ($joinGroup as $existingJoin) {
+                if (
+                    $existingJoin->getJoinType() === $joinType
+                    && $existingJoin->getJoin() === $join
+                    && $existingJoin->getAlias() === $joinAlias
+                ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     protected function leftJoin(string $rootAlias, $join, $joinAlias): void
     {
-        if ($this->hasJoin($this->qb, Join::LEFT_JOIN, "$rootAlias.$join", $joinAlias)) {
+        $join = "$rootAlias.$join";
+
+        if ($this->hasJoin($this->qb, Join::LEFT_JOIN, $join, $joinAlias)) {
             return;
         }
 
@@ -51,6 +65,6 @@ abstract class AbstractField
             return;
         }
 
-        $this->qb->leftJoin($join, $joinAlias);
+        $this->qb->innerJoin($join, $joinAlias);
     }
 }

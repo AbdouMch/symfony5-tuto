@@ -43,4 +43,9 @@ class Result
     {
         return $this->filteredCount;
     }
+
+    public function getTotalPages(): int
+    {
+        return $this->limit > 0 ? (int) ceil($this->filteredCount / $this->limit) : 1;
+    }
 }
