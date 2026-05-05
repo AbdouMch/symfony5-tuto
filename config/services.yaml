@@ -71,6 +71,14 @@ services:
         arguments:
             $listeners: !tagged_iterator app.silenceable_listener
 
+    _instanceof:
+        App\DataList\Filter\FilterInterface:
+            tags: ['app.data_list_filter']
+
+    App\DataList\DataListManager:
+        arguments:
+            $filters: !tagged_iterator app.data_list_filter
+
     App\Exporter\Question\QuestionExportCache:
         arguments:
             $client: '@snc_redis.default'

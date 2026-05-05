@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\DataList\Spell\SpellDataList;
+use App\DataList\Spell\SpellDataListConfiguration;
 use App\DataList\User\UserDataList;
 use App\Entity\Question;
 use App\Entity\Spell;
@@ -24,12 +24,12 @@ class QuestionFormType extends AbstractType
     public const API_MODE = 'API';
     private UserDataList $userDataList;
     private Security $security;
-    private SpellDataList $spellDataList;
+    private SpellDataListConfiguration $spellDataList;
     private DateTimeService $dateTimeService;
 
     public function __construct(
         UserDataList $userDataList,
-        SpellDataList $spellDataList,
+        SpellDataListConfiguration $spellDataList,
         Security $security,
         DateTimeService $dateTimeService
     ) {

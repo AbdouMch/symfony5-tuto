@@ -3,6 +3,7 @@
 namespace App\Controller\API\V1;
 
 use App\Controller\API\BaseApiController;
+use App\DataList\DataListManager;
 use App\DataList\User\UserDataList;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -88,7 +89,7 @@ class UserController extends BaseApiController
      *     @OA\Response(response=403, description="Forbidden")
      * )
      */
-    public function getUsersList(Request $request, ParamFetcher $paramFetcher, UserDataList $userDataList): View
+    public function getUsersList(Request $request, ParamFetcher $paramFetcher, DataListManager $manager, UserDataList $config): View
     {
         $serializerGroups = $request->get('serializer_group', '["api:user"]');
         $serializerGroups = json_decode($serializerGroups);
@@ -96,8 +97,7 @@ class UserController extends BaseApiController
         $context = new Context();
         $context->setGroups($serializerGroups);
 
-        $input = $userDataList->buildInput($paramFetcher->all());
-        $users = $userDataList->list($input);
+        $users = $manager->list($config, $paramFetcher->all());
 
         return $this->view($users, Response::HTTP_OK)->setContext($context);
     }

@@ -88,6 +88,11 @@ class ApiToken
         return $this;
     }
 
+    public function setCreatedAt(\DateTimeImmutable $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;

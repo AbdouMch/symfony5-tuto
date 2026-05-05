@@ -1,0 +1,10 @@
+App\Entity\ApiToken:
+  attributes:
+    id:
+      groups: ['api:api_token:read']
+    identifier:
+      groups: ['api:api_token:read']
+    createdAt:
+      groups: ['api:api_token:read']
+    lastUsedAt:
+      groups: ['api:api_token:read']
