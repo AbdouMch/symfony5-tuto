@@ -3,7 +3,8 @@
 namespace App\Controller\API\V1;
 
 use App\Controller\API\BaseApiController;
-use App\DataList\ApiToken\ApiTokenDataList;
+use App\DataList\ApiToken\ApiTokenDataListConfiguration;
+use App\DataList\DataListManager;
 use App\Entity\ApiToken;
 use App\Repository\ApiTokenRepository;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -21,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @OA\Tag(name="Tokens")
  */
-class TokenController extends BaseApiController
+class ApiTokenController extends BaseApiController
 {
     /**
      * @Route("", name="api_v1_api_token_list", methods="GET")
@@ -52,12 +53,13 @@ class TokenController extends BaseApiController
      *     @OA\Response(response=403, description="Forbidden — requires ROLE_API_TOKEN_READ")
      * )
      */
-    public function getSpellList(ParamFetcher $paramFetcher, ApiTokenDataList $dataList): JsonResponse
+    public function getSpellList(ParamFetcher $paramFetcher, ApiTokenDataListConfiguration $dataList, DataListManager $manager): JsonResponse
     {
-        $input = $dataList->buildInput($paramFetcher->all());
-        $tokens = $dataList->list($input);
+        $tokens = $manager->list($dataList, $paramFetcher->all());
 
-        return $this->json($tokens);
+        return $this->json($tokens, Response::HTTP_OK, [], [
+            'groups' => ['api:api_token:read', 'api:response:list'],
+        ]);
     }
 
     /**

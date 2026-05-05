@@ -3,7 +3,8 @@
 namespace App\Controller\API\V1;
 
 use App\Controller\API\BaseApiController;
-use App\DataList\Spell\SpellDataList;
+use App\DataList\DataListManager;
+use App\DataList\Spell\SpellDataListConfiguration;
 use App\Entity\Spell;
 use App\Form\Exception\Api\FormValidationException;
 use App\Form\SpellTypeTest;
@@ -95,10 +96,9 @@ class SpellController extends BaseApiController
      *     @OA\Response(response=403, description="Forbidden — requires ROLE_SPELL_READ")
      * )
      */
-    public function getSpellList(ParamFetcher $paramFetcher, SpellDataList $dataList): JsonResponse
+    public function getSpellList(ParamFetcher $paramFetcher, DataListManager $manager, SpellDataListConfiguration $config): JsonResponse
     {
-        $input = $dataList->buildInput($paramFetcher->all());
-        $spells = $dataList->list($input);
+        $spells = $manager->list($config, $paramFetcher->all());
 
         return $this->translatedJson(
             $spells,
