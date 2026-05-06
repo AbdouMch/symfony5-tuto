@@ -13,7 +13,7 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 class QuestionDataListTest extends KernelTestCase
 {
-    use ResetDatabase;
+    
     use Factories;
 
     private DataListManager $manager;

@@ -15,7 +15,7 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 class DataListManagerTest extends KernelTestCase
 {
-    use ResetDatabase;
+    
     use Factories;
 
     private DataListManager $manager;

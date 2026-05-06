@@ -95,11 +95,5 @@ class ExceptionEventListener
 
             return;
         }
-
-        $session = $this->event->getRequest()->getSession();
-        $session->getFlashBag()->add('error', $message);
-        $this->event->setResponse(
-            new RedirectResponse($this->urlGenerator->generate('app_homepage'))
-        );
     }
 }

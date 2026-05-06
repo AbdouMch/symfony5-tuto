@@ -11,7 +11,7 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 class ApiTokenAuthenticatorTest extends WebTestCase
 {
-    use ResetDatabase;
+    
     use Factories;
 
     // Header name from API_TOKEN_HEADER env var ("auth-token" → HTTP_AUTH_TOKEN in test client)

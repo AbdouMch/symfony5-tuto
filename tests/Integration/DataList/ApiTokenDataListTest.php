@@ -14,7 +14,7 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 class ApiTokenDataListTest extends KernelTestCase
 {
-    use ResetDatabase;
+    
     use Factories;
 
     private DataListManager $manager;

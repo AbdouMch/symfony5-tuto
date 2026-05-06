@@ -11,7 +11,6 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 class TokenControllerTest extends WebTestCase
 {
-    use ResetDatabase;
     use Factories;
 
     private const AUTH_HEADER = 'HTTP_AUTH_TOKEN';
