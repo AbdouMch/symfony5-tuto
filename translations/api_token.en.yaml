@@ -1,5 +1,6 @@
 page.title: 'API Tokens'
 
+table.user: 'User'
 table.identifier: 'Identifier'
 table.created_at: 'Created at'
 table.last_used_at: 'Last used at'

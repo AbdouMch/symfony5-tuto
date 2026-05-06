@@ -30,4 +30,9 @@ class QuestionDataListConfiguration implements DataListConfigurationInterface
             'title' => new FieldDefinition('question.name', FilterType::STRING, 'contains'),
         ];
     }
+
+    public function getScope(): array
+    {
+        return [];
+    }
 }

@@ -2,6 +2,8 @@ App\Entity\ApiToken:
   attributes:
     id:
       groups: ['api:api_token:read']
+    user:
+      groups: [ 'api:api_token:admin_read' ]
     identifier:
       groups: ['api:api_token:read']
     createdAt:

@@ -2,8 +2,9 @@
 
 namespace App\Form;
 
+use App\DataList\DataListQueryBuilderFactory;
 use App\DataList\Spell\SpellDataListConfiguration;
-use App\DataList\User\UserDataList;
+use App\DataList\User\UserDataListConfiguration;
 use App\Entity\Question;
 use App\Entity\Spell;
 use App\Entity\User;
@@ -22,21 +23,25 @@ class QuestionFormType extends AbstractType
 {
     public const WEB_MODE = 'WEB';
     public const API_MODE = 'API';
-    private UserDataList $userDataList;
+
+    private UserDataListConfiguration $userConfig;
     private Security $security;
-    private SpellDataListConfiguration $spellDataList;
+    private SpellDataListConfiguration $spellConfig;
     private DateTimeService $dateTimeService;
+    private DataListQueryBuilderFactory $factory;
 
     public function __construct(
-        UserDataList $userDataList,
-        SpellDataListConfiguration $spellDataList,
+        UserDataListConfiguration $userConfig,
+        SpellDataListConfiguration $spellConfig,
         Security $security,
-        DateTimeService $dateTimeService
+        DateTimeService $dateTimeService,
+        DataListQueryBuilderFactory $factory
     ) {
-        $this->userDataList = $userDataList;
-        $this->security = $security;
-        $this->spellDataList = $spellDataList;
-        $this->dateTimeService = $dateTimeService;
+        $this->userConfig        = $userConfig;
+        $this->security          = $security;
+        $this->spellConfig       = $spellConfig;
+        $this->dateTimeService   = $dateTimeService;
+        $this->factory           = $factory;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -65,11 +70,11 @@ class QuestionFormType extends AbstractType
                 'placeholder' => 'form.spell.placeholder',
                 'required' => false,
                 'search_field' => $spellSearchField,
-                'api_path' => 'api_v1_spells_list',
+                'api_path' => 'app_spell_filter',
                 'choice_value' => 'id',
                 'choice_translation_domain' => 'spell',
                 'choice_label' => 'name',
-                'query_builder' => $this->spellDataList->getQueryBuilder([], 'name', 'ASC'),
+                'query_builder' => $this->factory->createBaseQueryBuilder($this->spellConfig, 'name', 'ASC'),
             ]);
 
         $this->addToUserField($builder, $builder->getData());
@@ -124,7 +129,7 @@ class QuestionFormType extends AbstractType
             'api_path' => 'api_v1_users_list',
             'api_parameters' => ['id' => ['neq' => $userId]],
             'search_field' => 'email',
-            'query_builder' => $this->userDataList->getQueryBuilder([], 'id', 'ASC')
+            'query_builder' => $this->factory->createBaseQueryBuilder($this->userConfig, 'id', 'ASC')
                 ->andWhere("user.id != ($userId)"),
         ]);
     }

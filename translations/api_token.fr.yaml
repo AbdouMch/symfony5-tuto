@@ -1,5 +1,6 @@
 page.title: 'Tokens API'
 
+table.user: 'Utilisateur'
 table.identifier: 'Identifiant'
 table.created_at: 'Créé le'
 table.last_used_at: 'Dernière utilisation'

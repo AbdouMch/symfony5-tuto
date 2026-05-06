@@ -3,6 +3,7 @@
 namespace App\DataList;
 
 use App\DataList\Filter\FieldDefinition;
+use App\DataList\Filter\ScopeConstraint;
 
 interface DataListConfigurationInterface
 {
@@ -14,4 +15,7 @@ interface DataListConfigurationInterface
 
     /** @return FieldDefinition[] */
     public function getFields(): array;
+
+    /** @return ScopeConstraint[] */
+    public function getScope(): array;
 }

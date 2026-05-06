@@ -34,4 +34,9 @@ class SpellDataListConfiguration implements DataListConfigurationInterface
             ]),
         ];
     }
+
+    public function getScope(): array
+    {
+        return [];
+    }
 }

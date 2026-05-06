@@ -7,7 +7,7 @@ use App\DataList\Filter\FieldDefinition;
 use App\DataList\Filter\FilterType;
 use App\Entity\User;
 
-class UserDataList implements DataListConfigurationInterface
+class UserDataListConfiguration implements DataListConfigurationInterface
 {
     public function getEntityClass(): string
     {
@@ -30,5 +30,10 @@ class UserDataList implements DataListConfigurationInterface
             'id' => new FieldDefinition('user.id', FilterType::NUMBER),
             'email' => new FieldDefinition('user.email', FilterType::STRING, 'contains'),
         ];
+    }
+
+    public function getScope(): array
+    {
+        return [];
     }
 }
