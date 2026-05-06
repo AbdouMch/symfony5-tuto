@@ -12,6 +12,7 @@ use App\Messenger\MessageHandler\Exporter\Question\QuestionExportHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\TestBrowserToken;
 use Twig\Environment;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -34,6 +35,12 @@ class QuestionExportHandlerTest extends KernelTestCase
         $completedStatus = $this->createExportStatus(ExportStatus::COMPLETED);
 
         $user = UserFactory::createOne()->object();
+
+        $token = new TestBrowserToken($user->getRoles(), $user, 'main');
+
+        $container = $this->getContainer();
+        $container->get('security.untracked_token_storage')->setToken($token);
+
         QuestionFactory::createMany(2, ['owner' => $user]);
 
         $export = new Export();
@@ -50,7 +57,8 @@ class QuestionExportHandlerTest extends KernelTestCase
         $cache = $this->createMock(QuestionExportCache::class);
         $cache->expects($this->once())->method('saveExportForUser');
 
-        $twig = static::getContainer()->get(Environment::class);
+        $twig = $this->createMock(Environment::class);
+        $twig->expects($this->once())->method('render');
 
         $handler = new QuestionExportHandler(
             $this->em,

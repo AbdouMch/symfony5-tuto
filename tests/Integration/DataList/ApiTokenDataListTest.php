@@ -10,11 +10,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Zenstruck\Foundry\Test\Factories;
-use Zenstruck\Foundry\Test\ResetDatabase;
 
 class ApiTokenDataListTest extends KernelTestCase
 {
-    
     use Factories;
 
     private DataListManager $manager;
@@ -25,15 +23,7 @@ class ApiTokenDataListTest extends KernelTestCase
     {
         self::bootKernel();
         $this->manager = self::getContainer()->get(DataListManager::class);
-        $this->em      = self::getContainer()->get('doctrine')->getManager();
-    }
-
-    private function loginAs(object $user): void
-    {
-        $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
-        self::getContainer()->get('security.token_storage')->setToken($token);
-        // Re-fetch the config after the security token is set so getScope() sees the user
-        $this->config = self::getContainer()->get(ApiTokenDataListConfiguration::class);
+        $this->em = self::getContainer()->get('doctrine')->getManager();
     }
 
     public function testScopeRestrictsToAuthenticatedUser(): void
@@ -91,5 +81,13 @@ class ApiTokenDataListTest extends KernelTestCase
 
         $this->assertEquals(1, $result->getFilteredCount());
         $this->assertEquals($user1->getId(), $result->getResult()[0]->getUser()->getId());
+    }
+
+    private function loginAs(object $user): void
+    {
+        $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
+        self::getContainer()->get('security.token_storage')->setToken($token);
+        // Re-fetch the config after the security token is set so getScope() sees the user
+        $this->config = self::getContainer()->get(ApiTokenDataListConfiguration::class);
     }
 }

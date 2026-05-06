@@ -16,6 +16,8 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 
@@ -37,11 +39,11 @@ class QuestionFormType extends AbstractType
         DateTimeService $dateTimeService,
         DataListQueryBuilderFactory $factory
     ) {
-        $this->userConfig        = $userConfig;
-        $this->security          = $security;
-        $this->spellConfig       = $spellConfig;
-        $this->dateTimeService   = $dateTimeService;
-        $this->factory           = $factory;
+        $this->userConfig = $userConfig;
+        $this->security = $security;
+        $this->spellConfig = $spellConfig;
+        $this->dateTimeService = $dateTimeService;
+        $this->factory = $factory;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -94,6 +96,16 @@ class QuestionFormType extends AbstractType
                 'html5' => false,
             ]);
         }
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
+
+            if (!array_key_exists('version', $data)) {
+                $data['version'] = 1;
+            }
+
+            $event->setData($data);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void

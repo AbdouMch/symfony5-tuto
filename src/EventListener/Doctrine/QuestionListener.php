@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Exporter\Question\QuestionExportCache;
 use App\Exporter\Question\QuestionExportLimiter;
 use App\Repository\QuestionRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Security\Core\Security;
@@ -22,19 +23,22 @@ class QuestionListener implements SilenceableListenerInterface
     private Security $security;
     private QuestionExportLimiter $questionExportLimiter;
     private QuestionRepository $questionRepository;
+    private LoggerInterface $logger;
 
     public function __construct(
         HubInterface $hub,
         QuestionExportCache $cache,
         Security $security,
         QuestionExportLimiter $questionExportLimiter,
-        QuestionRepository $questionRepository
+        QuestionRepository $questionRepository,
+        LoggerInterface $logger
     ) {
         $this->mercureHub = $hub;
         $this->cache = $cache;
         $this->security = $security;
         $this->questionExportLimiter = $questionExportLimiter;
         $this->questionRepository = $questionRepository;
+        $this->logger = $logger;
     }
 
     public function postPersist(Question $question): void
@@ -52,6 +56,7 @@ class QuestionListener implements SilenceableListenerInterface
         if (!$this->isEnabled()) {
             return;
         }
+
         /** @var non-empty-string $data */
         $data = json_encode(['question_id' => $question->getId()], JSON_THROW_ON_ERROR);
 
@@ -61,7 +66,12 @@ class QuestionListener implements SilenceableListenerInterface
             false
         );
 
-        $this->mercureHub->publish($update);
+        try {
+            $this->mercureHub->publish($update);
+        } catch (\Throwable $e) {
+            $this->logger->error('Error when publishing question update', ['exception' => $e]);
+        }
+
         /** @var User $user */
         $user = $this->security->getUser();
 

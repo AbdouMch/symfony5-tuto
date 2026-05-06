@@ -3,15 +3,10 @@
 namespace App\Tests\Functional\Security;
 
 use App\Factory\UserFactory;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Zenstruck\Foundry\Test\Factories;
-use Zenstruck\Foundry\Test\ResetDatabase;
+use App\Tests\Functional\AbstractWebTestCase;
 
-class CheckBlockedUserSubscriberTest extends WebTestCase
+class CheckBlockedUserSubscriberTest extends AbstractWebTestCase
 {
-    
-    use Factories;
-
     public function testNonBlockedUserCanLogIn(): void
     {
         UserFactory::createOne([
@@ -20,17 +15,16 @@ class CheckBlockedUserSubscriberTest extends WebTestCase
             'isBlocked' => false,
         ]);
 
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/login');
+        $crawler = $this->client->request('GET', '/en/login');
 
-        $client->submit($crawler->filter('form')->form([
+        $this->client->submit($crawler->filter('form')->form([
             'email' => 'active@example.com',
             'password' => 'password',
         ]));
 
         // Successful login redirects away from the login page
         $this->assertResponseRedirects();
-        $this->assertStringNotContainsString('/blocked-page', $client->getResponse()->headers->get('Location') ?? '');
+        $this->assertStringNotContainsString('/blocked-page', $this->client->getResponse()->headers->get('Location') ?? '');
     }
 
     public function testBlockedUserIsRedirectedToBlockedPage(): void
@@ -41,14 +35,13 @@ class CheckBlockedUserSubscriberTest extends WebTestCase
             'isBlocked' => true,
         ]);
 
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/login');
+        $crawler = $this->client->request('GET', '/en/login');
 
-        $client->submit($crawler->filter('form')->form([
+        $this->client->submit($crawler->filter('form')->form([
             'email' => 'blocked@example.com',
             'password' => 'password',
         ]));
 
-        $this->assertResponseRedirects('/blocked-page');
+        $this->assertResponseRedirects('/en/blocked-page');
     }
 }

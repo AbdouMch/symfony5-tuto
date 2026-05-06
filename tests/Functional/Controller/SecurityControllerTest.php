@@ -3,19 +3,13 @@
 namespace App\Tests\Functional\Controller;
 
 use App\Factory\UserFactory;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Zenstruck\Foundry\Test\Factories;
-use Zenstruck\Foundry\Test\ResetDatabase;
+use App\Tests\Functional\AbstractWebTestCase;
 
-class SecurityControllerTest extends WebTestCase
+class SecurityControllerTest extends AbstractWebTestCase
 {
-    
-    use Factories;
-
     public function testLoginPageRenders(): void
     {
-        $client = static::createClient();
-        $client->request('GET', '/en/login');
+        $this->client->request('GET', '/en/login');
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('form');
@@ -23,19 +17,14 @@ class SecurityControllerTest extends WebTestCase
 
     public function testEnable2faRedirectsAnonymousToLogin(): void
     {
-        $client = static::createClient();
-        $client->request('GET', '/en/authentication/2fa/enable');
-
-        $this->assertResponseRedirects('/en/login');
+        $this->client->request('GET', '/en/authentication/2fa/enable');
+        $this->assertResponseRedirects('http://localhost/en/login');
     }
 
     public function testEnable2faIsAccessibleWhenAuthenticated(): void
     {
-        $client = static::createClient();
-        $client->loginUser(UserFactory::createOne()->object());
-
-        $client->request('GET', '/en/authentication/2fa/enable');
-
+        $this->client->loginUser(UserFactory::createOne()->object());
+        $this->client->request('GET', '/en/authentication/2fa/enable');
         $this->assertResponseIsSuccessful();
     }
 }

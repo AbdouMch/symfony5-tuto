@@ -32,33 +32,43 @@ class QuestionController extends BaseApiController
      *     summary="Create a question",
      *     tags={"Questions"},
      *     security={{"ApiToken":{}}},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\MediaType(
      *             mediaType="application/x-www-form-urlencoded",
+     *
      *             @OA\Schema(
      *                 required={"name", "question"},
+     *
      *                 @OA\Property(property="name", type="string", minLength=4, description="Question title"),
      *                 @OA\Property(property="question", type="string", minLength=4, description="Question body"),
      *                 @OA\Property(property="spell", type="integer", nullable=true, description="ID of the related spell")
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=201,
      *         description="Question created",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="result", ref="#/components/schemas/QuestionRead"),
      *             @OA\Property(property="code", type="integer", example=201)
      *         )
      *     ),
+     *
      *     @OA\Response(response=400, description="Validation failed"),
      *     @OA\Response(response=401, description="Not authenticated")
      * )
      */
     public function create(Request $request, QuestionRepository $questionRepository): Response
     {
-        $form = $this->createForm(QuestionFormType::class, null, [
+        $question = new Question();
+
+        $form = $this->createForm(QuestionFormType::class, $question, [
             'mode' => QuestionFormType::API_MODE,
             'csrf_protection' => false,
         ]);

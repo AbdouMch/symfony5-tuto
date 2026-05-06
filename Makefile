@@ -50,6 +50,10 @@ mercure: ## Enter PHP container as root
 	@echo "Entering PHP container..."
 	$(DOCKER_EXEC) -it $(MERCURE_CONTAINER) /bin/sh
 
+db: ## Enter DB container as root
+	@echo "Entering PHP container..."
+	$(DOCKER_EXEC) -it $(DB_CONTAINER) /bin/sh
+
 install-vendors:
 	@$(PHP_EXEC) /usr/local/bin/install-vendors.sh
 

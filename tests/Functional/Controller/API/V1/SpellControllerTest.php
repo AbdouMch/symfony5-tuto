@@ -2,71 +2,76 @@
 
 namespace App\Tests\Functional\Controller\API\V1;
 
-use App\Entity\ApiToken;
+use App\Entity\Spell;
 use App\Factory\SpellFactory;
-use App\Factory\UserFactory;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Zenstruck\Foundry\Test\Factories;
-use Zenstruck\Foundry\Test\ResetDatabase;
+use App\Tests\Functional\AbstractWebTestCase;
 
-class SpellControllerTest extends WebTestCase
+class SpellControllerTest extends AbstractWebTestCase
 {
-    
-    use Factories;
-
-    private const AUTH_HEADER = 'HTTP_AUTH_TOKEN';
     private const ENDPOINT = '/api/v1/spells';
-
-    private function createBearerToken(): string
-    {
-        $user = UserFactory::createOne()->object();
-        $apiToken = new ApiToken($user);
-        $plainToken = $apiToken->getPlainToken();
-
-        /** @var EntityManagerInterface $em */
-        $em = static::getContainer()->get('doctrine')->getManager();
-        $em->persist($apiToken);
-        $em->flush();
-
-        return $plainToken;
-    }
 
     public function testListRequiresAuthentication(): void
     {
-        $client = static::createClient();
-        $client->request('GET', self::ENDPOINT);
+        $this->client->request('GET', self::ENDPOINT);
 
         $this->assertResponseStatusCodeSame(401);
     }
 
     public function testListReturnsJsonWithSpells(): void
     {
+        $em = static::getContainer()->get('doctrine')->getManager();
+        $spellCout = $em->getRepository(Spell::class)->count([]);
         SpellFactory::createMany(3);
 
-        $client = static::createClient();
-        $client->request('GET', self::ENDPOINT, [], [], [
-            self::AUTH_HEADER => 'Bearer ' . $this->createBearerToken(),
+        $this->client->request('GET', self::ENDPOINT, [], [], [
+            self::AUTH_HEADER => 'Bearer '.$this->createBearerToken(),
         ]);
 
         $this->assertResponseIsSuccessful();
         $this->assertResponseFormatSame('json');
 
-        $body = json_decode($client->getResponse()->getContent(), true);
+        $body = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('result', $body);
-        $this->assertCount(3, $body['result']);
+        $this->assertCount($spellCout + 3, $body['result']);
     }
 
-    public function testListReturnsEmptyResultWhenNoSpells(): void
+    public function testListReturnsJsonWithSpellsPaginated(): void
     {
-        $client = static::createClient();
-        $client->request('GET', self::ENDPOINT, [], [], [
-            self::AUTH_HEADER => 'Bearer ' . $this->createBearerToken(),
+        SpellFactory::createMany(6);
+
+        $this->client->request('GET', self::ENDPOINT, [
+            'limit' => 3,
+            'page' => 2,
+        ], [], [
+            self::AUTH_HEADER => 'Bearer '.$this->createBearerToken(),
         ]);
 
         $this->assertResponseIsSuccessful();
+        $this->assertResponseFormatSame('json');
 
-        $body = json_decode($client->getResponse()->getContent(), true);
-        $this->assertCount(0, $body['result']);
+        $body = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('result', $body);
+        $this->assertCount(3, $body['result']);
+        $this->assertSame(3, $body['limit']);
+        $this->assertSame(2, $body['page']);
+    }
+
+    public function testCreateSpell(): void
+    {
+        $this->client->request('POST', self::ENDPOINT, [
+            'name' => 'new  spell',
+            'constantCode' => 'new.spell',
+        ], [], [
+            self::AUTH_HEADER => 'Bearer '.$this->createBearerToken(),
+        ]);
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertResponseFormatSame('json');
+
+        $body = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('result', $body);
+        $spell = $body['result'];
+        $this->assertSame('new  spell', $spell['name']);
+        $this->assertSame('new.spell', $spell['constant_code']);
     }
 }

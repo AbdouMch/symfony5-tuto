@@ -20,24 +20,17 @@ class ApiTokenControllerTest extends AbstractWebTestCase
     public function testListIsAccessibleWhenAuthenticated(): void
     {
         $this->client->loginUser(UserFactory::createOne()->object());
-
         $this->client->request('GET', '/en/profile/tokens');
-
         $this->assertResponseIsSuccessful();
     }
 
     public function testCreateGeneratesTokenAndRedirects(): void
     {
         $user = UserFactory::createOne()->object();
-
         $this->client->loginUser($user);
-
         $this->client->request('POST', '/en/profile/tokens/new');
-
         $this->client->getResponse();
-
         $this->assertResponseRedirects('/en/profile/tokens');
-
         $repo = static::getContainer()->get(ApiTokenRepository::class);
         $this->assertCount(1, $repo->findBy(['user' => $user]));
     }
@@ -53,15 +46,14 @@ class ApiTokenControllerTest extends AbstractWebTestCase
         $em->persist($token);
         $em->flush();
 
-
         $this->client->loginUser($user);
 
         $csrfToken = static::getContainer()
             ->get('security.csrf.token_manager')
-            ->getToken('delete_api_token_' . $identifier)
+            ->getToken('delete_api_token_'.$identifier)
             ->getValue();
 
-        $this->client->request('POST', '/en/profile/tokens/' . $identifier . '/delete', [
+        $this->client->request('POST', '/en/profile/tokens/'.$identifier.'/delete', [
             '_token' => $csrfToken,
         ]);
 
@@ -84,7 +76,7 @@ class ApiTokenControllerTest extends AbstractWebTestCase
 
         $this->client->loginUser($user);
 
-        $this->client->request('POST', '/en/profile/tokens/' . $identifier . '/delete', [
+        $this->client->request('POST', '/en/profile/tokens/'.$identifier.'/delete', [
             '_token' => 'invalid-csrf-token',
         ]);
 

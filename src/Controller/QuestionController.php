@@ -66,7 +66,9 @@ class QuestionController extends BaseController
         QuestionRepository $questionRepository,
         DateTimeService $dateTimeService
     ): Response {
-        $form = $this->createForm(QuestionFormType::class);
+        $question = new Question();
+
+        $form = $this->createForm(QuestionFormType::class, $question);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

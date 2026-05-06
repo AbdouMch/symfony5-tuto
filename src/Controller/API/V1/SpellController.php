@@ -7,7 +7,7 @@ use App\DataList\DataListManager;
 use App\DataList\Spell\SpellDataListConfiguration;
 use App\Entity\Spell;
 use App\Form\Exception\Api\FormValidationException;
-use App\Form\SpellTypeTest;
+use App\Form\SpellType;
 use App\Model\Api\Response as ApiResponse;
 use App\Repository\SpellRepository;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -148,7 +148,7 @@ class SpellController extends BaseApiController
      */
     public function create(Request $request, SpellRepository $spellRepo): Response
     {
-        $form = $this->createForm(SpellTypeTest::class);
+        $form = $this->createForm(SpellType::class);
         $form->submit($request->request->all());
 
         if ($form->isSubmitted() && $form->isValid()) {

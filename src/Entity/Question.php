@@ -64,7 +64,7 @@ class Question
      *
      * @ORM\ManyToOne(targetEntity=Spell::class, inversedBy="questions")
      */
-    private ?Spell $spell;
+    private ?Spell $spell = null;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="pendingQuestions")
