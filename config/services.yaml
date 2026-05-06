@@ -75,7 +75,7 @@ services:
         App\DataList\Filter\FilterInterface:
             tags: ['app.data_list_filter']
 
-    App\DataList\DataListManager:
+    App\DataList\DataListQueryBuilderFactory:
         arguments:
             $filters: !tagged_iterator app.data_list_filter
 

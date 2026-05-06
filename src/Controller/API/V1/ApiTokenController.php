@@ -57,8 +57,15 @@ class ApiTokenController extends BaseApiController
     {
         $tokens = $manager->list($dataList, $paramFetcher->all());
 
+        $groupes = ['api:api_token:read', 'api:response:list'];
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $groupes[] = 'api:api_token:admin_read';
+            $groupes[] = 'api:user';
+        }
+
         return $this->json($tokens, Response::HTTP_OK, [], [
-            'groups' => ['api:api_token:read', 'api:response:list'],
+            'groups' => $groupes,
         ]);
     }
 

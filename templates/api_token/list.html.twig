@@ -6,11 +6,21 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>{{ 'page.title'|trans({}, 'api_token') }}</h1>
-        <form method="post" action="{{ path('app_api_token_create') }}">
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-plus mr-1"></i>{{ 'button.new'|trans({}, 'api_token') }}
-            </button>
-        </form>
+        <div class="d-flex justify-content-right align-items-center mb-4">
+            {% if is_filtered %}
+                <a class="btn btn-danger mr-1" href="{{ path('app_api_token_list') }}">
+                <span class="fa-stack">
+                  <i class="fa fa-filter fa-stack"></i>
+                  <i class="fa fa-slash fa-stack-1x" style="color:black"></i>
+                </span>
+                </a>
+            {% endif %}
+            <form method="post" action="{{ path('app_api_token_create') }}">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus mr-1"></i>{{ 'button.new'|trans({}, 'api_token') }}
+                </button>
+            </form>
+        </div>
     </div>
 
     {% if result.result is empty %}
@@ -19,6 +29,9 @@
         <table class="table">
             <thead class="thead-light">
                 <tr>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th>{{ 'table.user'|trans({}, 'api_token') }}</th>
+                    {% endif %}
                     <th>{{ 'table.identifier'|trans({}, 'api_token') }}</th>
                     <th>{{ 'table.created_at'|trans({}, 'api_token') }}</th>
                     <th>{{ 'table.last_used_at'|trans({}, 'api_token') }}</th>
@@ -28,6 +41,9 @@
             <tbody>
                 {% for token in result.result %}
                 <tr>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <td><a href="{{ path('app_api_token_list', {user: token.user.id}) }}">{{ token.user.email }}</a></td>
+                    {% endif %}
                     <td><code>{{ token.identifier }}</code></td>
                     <td>{{ token.createdAt|date('Y-m-d H:i') }}</td>
                     <td>

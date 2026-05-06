@@ -23,12 +23,10 @@ class ApiTokenController extends BaseController
      */
     public function list(Request $request, ApiTokenDataListConfiguration $apiTokenDataListConfiguration, DataListManager $dataListManager): Response
     {
-        $params = $request->query->all();
-        $params['user'] = (string) $this->getUser()->getId();
-
-        $result = $dataListManager->list($apiTokenDataListConfiguration, $params);
+        $result = $dataListManager->list($apiTokenDataListConfiguration, $request->query->all());
 
         return $this->render('api_token/list.html.twig', [
+            'is_filtered' => $result->getFilteredCount() < $result->getTotalCount(),
             'result' => $result,
         ]);
     }
